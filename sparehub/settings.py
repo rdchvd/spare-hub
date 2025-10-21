@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     'products',
     'orders',
     'feedback',
+	'phonenumber_field',
 ]
+
+AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

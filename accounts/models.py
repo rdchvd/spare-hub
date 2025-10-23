@@ -8,36 +8,43 @@ from accounts.managers import CustomUserManager
 
 
 class Audit(models.Model):
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
-	deleted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
 
-	class Meta:
-		abstract = True
+    class Meta:
+        abstract = True
 
 
 class User(AbstractBaseUser, Audit, PermissionsMixin):
-	email = models.EmailField(unique=True)
-	is_staff = models.BooleanField(default=False)
-	is_active = models.BooleanField(default=True)
-	date_joined = models.DateTimeField(default=timezone.now)
+    email = models.EmailField(unique=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
 
-	USERNAME_FIELD = "email"
-	REQUIRED_FIELDS = []
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
-	objects = CustomUserManager()
-
+    objects = CustomUserManager()
 
 class UserProfile(Audit):
-	ROLE_CHOICES = [
-		('seller', 'Seller'),
-		('buyer', 'Buyer'),
-		('admin', 'Admin'),
-	]
+    ROLE_CHOICES = [
+        ('seller', 'Seller'),
+        ('buyer', 'Buyer'),
+        ('admin', 'Admin'),
+    ]
 
-	first_name = models.CharField(max_length=50)
-	last_name = models.CharField(max_length=50)
-	# pip install "django-phonenumber-field[phonenumberslite]"
-	phone_number = PhoneNumberField()
-	role = models.CharField(max_length=7, choices=ROLE_CHOICES, default="buyer")
-	user = models.OneToOneField(User, on_delete=models.PROTECT)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    # pip install "django-phonenumber-field[phonenumberslite]"
+    phone_number = PhoneNumberField()
+    role = models.CharField(max_length=7, choices=ROLE_CHOICES, default="buyer")
+    user = models.OneToOneField(User, on_delete=models.PROTECT)
+
+class Seller(Audit, models.Model):
+    company_name = models.CharField(max_length=50)
+    phone_number = PhoneNumberField()
+    address = models.TextField()
+    user = models.ManyToManyField(User, related_name="seller")
+
+

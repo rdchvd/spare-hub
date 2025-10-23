@@ -45,6 +45,6 @@ class Seller(Audit, models.Model):
     company_name = models.CharField(max_length=50)
     phone_number = PhoneNumberField()
     address = models.TextField()
-    user = models.ManyToManyField(User, related_name="seller")
+    user = models.ManyToManyField(User, related_name="seller", blank=True)
 
 

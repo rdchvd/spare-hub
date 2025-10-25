@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'orders',
     'feedback',
 	'phonenumber_field',
+    'core',
 ]
 
 AUTH_USER_MODEL = "accounts.User"

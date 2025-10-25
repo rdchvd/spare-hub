@@ -5,16 +5,7 @@ from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 
 from accounts.managers import CustomUserManager
-
-
-class Audit(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        abstract = True
-
+from core.models import Audit
 
 class User(AbstractBaseUser, Audit, PermissionsMixin):
     email = models.EmailField(unique=True)
@@ -36,7 +27,6 @@ class UserProfile(Audit):
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    # pip install "django-phonenumber-field[phonenumberslite]"
     phone_number = PhoneNumberField()
     role = models.CharField(max_length=7, choices=ROLE_CHOICES, default="buyer")
     user = models.OneToOneField(User, on_delete=models.PROTECT, related_name="profile")
@@ -56,9 +46,3 @@ class Seller(Audit, models.Model):
         return (f'Name company: {self.company_name}'
                 f'Phone number: {self.phone_number}'
                 f'Address: {self.address}')
-    # class Meta:
-    #     ordering = ['-created_at']
-    #     verbose_name_plural = "sellers"
-    #     permissions = ()
-
-

@@ -1,6 +1,7 @@
 
 from django.contrib import admin
-from .models import User, UserProfile, Seller
+# from .models import User, UserProfile, Seller
+from accounts.models import User, UserProfile, Seller
 
 class UserAdmin(admin.ModelAdmin):
     search_fields = ["email"]

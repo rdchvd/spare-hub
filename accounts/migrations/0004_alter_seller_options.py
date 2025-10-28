@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0003_alter_seller_options_alter_userprofile_user'),
+        ("accounts", "0003_alter_seller_options_alter_userprofile_user"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='seller',
+            name="seller",
             options={},
         ),
     ]

@@ -1,0 +1,39 @@
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+# Common, fast, safe rulesets plus import sorting (I), bugbear (B),
+# pyupgrade (UP), naming (N), flake8-quotes (Q), Django (DJ)
+select = [
+  "E",  # pycodestyle errors
+  "W",  # pycodestyle warnings
+  "F",  # pyflakes
+  "I",  # isort (import sorting)
+  "B",  # flake8-bugbear
+  "UP", # pyupgrade
+  "N",  # pep8-naming
+  "Q",  # flake8-quotes (enforce double quotes)
+  "DJ", # flake8-django
+]
+extend-ignore = ["E501"]  # Let Black handle line length; allow long strings/constants
+
+[tool.ruff.lint.isort]
+known-first-party = [
+  "sparehub",
+  "accounts",
+  "core",
+  "orders",
+  "products",
+  "feedback",
+]
+combine-as-imports = true
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "double"
+multiline-quotes = "double"
+docstring-quotes = "double"

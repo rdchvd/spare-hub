@@ -7,6 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from accounts.managers import CustomUserManager
 from core.models import Audit
 
+
 class User(AbstractBaseUser, Audit, PermissionsMixin):
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
@@ -18,11 +19,12 @@ class User(AbstractBaseUser, Audit, PermissionsMixin):
 
     objects = CustomUserManager()
 
+
 class UserProfile(Audit):
     ROLE_CHOICES = [
-        ('seller', 'Seller'),
-        ('buyer', 'Buyer'),
-        ('admin', 'Admin'),
+        ("seller", "Seller"),
+        ("buyer", "Buyer"),
+        ("admin", "Admin"),
     ]
 
     first_name = models.CharField(max_length=50)
@@ -35,7 +37,6 @@ class UserProfile(Audit):
         return f"{self.first_name} {self.last_name}"
 
 
-
 class Seller(Audit, models.Model):
     company_name = models.CharField(max_length=50)
     phone_number = PhoneNumberField()
@@ -43,6 +44,8 @@ class Seller(Audit, models.Model):
     user = models.ManyToManyField(User, related_name="seller", blank=True)
 
     def __str__(self):
-        return (f'Name company: {self.company_name}'
-                f'Phone number: {self.phone_number}'
-                f'Address: {self.address}')
+        return (
+            f"Name company: {self.company_name}"
+            f"Phone number: {self.phone_number}"
+            f"Address: {self.address}"
+        )

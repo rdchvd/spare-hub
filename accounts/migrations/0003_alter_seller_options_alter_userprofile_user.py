@@ -8,17 +8,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0002_alter_seller_user'),
+        ("accounts", "0002_alter_seller_user"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='seller',
-            options={'ordering': ['-created_at'], 'permissions': (), 'verbose_name_plural': 'sellers'},
+            name="seller",
+            options={
+                "ordering": ["-created_at"],
+                "permissions": (),
+                "verbose_name_plural": "sellers",
+            },
         ),
         migrations.AlterField(
-            model_name='userprofile',
-            name='user',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.PROTECT, related_name='profile', to=settings.AUTH_USER_MODEL),
+            model_name="userprofile",
+            name="user",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="profile",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

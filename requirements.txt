@@ -2,3 +2,7 @@ Django==5.2.7
 djangorestframework
 django-phonenumber-field
 phonenumberslite
+pre-commit
+psycopg2-binary
+postgresql
+python-decouple

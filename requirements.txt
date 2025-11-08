@@ -5,3 +5,4 @@ phonenumberslite
 pre-commit
 psycopg2-binary
 python-decouple
+drf-spectacular

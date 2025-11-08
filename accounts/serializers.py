@@ -17,3 +17,8 @@ class CreateUserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ["first_name", "last_name", "role", "user"]
+
+    def create(self, validated_data):
+        print(f"{validated_data=}")
+        # user_data = validated_data
+        return super().create(validated_data)

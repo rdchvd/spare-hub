@@ -4,5 +4,4 @@ django-phonenumber-field
 phonenumberslite
 pre-commit
 psycopg2-binary
-postgresql
 python-decouple

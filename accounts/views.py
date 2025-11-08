@@ -1,7 +1,7 @@
 from rest_framework import mixins, viewsets
 
 from accounts.models import UserProfile
-from accounts.serializers import CreateUserProfileSerializer
+from accounts.serializers import UserProfileSerializer
 
 #
 # class UserViewSet(
@@ -16,6 +16,8 @@ from accounts.serializers import CreateUserProfileSerializer
 #     serializer_class = UserSerializer
 
 
-class UserProfileViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    queryset = UserProfile.objects.select_related("user").all()
-    serializer_class = CreateUserProfileSerializer
+class UserProfileViewSet(
+    mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer

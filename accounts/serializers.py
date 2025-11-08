@@ -3,7 +3,7 @@ from rest_framework import serializers
 from accounts.models import User, UserProfile
 
 
-class CreateUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
@@ -11,8 +11,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
         ]
 
 
-class CreateUserProfileSerializer(serializers.ModelSerializer):
-    user = CreateUserSerializer()
+class UserProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
 
     class Meta:
         model = UserProfile
@@ -23,3 +23,7 @@ class CreateUserProfileSerializer(serializers.ModelSerializer):
         user = User.objects.create(**user_data)
         validated_data["user_id"] = user.id
         return super().create(validated_data)
+
+
+# todo: додай тут код
+#     def update

@@ -21,3 +21,9 @@ class UserProfileViewSet(
 ):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+
+# class UserProfileDestroyViewSet(mixins.DestroyModelMixin, viewsets.GenericViewSet):
+#     queryset = UserProfile.objects.all()
+#     serializer_class = UserProfileSerializer
+#     permission_classes = (IsAdminUser,)

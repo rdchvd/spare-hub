@@ -17,7 +17,10 @@ from accounts.serializers import UserProfileSerializer
 
 
 class UserProfileViewSet(
-    mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
 ):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer

@@ -1,7 +1,7 @@
 from rest_framework import mixins, viewsets
 
-from accounts.models import User, UserProfile
-from accounts.serializers import UserDetailSerializer, UserProfileSerializer
+from accounts.models import UserProfile
+from accounts.serializers import UserProfileSerializer
 
 #
 # class UserViewSet(
@@ -19,18 +19,11 @@ from accounts.serializers import UserDetailSerializer, UserProfileSerializer
 class UserProfileViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-
-
-class UserViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = User.objects.select_related("profile").all()
-    serializer_class = UserDetailSerializer
+    queryset = UserProfile.objects.select_related("user").all()
+    serializer_class = UserProfileSerializer
 
 
 # class UserProfileDestroyViewSet(mixins.DestroyModelMixin, viewsets.GenericViewSet):

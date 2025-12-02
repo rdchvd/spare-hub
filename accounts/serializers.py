@@ -32,20 +32,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         validated_data["user_id"] = user.id
         return super().create(validated_data)
 
-
-class UserProfileInlineSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ["first_name", "last_name", "role"]
-
-
-class UserDetailSerializer(serializers.ModelSerializer):
-    profile = UserProfileInlineSerializer()
-
-    class Meta:
-        model = User
-        fields = ["email", "profile"]
-
     # def update(self, instance, validated_data):
     #     request_user = self.context["request"].user
     #     user_data = validated_data.pop("user", None)

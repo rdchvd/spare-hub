@@ -32,10 +32,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         validated_data["user_id"] = user.id
         return super().create(validated_data)
 
-    # def get(self, request):
-    #     request_user = self.context["request"].user
-    #     auth = request.headers.get("Authorization")
-
     # def update(self, instance, validated_data):
     #     request_user = self.context["request"].user
     #     user_data = validated_data.pop("user", None)

@@ -30,5 +30,4 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("api/accounts/", include(accounts_router.urls)),
-    # path"api/users/<id>/"),
 ]

@@ -22,7 +22,7 @@ class UserProfileViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = UserProfile.objects.all()
+    queryset = UserProfile.objects.select_related("user").all()
     serializer_class = UserProfileSerializer
 
 

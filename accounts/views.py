@@ -7,7 +7,6 @@ from accounts.serializers import UserProfileSerializer
 # class UserViewSet(
 #     mixins.CreateModelMixin,
 #     mixins.RetrieveModelMixin,
-#     mixins.UpdateModelMixin,
 #     mixins.DestroyModelMixin,
 #     mixins.ListModelMixin,
 #     viewsets.GenericViewSet,
@@ -19,6 +18,7 @@ from accounts.serializers import UserProfileSerializer
 class UserProfileViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,

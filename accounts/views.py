@@ -20,6 +20,7 @@ class UserProfileViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = UserProfile.objects.select_related("user").all()

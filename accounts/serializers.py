@@ -32,25 +32,25 @@ class UserProfileSerializer(serializers.ModelSerializer):
         validated_data["user_id"] = user.id
         return super().create(validated_data)
 
-    # def update(self, instance, validated_data):
-    #     request_user = self.context["request"].user
-    #     user_data = validated_data.pop("user", None)
-    #     role = validated_data.get("role", instance.role)
-    #
-    #     if role == "admin" and not request_user.is_superuser:
-    #         raise serializers.ValidationError("У вас не має прав для створення адміна")
-    #
-    #     if user_data:
-    #         user = instance.user
-    #         if "email" in user_data:
-    #             user.email = user_data["email"]
-    #         if ("is_staff") in user_data:
-    #             user.is_staff = user_data["is_staff"]
-    #         user.save()
-    #
-    #     instance.role = role
-    #     instance.first_name = user_data["first_name"]
-    #     instance.last_name = user_data["last_name"]
-    #     instance.save()
-    #
-    #     return instance
+    def update(self, instance, validated_data):
+        request_user = self.context["request"].user
+        user_data = validated_data.pop("user", None)
+        role = validated_data.get("role", instance.role)
+
+        if role == "admin" and not request_user.is_superuser:
+            raise serializers.ValidationError(
+                "You do not have permission to assign admin role"
+            )
+
+        if user_data:
+            user = instance.user
+            for attr, value in user_data.items():
+                setattr(user, attr, value)
+            user.save()
+
+        instance.first_name = validated_data.get("first_name", instance.first_name)
+        instance.last_name = validated_data.get("last_name", instance.last_name)
+        instance.role = role
+        instance.save()
+
+        return instance

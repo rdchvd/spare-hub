@@ -55,6 +55,9 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = "accounts.User"
 
 REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 MIDDLEWARE = [
@@ -88,7 +91,6 @@ WSGI_APPLICATION = "sparehub.wsgi.application"
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
     "default": {
@@ -100,6 +102,7 @@ DATABASES = {
         "PORT": config("DB_PORT", default="5432"),
     }
 }
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
 # Password validation

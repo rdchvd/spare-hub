@@ -30,7 +30,4 @@ class UserProfileViewSet(
         profile.deleted_at = timezone.now()
         profile.save()
 
-        return Response(
-            {"detail": f"User {user_to_delete.email} has been deactivated."},
-            status=status.HTTP_200_OK,
-        )
+        return Response(status=status.HTTP_204_NO_CONTENT)

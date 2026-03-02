@@ -1,5 +1,6 @@
 from django.utils import timezone
 from rest_framework import mixins, status, viewsets
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.response import Response
 
 from accounts.models import UserProfile
@@ -18,6 +19,11 @@ class UserProfileViewSet(
         UserProfile.objects.filter(deleted_at__isnull=True).select_related("user").all()
     )
     serializer_class = UserProfileSerializer
+
+    filter_backends = [OrderingFilter, SearchFilter]
+    ordering_fields = ["last_name", "first_name", "user__email", "created_at"]
+    search_fields = ["first_name", "last_name", "user__email", "phone_number"]
+    ordering = ["user__email"]
 
     def destroy(self, request, *args, **kwargs):
         profile = self.get_object()

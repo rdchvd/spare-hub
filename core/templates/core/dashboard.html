@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpareHub Dashboard</title>
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --primary: #2563eb;
+            --primary-soft: #dbeafe;
+            --border: #e5e7eb;
+            --danger: #dc2626;
+            --success: #059669;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .layout {
+            width: min(1200px, 94vw);
+            margin: 28px auto;
+            display: grid;
+            gap: 18px;
+            grid-template-columns: 230px 1fr;
+        }
+
+        .topbar {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .lang-switcher {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+            padding: 6px;
+        }
+
+        .lang-icon {
+            display: inline-flex;
+            width: 30px;
+            height: 30px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: #f3f4f6;
+            font-size: 16px;
+        }
+
+        .menu, .panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+        }
+
+        .menu {
+            padding: 16px;
+            align-self: start;
+            position: sticky;
+            top: 20px;
+        }
+
+        .brand {
+            margin: 0 0 14px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .menu button {
+            width: 100%;
+            text-align: left;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            background: transparent;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .menu button.active {
+            background: var(--primary-soft);
+            color: var(--primary);
+            border-color: #bfdbfe;
+        }
+
+        .panel {
+            padding: 20px;
+        }
+
+        .hidden { display: none; }
+
+        h1, h2, h3 { margin-top: 0; }
+
+        .subtitle {
+            margin: 0 0 18px;
+            color: var(--muted);
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            background: #fff;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 6px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        input, select {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid var(--primary-soft);
+            border-color: var(--primary);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-secondary { background: #eef2ff; color: #1e3a8a; }
+        .btn-danger { background: #fef2f2; color: var(--danger); }
+
+        .status {
+            margin-top: 10px;
+            min-height: 20px;
+            font-size: 14px;
+        }
+
+        .status.success { color: var(--success); }
+        .status.error { color: var(--danger); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th, td {
+            padding: 11px 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        th { color: var(--muted); }
+
+        .table-wrap { overflow-x: auto; }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .menu { position: static; }
+            .topbar { justify-content: flex-start; }
+        }
+    </style>
+</head>
+<body>
+<main class="layout">
+    <header class="topbar">
+        <div class="lang-switcher" aria-label="Language switcher">
+            <span class="lang-icon" aria-hidden="true">🌐</span>
+            <button class="btn-secondary lang-btn active" data-lang="en">EN</button>
+            <button class="btn-secondary lang-btn" data-lang="uk">UA</button>
+        </div>
+    </header>
+
+    <aside class="menu">
+        <p class="brand">SpareHub</p>
+        <button class="menu-link active" data-target="spares-page" data-i18n="menu_spares">Spare Parts</button>
+        <button class="menu-link" data-target="users-page" data-i18n="menu_users">Users</button>
+    </aside>
+
+    <section class="panel">
+        <div id="spares-page">
+            <h1 data-i18n="spares_title">Agro Machine Spare Parts</h1>
+            <p class="subtitle" data-i18n="spares_subtitle">Demo page with random inventory cards for now.</p>
+            <div class="cards">
+                <article class="card">
+                    <h3>Hydraulic Pump HX-120</h3>
+                    <p class="subtitle" data-i18n="part_1_desc">For combine harvesters and seed drills.</p>
+                    <span class="pill" data-i18n="part_1_stock">In stock: 12</span>
+                </article>
+                <article class="card">
+                    <h3>Tractor Air Filter AF-88</h3>
+                    <p class="subtitle" data-i18n="part_2_desc">Compatible with MTZ and John Deere lines.</p>
+                    <span class="pill" data-i18n="part_2_stock">In stock: 34</span>
+                </article>
+                <article class="card">
+                    <h3>Plow Disc 560mm</h3>
+                    <p class="subtitle" data-i18n="part_3_desc">Reinforced steel, anti-corrosion coating.</p>
+                    <span class="pill" data-i18n="part_3_stock">In stock: 19</span>
+                </article>
+                <article class="card">
+                    <h3>Fuel Injector Kit FI-24</h3>
+                    <p class="subtitle" data-i18n="part_4_desc">Universal injector set for diesel engines.</p>
+                    <span class="pill" data-i18n="part_4_stock">In stock: 8</span>
+                </article>
+            </div>
+        </div>
+
+        <div id="users-page" class="hidden">
+            <h2 data-i18n="users_title">Users</h2>
+            <p class="subtitle"><span data-i18n="users_subtitle">Manage user profiles from</span> <code>/api/accounts/profiles/</code>.</p>
+
+            <div class="cards">
+                <div class="card">
+                    <h3 data-i18n="create_profile">Create user profile</h3>
+                    <label for="email" data-i18n="email_label">Email</label>
+                    <input id="email" type="email" placeholder="john@example.com">
+                    <label for="first-name" data-i18n="first_name">First name</label>
+                    <input id="first-name" type="text" data-i18n-placeholder="first_name_placeholder" placeholder="John">
+                    <label for="last-name" data-i18n="last_name">Last name</label>
+                    <input id="last-name" type="text" data-i18n-placeholder="last_name_placeholder" placeholder="Doe">
+                    <label for="role" data-i18n="role_label">Role</label>
+                    <select id="role">
+                        <option value="buyer">buyer</option>
+                        <option value="seller">seller</option>
+                        <option value="admin">admin</option>
+                    </select>
+                    <div class="actions">
+                        <button class="btn-primary" id="create" data-i18n="create_btn">Create profile</button>
+                        <button class="btn-secondary" id="refresh" data-i18n="refresh_list">Refresh list</button>
+                    </div>
+                </div>
+            </div>
+
+            <label for="search" data-i18n="search_users">Search users</label>
+            <input id="search" type="text" data-i18n-placeholder="search_placeholder" placeholder="Name, email, phone...">
+            <div class="status" id="status"></div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th data-i18n="table_name">Name</th>
+                        <th data-i18n="table_email">Email</th>
+                        <th data-i18n="table_role">Role</th>
+                        <th data-i18n="table_user_id">User ID</th>
+                        <th data-i18n="table_action">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="profiles-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const apiBase = "/api/accounts/profiles/";
+    const statusEl = document.getElementById("status");
+    const tableBody = document.getElementById("profiles-body");
+    const searchInput = document.getElementById("search");
+    const emailInput = document.getElementById("email");
+    const firstNameInput = document.getElementById("first-name");
+    const lastNameInput = document.getElementById("last-name");
+    const roleInput = document.getElementById("role");
+    const translations = {
+        en: {
+            menu_spares: "Spare Parts",
+            menu_users: "Users",
+            spares_title: "Agro Machine Spare Parts",
+            spares_subtitle: "Demo page with random inventory cards for now.",
+            part_1_desc: "For combine harvesters and seed drills.",
+            part_1_stock: "In stock: 12",
+            part_2_desc: "Compatible with MTZ and John Deere lines.",
+            part_2_stock: "In stock: 34",
+            part_3_desc: "Reinforced steel, anti-corrosion coating.",
+            part_3_stock: "In stock: 19",
+            part_4_desc: "Universal injector set for diesel engines.",
+            part_4_stock: "In stock: 8",
+            users_title: "Users",
+            users_subtitle: "Manage user profiles from",
+            refresh_list: "Refresh list",
+            create_profile: "Create user profile",
+            email_label: "Email",
+            first_name: "First name",
+            first_name_placeholder: "John",
+            last_name: "Last name",
+            last_name_placeholder: "Doe",
+            role_label: "Role",
+            create_btn: "Create profile",
+            search_users: "Search users",
+            search_placeholder: "Name, email, phone...",
+            table_name: "Name",
+            table_email: "Email",
+            table_role: "Role",
+            table_user_id: "User ID",
+            table_action: "Action",
+            no_users: "No users found.",
+            loaded_users: "Loaded {count} user(s).",
+            load_failed: "Failed to load users.",
+            required_fields: "Email, first name, and last name are required.",
+            created: "User profile created.",
+            create_failed: "Create failed: {error}",
+            deleted: "User profile deleted.",
+            delete_failed: "Delete failed: {error}",
+            delete_btn: "Delete"
+        },
+        uk: {
+            menu_spares: "Запчастини",
+            menu_users: "Користувачі",
+            spares_title: "Запчастини для агро-техніки",
+            spares_subtitle: "Демо-сторінка з випадковими позиціями складу.",
+            part_1_desc: "Для комбайнів та сівалок.",
+            part_1_stock: "На складі: 12",
+            part_2_desc: "Сумісний з лінійками МТЗ та John Deere.",
+            part_2_stock: "На складі: 34",
+            part_3_desc: "Посилена сталь з антикорозійним покриттям.",
+            part_3_stock: "На складі: 19",
+            part_4_desc: "Універсальний комплект форсунок для дизеля.",
+            part_4_stock: "На складі: 8",
+            users_title: "Користувачі",
+            users_subtitle: "Керуйте профілями користувачів через",
+            refresh_list: "Оновити список",
+            create_profile: "Створити профіль користувача",
+            email_label: "Email",
+            first_name: "Ім'я",
+            first_name_placeholder: "Іван",
+            last_name: "Прізвище",
+            last_name_placeholder: "Петренко",
+            role_label: "Роль",
+            create_btn: "Створити профіль",
+            search_users: "Пошук користувачів",
+            search_placeholder: "Ім'я, email, телефон...",
+            table_name: "Ім'я",
+            table_email: "Email",
+            table_role: "Роль",
+            table_user_id: "ID користувача",
+            table_action: "Дія",
+            no_users: "Користувачів не знайдено.",
+            loaded_users: "Завантажено користувачів: {count}.",
+            load_failed: "Не вдалося завантажити користувачів.",
+            required_fields: "Email, ім'я та прізвище є обов'язковими.",
+            created: "Профіль користувача створено.",
+            create_failed: "Помилка створення: {error}",
+            deleted: "Профіль користувача видалено.",
+            delete_failed: "Помилка видалення: {error}",
+            delete_btn: "Видалити"
+        }
+    };
+    let currentLang = localStorage.getItem("sparehub_lang") || "en";
+
+    function t(key, vars = {}) {
+        const dict = translations[currentLang] || translations.en;
+        let text = dict[key] || translations.en[key] || key;
+        Object.entries(vars).forEach(([name, value]) => {
+            text = text.replace(`{${name}}`, value);
+        });
+        return text;
+    }
+
+    function applyLanguage() {
+        document.documentElement.lang = currentLang;
+        document.querySelectorAll("[data-i18n]").forEach((node) => {
+            node.textContent = t(node.dataset.i18n);
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+            node.placeholder = t(node.dataset.i18nPlaceholder);
+        });
+        document.querySelectorAll(".lang-btn").forEach((btn) => {
+            btn.classList.toggle("active", btn.dataset.lang === currentLang);
+        });
+    }
+
+    function setStatus(message, isError = false) {
+        statusEl.textContent = message;
+        statusEl.className = `status ${isError ? "error" : "success"}`;
+    }
+
+    function getHeaders() {
+        const headers = { "Content-Type": "application/json" };
+        return headers;
+    }
+
+    function renderProfiles(items) {
+        if (!items.length) {
+            tableBody.innerHTML = `<tr><td colspan="5">${t("no_users")}</td></tr>`;
+            return;
+        }
+        tableBody.innerHTML = items.map((profile) => {
+            const fullName = `${profile.first_name || ""} ${profile.last_name || ""}`.trim() || "—";
+            return `
+                <tr>
+                    <td>${fullName}</td>
+                    <td>${profile.user?.email || "—"}</td>
+                    <td>${profile.role || "—"}</td>
+                    <td>${profile.user?.id ?? "—"}</td>
+                    <td><button class="btn-danger" data-profile-id="${profile.id}">${t("delete_btn")}</button></td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    async function loadProfiles() {
+        const params = new URLSearchParams();
+        const searchQuery = searchInput.value.trim();
+        if (searchQuery) params.set("search", searchQuery);
+        const url = `${apiBase}${params.toString() ? `?${params.toString()}` : ""}`;
+        try {
+            const response = await fetch(url, { headers: getHeaders() });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.detail || t("load_failed"));
+            const items = Array.isArray(data.results) ? data.results : data;
+            renderProfiles(items);
+            setStatus(t("loaded_users", { count: items.length }));
+        } catch (error) {
+            renderProfiles([]);
+            setStatus(error.message, true);
+        }
+    }
+
+    async function createProfile() {
+        const payload = {
+            first_name: firstNameInput.value.trim(),
+            last_name: lastNameInput.value.trim(),
+            role: roleInput.value,
+            user: { email: emailInput.value.trim() }
+        };
+        if (!payload.user.email || !payload.first_name || !payload.last_name) {
+            setStatus(t("required_fields"), true);
+            return;
+        }
+        try {
+            const response = await fetch(apiBase, {
+                method: "POST",
+                headers: getHeaders(),
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(JSON.stringify(data));
+            setStatus(t("created"));
+            emailInput.value = "";
+            firstNameInput.value = "";
+            lastNameInput.value = "";
+            await loadProfiles();
+        } catch (error) {
+            setStatus(t("create_failed", { error: error.message }), true);
+        }
+    }
+
+    async function deleteProfile(profileId) {
+        if (!profileId) return;
+        try {
+            const response = await fetch(`${apiBase}${profileId}/`, {
+                method: "DELETE",
+                headers: getHeaders()
+            });
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.detail || JSON.stringify(data));
+            }
+            setStatus(t("deleted"));
+            await loadProfiles();
+        } catch (error) {
+            setStatus(t("delete_failed", { error: error.message }), true);
+        }
+    }
+
+    document.querySelectorAll(".lang-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+            currentLang = button.dataset.lang;
+            localStorage.setItem("sparehub_lang", currentLang);
+            applyLanguage();
+            if (!document.getElementById("users-page").classList.contains("hidden")) {
+                loadProfiles();
+            }
+        });
+    });
+
+    document.querySelectorAll(".menu-link").forEach((button) => {
+        button.addEventListener("click", () => {
+            document.querySelectorAll(".menu-link").forEach((item) => item.classList.remove("active"));
+            button.classList.add("active");
+            const target = button.dataset.target;
+            document.querySelectorAll(".panel > div").forEach((section) => section.classList.add("hidden"));
+            document.getElementById(target).classList.remove("hidden");
+            if (target === "users-page") loadProfiles();
+        });
+    });
+
+    document.getElementById("refresh").addEventListener("click", loadProfiles);
+    document.getElementById("create").addEventListener("click", createProfile);
+    searchInput.addEventListener("input", () => {
+        clearTimeout(window.searchTimer);
+        window.searchTimer = setTimeout(loadProfiles, 300);
+    });
+    tableBody.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-profile-id]");
+        if (button) deleteProfile(button.dataset.profileId);
+    });
+    applyLanguage();
+</script>
+</body>
+</html>

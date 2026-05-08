@@ -14,7 +14,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ["first_name", "last_name", "role", "user"]
+        fields = ["id", "first_name", "last_name", "role", "user"]
+        read_only_fields = ["id"]
 
     def create(self, validated_data):
         request_user = self.context["request"].user

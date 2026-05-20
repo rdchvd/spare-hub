@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from accounts.models import User, UserProfile
 
@@ -53,3 +54,62 @@ class UserProfileSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def validate(self, attrs):
+        self.token = attrs["refresh"]
+        return attrs
+
+    def save(self, **kwargs):
+        try:
+            token = RefreshToken(self.token)
+            token.blacklist()
+
+        except Exception:
+            self.fail("bad_token")
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(write_only=True)
+    last_name = serializers.CharField(write_only=True)
+    phone_number = serializers.CharField(write_only=True)
+    role = serializers.CharField(write_only=True)
+
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            "email",
+            "password",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "role",
+        ]
+
+    def create(self, validated_data):
+        first_name = validated_data.pop("first_name")
+        last_name = validated_data.pop("last_name")
+        phone_number = validated_data.pop("phone_number")
+        role = validated_data.pop("role")
+
+        password = validated_data.pop("password")
+
+        user = User.objects.create(**validated_data)
+
+        user.set_password(password)
+        user.save()
+
+        UserProfile.objects.create(
+            user=user,
+            first_name=first_name,
+            last_name=last_name,
+            phone_number=phone_number,
+            role=role,
+        )
+
+        return user

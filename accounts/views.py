@@ -1,10 +1,17 @@
 from django.utils import timezone
 from rest_framework import mixins, status, viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from accounts.models import UserProfile
-from accounts.serializers import UserProfileSerializer
+from accounts.serializers import (
+    LogoutSerializer,
+    RegisterSerializer,
+    UserProfileSerializer,
+)
 
 
 class UserProfileViewSet(
@@ -19,6 +26,7 @@ class UserProfileViewSet(
         UserProfile.objects.filter(deleted_at__isnull=True).select_related("user").all()
     )
     serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
 
     filter_backends = [OrderingFilter, SearchFilter]
     ordering_fields = ["last_name", "first_name", "user__email", "created_at"]
@@ -37,3 +45,21 @@ class UserProfileViewSet(
         profile.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = LogoutSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            {"detail": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT
+        )
+
+
+class RegisterView(CreateAPIView):
+    serializer_class = RegisterSerializer

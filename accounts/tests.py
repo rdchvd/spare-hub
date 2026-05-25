@@ -83,3 +83,135 @@ class AuthTests(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_protected_without_token(self):
+        response = self.client.get(self.protected_url)
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_protected_with_token(self):
+        login_response = self.client.post(
+            self.login_url,
+            {
+                "email": "existing@test.com",
+                "password": "StrongPass123",
+            },
+            format="json",
+        )
+
+        token = login_response.data["token"]
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+
+        response = self.client.get(self.protected_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_logout_success(self):
+        login_response = self.client.post(
+            self.login_url,
+            {
+                "email": "existing@test.com",
+                "password": "StrongPass123",
+            },
+            format="json",
+        )
+
+        token = login_response.data["token"]
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+
+        response = self.client.post(self.logout_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_logout_without_token(self):
+        response = self.client.post(self.logout_url)
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_profile_authorized(self):
+        login_response = self.client.post(
+            self.login_url,
+            {
+                "email": "existing@test.com",
+                "password": "StrongPass123",
+            },
+            format="json",
+        )
+
+        token = login_response.data["token"]
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+
+        response = self.client.get(self.protected_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["email"], "existing@test.com")
+
+    def test_get_profile_unauthorized(self):
+        response = self.client.get(self.protected_url)
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_update_profile(self):
+        login_response = self.client.post(
+            self.login_url,
+            {
+                "email": "existing@test.com",
+                "password": "StrongPass123",
+            },
+            format="json",
+        )
+
+        token = login_response.data["token"]
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+
+        response = self.client.patch(
+            self.protected_url,
+            {
+                "first_name": "UpdatedName",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["first_name"], "UpdatedName")
+
+    def test_update_profile_invalid_data(self):
+        login_response = self.client.post(
+            self.login_url,
+            {
+                "email": "existing@test.com",
+                "password": "StrongPass123",
+            },
+            format="json",
+        )
+
+        token = login_response.data["token"]
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+
+        response = self.client.patch(
+            self.protected_url,
+            {
+                "email": "not-an-email",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_account(self):
+        login_response = self.client.post(
+            self.login_url,
+            {
+                "email": "existing@test.com",
+                "password": "StrongPass123",
+            },
+            format="json",
+        )
+
+        token = login_response.data["token"]
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+
+        response = self.client.delete(self.protected_url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

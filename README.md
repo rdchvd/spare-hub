@@ -18,6 +18,31 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Install frontend dependencies:
+
+```bash
+npm install
+```
+
+## Run frontend + backend for development
+
+From the repository root, run:
+
+```bash
+npm run dev:full
+```
+
+This starts:
+- frontend (Vite) on your local dev port (shown in terminal)
+- backend (Django) on `http://localhost:8000`
+
+If you want to run only one side:
+
+```bash
+npm run dev      # frontend only
+npm run dev:be   # backend only
+```
+
 ## Code style and pre-commit
 
 This repository enforces consistent code style and best practices using Black (formatter), Ruff (linter and import sorter), and pre-commit hooks.

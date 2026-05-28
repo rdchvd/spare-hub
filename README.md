@@ -1,5 +1,5 @@
-# spare-hub
-SpareHub – Online Tractor Parts Store SpareHub is a modern e-commerce platform for selling tractor spare parts online. It provides farmers and businesses with an easy way to browse, search, and order high-quality parts. The project focuses on simplicity, fast search, and clear categorization, making it convenient to find exactly what you need.
+# Spare Hub
+Spare Hub is an online marketplace for tractor parts and agronomy supplies. It helps farmers and agribusiness teams browse listings, compare options, and order trusted parts with clear categories and fast search.
 
 
 ## Installation

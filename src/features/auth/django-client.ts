@@ -27,8 +27,15 @@ export async function register(input: RegisterInput): Promise<void> {
 }
 
 export async function logout(): Promise<void> {
+  const refresh = tokenStore.getRefresh();
   try {
-    await apiRequest("/api/auth/logout/", { method: "POST" });
+    // Django logout endpoint expects the refresh token in request body.
+    if (refresh) {
+      await apiRequest("/api/auth/logout/", {
+        method: "POST",
+        body: { refresh },
+      });
+    }
   } catch {
     // Even if backend logout fails, clear local tokens.
   } finally {

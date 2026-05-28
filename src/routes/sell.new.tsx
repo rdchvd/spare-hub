@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,7 @@ import { ArrowLeft, ArrowRight, Check, ImagePlus, PartyPopper } from "lucide-rea
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { routeVisibility } from "@/lib/route-visibility";
 
 export const Route = createFileRoute("/sell/new")({
   component: SellNew,
@@ -52,6 +54,7 @@ const initial: FormState = {
 };
 
 function SellNew() {
+  if (!routeVisibility.header.sell) return <ComingSoon />;
   const { t } = useI18n();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);

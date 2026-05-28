@@ -1,10 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
 import { ListingCard } from "@/components/listing-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useI18n } from "@/lib/i18n";
+import { routeVisibility } from "@/lib/route-visibility";
 import { getSellerBySlug, type Listing } from "@/lib/listings";
 import { BadgeCheck, Clock, MapPin, MessageSquare, Phone, Star, Store } from "lucide-react";
 
@@ -33,6 +35,7 @@ export const Route = createFileRoute("/sellers/$slug")({
 });
 
 function SellerPage() {
+  if (!routeVisibility.backend.productsApiReady) return <ComingSoon showBrowse={false} />;
   const { seller } = Route.useLoaderData();
   const { t } = useI18n();
 

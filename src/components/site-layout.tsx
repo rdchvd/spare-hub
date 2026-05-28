@@ -6,6 +6,7 @@ import { useTheme } from "@/lib/theme";
 import { useI18n, LANGS, type Lang } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/auth-context";
+import { routeVisibility } from "@/lib/route-visibility";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,10 +33,12 @@ export function SiteHeader() {
   };
 
   const navLinks = [
-    { to: "/browse", label: t("nav.browse") },
-    { to: "/sell", label: t("nav.sell") },
-    { to: "/about", label: t("nav.about") },
-  ];
+    ...(routeVisibility.backend.productsApiReady && routeVisibility.header.browse
+      ? [{ to: "/browse", label: t("nav.browse") }]
+      : []),
+    ...(routeVisibility.header.sell ? [{ to: "/sell", label: t("nav.sell") }] : []),
+    ...(routeVisibility.header.about ? [{ to: "/about", label: t("nav.about") }] : []),
+  ] as const;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -213,25 +216,25 @@ export function SiteFooter() {
         <div className="text-sm">
           <div className="font-medium mb-2">{t("footer.product")}</div>
           <ul className="space-y-1.5 text-muted-foreground">
-            <li><Link to="/browse" className="hover:text-foreground">{t("nav.browse")}</Link></li>
-            <li><Link to="/sell" className="hover:text-foreground">{t("nav.sell")}</Link></li>
-            <li><Link to="/about" className="hover:text-foreground">{t("nav.about")}</Link></li>
+            {routeVisibility.backend.productsApiReady && routeVisibility.header.browse ? <li><Link to="/browse" className="hover:text-foreground">{t("nav.browse")}</Link></li> : null}
+            {routeVisibility.header.sell ? <li><Link to="/sell" className="hover:text-foreground">{t("nav.sell")}</Link></li> : null}
+            {routeVisibility.header.about ? <li><Link to="/about" className="hover:text-foreground">{t("nav.about")}</Link></li> : null}
           </ul>
         </div>
         <div className="text-sm">
           <div className="font-medium mb-2">{t("footer.support")}</div>
           <ul className="space-y-1.5 text-muted-foreground">
-            <li><Link to="/how-it-works" className="hover:text-foreground">{t("nav.howItWorks")}</Link></li>
-            <li><Link to="/safety" className="hover:text-foreground">{t("nav.safety")}</Link></li>
-            <li><Link to="/help" className="hover:text-foreground">{t("nav.help")}</Link></li>
+            {routeVisibility.supportFooter.howItWorks ? <li><Link to="/how-it-works" className="hover:text-foreground">{t("nav.howItWorks")}</Link></li> : null}
+            {routeVisibility.supportFooter.safety ? <li><Link to="/safety" className="hover:text-foreground">{t("nav.safety")}</Link></li> : null}
+            {routeVisibility.supportFooter.help ? <li><Link to="/help" className="hover:text-foreground">{t("nav.help")}</Link></li> : null}
           </ul>
         </div>
         <div className="text-sm">
           <div className="font-medium mb-2">{t("footer.legal")}</div>
           <ul className="space-y-1.5 text-muted-foreground">
-            <li><Link to="/legal/terms" className="hover:text-foreground">{t("nav.terms")}</Link></li>
-            <li><Link to="/legal/privacy" className="hover:text-foreground">{t("nav.privacy")}</Link></li>
-            <li><Link to="/legal/cookies" className="hover:text-foreground">{t("nav.cookies")}</Link></li>
+            {routeVisibility.legalFooter.terms ? <li><Link to="/legal/terms" className="hover:text-foreground">{t("nav.terms")}</Link></li> : null}
+            {routeVisibility.legalFooter.privacy ? <li><Link to="/legal/privacy" className="hover:text-foreground">{t("nav.privacy")}</Link></li> : null}
+            {routeVisibility.legalFooter.cookies ? <li><Link to="/legal/cookies" className="hover:text-foreground">{t("nav.cookies")}</Link></li> : null}
           </ul>
         </div>
       </div>

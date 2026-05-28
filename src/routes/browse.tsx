@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
 import { ListingCard } from "@/components/listing-card";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useI18n } from "@/lib/i18n";
+import { routeVisibility } from "@/lib/route-visibility";
 import { listings, categories } from "@/lib/listings";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -26,6 +28,7 @@ type Condition = "new" | "used" | "refurb";
 type SortKey = "relevance" | "priceAsc" | "priceDesc" | "newest";
 
 function Browse() {
+  if (!routeVisibility.backend.productsApiReady) return <ComingSoon showBrowse={false} />;
   const { t, lang } = useI18n();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("all");

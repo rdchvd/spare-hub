@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
 import { useI18n, type Lang } from "@/lib/i18n";
+import { routeVisibility } from "@/lib/route-visibility";
 
 export const Route = createFileRoute("/legal/terms")({
   head: () => ({
@@ -63,6 +65,7 @@ const content: Record<Lang, { intro: string; sections: { h: string; p: string }[
 };
 
 function Terms() {
+  if (!routeVisibility.legalFooter.terms) return <ComingSoon />;
   const { t, lang } = useI18n();
   const c = content[lang];
   return (

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
 import { ListingCard } from "@/components/listing-card";
 import { Button } from "@/components/ui/button";
@@ -9,12 +10,15 @@ import { useI18n } from "@/lib/i18n";
 import { listings, categories } from "@/lib/listings";
 import { ArrowRight, Search, ShieldCheck, Wrench, Signal, BadgeCheck, MapPin } from "lucide-react";
 import heroField from "@/assets/hero-field.jpg";
+import { routeVisibility } from "@/lib/route-visibility";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
+  if (!routeVisibility.backend.productsApiReady) return <ComingSoon showBrowse={false} />;
+
   const { t } = useI18n();
 
   const featured = listings.slice(0, 8);

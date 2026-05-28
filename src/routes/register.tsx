@@ -46,12 +46,18 @@ function Register() {
       let msg = t("auth.error.generic");
       if (err instanceof ApiError && err.data && typeof err.data === "object") {
         const data = err.data as Record<string, unknown>;
-        const firstField = Object.keys(data)[0];
-        const firstVal = firstField ? data[firstField] : undefined;
-        if (Array.isArray(firstVal) && typeof firstVal[0] === "string") {
-          msg = `${firstField}: ${firstVal[0]}`;
-        } else if (typeof firstVal === "string") {
-          msg = firstVal;
+        const emailError = data.email;
+        const detailError = data.detail;
+
+        if (
+          Array.isArray(emailError) &&
+          typeof emailError[0] === "string" &&
+          /already exists/i.test(emailError[0])
+        ) {
+          msg = t("auth.error.emailExists");
+        } else if (typeof detailError === "string") {
+          // Keep server detail fallback, but prefer translated known cases.
+          msg = detailError;
         }
       }
       toast.error(msg);

@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
+import { routeVisibility } from "@/lib/route-visibility";
 import { Search, MessageSquare, HandshakeIcon, Star } from "lucide-react";
 
 export const Route = createFileRoute("/how-it-works")({
@@ -18,6 +20,7 @@ export const Route = createFileRoute("/how-it-works")({
 });
 
 function HowItWorks() {
+  if (!routeVisibility.supportFooter.howItWorks) return <ComingSoon />;
   const { t } = useI18n();
   const steps = [
     { icon: Search, key: "b1" },

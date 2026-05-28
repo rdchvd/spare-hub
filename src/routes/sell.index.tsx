@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
+import { routeVisibility } from "@/lib/route-visibility";
 import { Store, TrendingUp, Users, Zap } from "lucide-react";
 
 export const Route = createFileRoute("/sell/")({
@@ -9,6 +11,7 @@ export const Route = createFileRoute("/sell/")({
 });
 
 function Sell() {
+  if (!routeVisibility.header.sell) return <ComingSoon />;
   const { t } = useI18n();
   const perks = [
     { icon: Users, title: "12,000+ active buyers", body: "Farms, agronomists and cooperatives looking for parts every week." },

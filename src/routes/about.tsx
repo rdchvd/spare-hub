@@ -1,12 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
 import { useI18n } from "@/lib/i18n";
+import { routeVisibility } from "@/lib/route-visibility";
 
 export const Route = createFileRoute("/about")({
   component: About,
 });
 
 function About() {
+  if (!routeVisibility.header.about) return <ComingSoon />;
   const { t } = useI18n();
   return (
     <SiteLayout>

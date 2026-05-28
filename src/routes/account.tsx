@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { SiteLayout } from "@/components/site-layout";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/features/auth/auth-context";
+import { routeVisibility } from "@/lib/route-visibility";
 import { User, ListChecks, Heart, Settings, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/account")({
@@ -30,11 +31,19 @@ function AccountLayout() {
   }, [status, navigate]);
 
   const nav = [
-    { to: "/account", label: t("account.nav.profile"), icon: User, exact: true },
-    { to: "/account/listings", label: t("account.nav.listings"), icon: ListChecks },
-    { to: "/account/favorites", label: t("account.nav.favorites"), icon: Heart },
-    { to: "/account/settings", label: t("account.nav.settings"), icon: Settings },
-  ];
+    ...(routeVisibility.accountTabs.profile
+      ? [{ to: "/account", label: t("account.nav.profile"), icon: User, exact: true }]
+      : []),
+    ...(routeVisibility.accountTabs.listings
+      ? [{ to: "/account/listings", label: t("account.nav.listings"), icon: ListChecks }]
+      : []),
+    ...(routeVisibility.accountTabs.favorites
+      ? [{ to: "/account/favorites", label: t("account.nav.favorites"), icon: Heart }]
+      : []),
+    ...(routeVisibility.accountTabs.settings
+      ? [{ to: "/account/settings", label: t("account.nav.settings"), icon: Settings }]
+      : []),
+  ] as const;
 
   if (status !== "authenticated" || !user) {
     return (

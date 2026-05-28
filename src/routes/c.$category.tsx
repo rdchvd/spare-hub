@@ -1,8 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
 import { ListingCard } from "@/components/listing-card";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
+import { routeVisibility } from "@/lib/route-visibility";
 import { listings, categories } from "@/lib/listings";
 import { ArrowLeft } from "lucide-react";
 
@@ -17,6 +19,7 @@ export const Route = createFileRoute("/c/$category")({
 });
 
 function CategoryPage() {
+  if (!routeVisibility.backend.productsApiReady) return <ComingSoon showBrowse={false} />;
   const { category } = Route.useLoaderData();
   const { t } = useI18n();
 

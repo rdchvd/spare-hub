@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ComingSoon } from "@/components/coming-soon";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
+import { routeVisibility } from "@/lib/route-visibility";
 import { ListChecks, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/account/listings")({
@@ -9,6 +11,7 @@ export const Route = createFileRoute("/account/listings")({
 });
 
 function MyListings() {
+  if (!routeVisibility.accountTabs.listings) return <ComingSoon embedded />;
   const { t } = useI18n();
   return (
     <div className="space-y-6">

@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { useI18n } from "@/lib/i18n";
+import { routeVisibility } from "@/lib/route-visibility";
 import { ShieldCheck, Wallet, MessageCircle, Flag } from "lucide-react";
 
 export const Route = createFileRoute("/safety")({
@@ -17,6 +19,7 @@ export const Route = createFileRoute("/safety")({
 });
 
 function Safety() {
+  if (!routeVisibility.supportFooter.safety) return <ComingSoon />;
   const { t } = useI18n();
   const tiles = [
     { icon: ShieldCheck, key: "s1" },

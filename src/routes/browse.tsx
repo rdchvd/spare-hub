@@ -16,11 +16,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useI18n } from "@/lib/i18n";
 import { routeVisibility } from "@/lib/route-visibility";
-import { listings, categories } from "@/lib/listings";
+import { categories } from "@/lib/listings";
+import { productQueries } from "@/features/products/queries";
+import { productsToDisplay } from "@/features/products/display";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/browse")({
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(productQueries.list()),
   component: Browse,
 });
 
@@ -29,7 +33,9 @@ type SortKey = "relevance" | "priceAsc" | "priceDesc" | "newest";
 
 function Browse() {
   if (!routeVisibility.backend.productsApiReady) return <ComingSoon showBrowse={false} />;
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
+  const products = Route.useLoaderData();
+  const displays = productsToDisplay(products);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("all");
   const [conds, setConds] = useState<Record<Condition, boolean>>({
@@ -43,24 +49,30 @@ function Browse() {
   const hasFilters = query !== "" || category !== "all" || activeConds.length > 0;
 
   const filtered = useMemo(() => {
-    let out = listings.filter((l) => {
-      if (category !== "all" && l.category !== category) return false;
-      if (activeConds.length && !activeConds.includes(l.condition)) return false;
+    let out = displays.filter((l) => {
+      if (category !== "all" && l.mock.category !== category) return false;
+      if (activeConds.length && !activeConds.includes(l.mock.condition)) return false;
       if (query) {
         const q = query.toLowerCase();
         return (
-          l.title[lang].toLowerCase().includes(q) ||
-          l.brand.toLowerCase().includes(q) ||
-          l.location.toLowerCase().includes(q)
+          l.name.toLowerCase().includes(q) ||
+          l.description.toLowerCase().includes(q) ||
+          l.mock.brand.toLowerCase().includes(q) ||
+          l.mock.location.toLowerCase().includes(q)
         );
       }
       return true;
     });
     if (sort === "priceAsc") out = [...out].sort((a, b) => a.price - b.price);
     if (sort === "priceDesc") out = [...out].sort((a, b) => b.price - a.price);
-    if (sort === "newest") out = [...out].reverse();
+    if (sort === "newest") {
+      out = [...out].sort(
+        (a, b) =>
+          new Date(b.product.created_at).getTime() - new Date(a.product.created_at).getTime(),
+      );
+    }
     return out;
-  }, [query, category, activeConds.join(","), sort, lang]);
+  }, [displays, query, category, activeConds.join(","), sort]);
 
   const clear = () => {
     setQuery("");
@@ -165,10 +177,10 @@ function Browse() {
 
           <div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-              <span>{filtered.length} results</span>
+              <span>{t("browse.results").replace("{count}", String(filtered.length))}</span>
               {category !== "all" && (
                 <Badge variant="secondary" className="font-normal">
-                  {t(`cat.${category}` as any)}
+                  {t(`cat.${category}` as const)}
                 </Badge>
               )}
               {activeConds.map((c) => (

@@ -1,10 +1,10 @@
 export const routeVisibility = {
   backend: {
-    productsApiReady: false,
+    productsApiReady: true,
   },
   header: {
     browse: true,
-    sell: false,
+    sell: true,
     about: false,
   },
   supportFooter: {
@@ -19,7 +19,7 @@ export const routeVisibility = {
   },
   accountTabs: {
     profile: true,
-    listings: false,
+    listings: true,
     favorites: false,
     settings: true,
   },

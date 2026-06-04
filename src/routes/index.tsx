@@ -7,12 +7,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { useI18n } from "@/lib/i18n";
-import { listings, categories } from "@/lib/listings";
+import { categories } from "@/lib/listings";
+import { productQueries } from "@/features/products/queries";
+import { currencySymbol, productsToDisplay } from "@/features/products/display";
 import { ArrowRight, Search, ShieldCheck, Wrench, Signal, BadgeCheck, MapPin } from "lucide-react";
 import heroField from "@/assets/hero-field.jpg";
 import { routeVisibility } from "@/lib/route-visibility";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(productQueries.list()),
   component: Index,
 });
 
@@ -20,9 +24,10 @@ function Index() {
   if (!routeVisibility.backend.productsApiReady) return <ComingSoon showBrowse={false} />;
 
   const { t } = useI18n();
-
-  const featured = listings.slice(0, 8);
-  const spotlight = listings[2]; // editorial spotlight
+  const products = Route.useLoaderData();
+  const displays = productsToDisplay(products);
+  const featured = displays.slice(0, 8);
+  const spotlight = displays[2] ?? displays[0];
 
   const trustItems = [
     { icon: ShieldCheck, key: "t1" as const },
@@ -133,6 +138,7 @@ function Index() {
 
             {/* Right: floating spotlight card — layered depth */}
             <div className="md:col-span-5 hidden md:block">
+              {spotlight ? (
               <div
                 className="relative ml-auto max-w-sm animate-fade-in"
                 style={{ animationDelay: "320ms", animationFillMode: "both" }}
@@ -153,26 +159,26 @@ function Index() {
                   </div>
                   <div className="mt-4 flex items-start gap-4">
                     <div className="h-20 w-20 rounded-xl bg-secondary flex items-center justify-center text-4xl shrink-0">
-                      {spotlight.emoji}
+                      {spotlight.mock.emoji}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="font-display text-base font-semibold leading-tight line-clamp-2">
-                        {spotlight.title.en}
+                        {spotlight.name}
                       </div>
-                      <div className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <div className="mt-1.5 flex items-center gap-1.5 text-xs text-[color:var(--mock-foreground)]">
                         <MapPin className="h-3 w-3" />
-                        {spotlight.location}
+                        {spotlight.mock.location}
                       </div>
                     </div>
                   </div>
                   <div className="mt-4 flex items-end justify-between">
                     <div>
                       <div className="font-display text-2xl font-semibold tracking-tight">
-                        €{spotlight.price.toLocaleString()}
+                        {currencySymbol(spotlight.mock.currency)}{spotlight.price.toLocaleString()}
                       </div>
-                      <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-[color:var(--accent)]">
+                      <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-[color:var(--mock-foreground)]">
                         <BadgeCheck className="h-3.5 w-3.5" />
-                        {spotlight.seller}
+                        {spotlight.mock.seller}
                       </div>
                     </div>
                     <span className="inline-flex items-center gap-1 text-xs font-medium text-foreground/80">
@@ -181,6 +187,7 @@ function Index() {
                   </div>
                 </Link>
               </div>
+              ) : null}
             </div>
           </div>
         </div>

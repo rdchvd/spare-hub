@@ -6,6 +6,7 @@ import { useTheme } from "@/lib/theme";
 import { useI18n, LANGS, type Lang } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/auth-context";
+import { canManageProducts } from "@/features/products/client";
 import { routeVisibility } from "@/lib/route-visibility";
 import {
   DropdownMenu,
@@ -23,6 +24,7 @@ export function SiteHeader() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const isAuthed = status === "authenticated";
+  const canSell = routeVisibility.header.sell && isAuthed && canManageProducts(user);
   const displayName = user
     ? [user.first_name, user.last_name].filter(Boolean).join(" ") || user.user?.email
     : "";
@@ -36,7 +38,7 @@ export function SiteHeader() {
     ...(routeVisibility.backend.productsApiReady && routeVisibility.header.browse
       ? [{ to: "/browse", label: t("nav.browse") }]
       : []),
-    ...(routeVisibility.header.sell ? [{ to: "/sell", label: t("nav.sell") }] : []),
+    ...(canSell ? [{ to: "/sell", label: t("nav.sell") }] : []),
     ...(routeVisibility.header.about ? [{ to: "/about", label: t("nav.about") }] : []),
   ] as const;
 
@@ -203,6 +205,8 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   const { t } = useI18n();
+  const { status, user } = useAuth();
+  const showSellLink = canManageProducts(user) && routeVisibility.header.sell && status === "authenticated";
   return (
     <footer className="border-t border-border bg-background mt-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 grid gap-8 md:grid-cols-5">
@@ -217,7 +221,7 @@ export function SiteFooter() {
           <div className="font-medium mb-2">{t("footer.product")}</div>
           <ul className="space-y-1.5 text-muted-foreground">
             {routeVisibility.backend.productsApiReady && routeVisibility.header.browse ? <li><Link to="/browse" className="hover:text-foreground">{t("nav.browse")}</Link></li> : null}
-            {routeVisibility.header.sell ? <li><Link to="/sell" className="hover:text-foreground">{t("nav.sell")}</Link></li> : null}
+            {showSellLink ? <li><Link to="/sell" className="hover:text-foreground">{t("nav.sell")}</Link></li> : null}
             {routeVisibility.header.about ? <li><Link to="/about" className="hover:text-foreground">{t("nav.about")}</Link></li> : null}
           </ul>
         </div>

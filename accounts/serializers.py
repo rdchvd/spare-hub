@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from accounts.models import User, UserProfile
+from accounts.models import Seller, User, UserProfile
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -111,5 +111,13 @@ class RegisterSerializer(serializers.ModelSerializer):
             phone_number=phone_number,
             role=role,
         )
+
+        if role == "seller":
+            Seller.objects.create(
+                user=user,
+                company_name="Not set yet",
+                phone_number=phone_number,
+                address="Not set yet",
+            )
 
         return user

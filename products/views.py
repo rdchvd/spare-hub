@@ -7,7 +7,7 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 
 from products.models import Product
-from products.permissions import IsProductOwner
+from products.permissions import IsProductOwner, IsSeller
 from products.serializers import ProductSerializer
 
 
@@ -23,7 +23,13 @@ class ProductViewSet(viewsets.ModelViewSet):
                 IsProductOwner(),
             ]
 
-        if self.action in ["create", "my"]:
+        if self.action == "create":
+            return [
+                IsAuthenticated(),
+                IsSeller(),
+            ]
+
+        if self.action == "my":
             return [IsAuthenticated()]
 
         return [AllowAny()]

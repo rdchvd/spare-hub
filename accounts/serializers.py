@@ -115,9 +115,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         if role == "seller":
             Seller.objects.create(
                 user=user,
-                company_name="Not set yet",
                 phone_number=phone_number,
-                address="Not set yet",
             )
 
         return user

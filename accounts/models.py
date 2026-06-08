@@ -38,9 +38,17 @@ class UserProfile(Audit):
 
 
 class Seller(Audit, models.Model):
-    company_name = models.CharField(max_length=50)
+    company_name = models.CharField(
+        max_length=50,
+        blank=True,
+        default="",
+    )
+
+    address = models.TextField(
+        blank=True,
+        default="",
+    )
     phone_number = PhoneNumberField()
-    address = models.TextField()
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,

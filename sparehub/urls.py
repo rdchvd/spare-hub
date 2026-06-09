@@ -24,12 +24,13 @@ from rest_framework_simplejwt.views import (
 )
 
 from accounts.urls import router as accounts_router
-from accounts.views import LogoutView, RegisterView
+from accounts.views import LogoutView, MeView, RegisterView
 from core.views import dashboard
 
 urlpatterns = [
     path("", dashboard, name="dashboard"),
     path("admin/", admin.site.urls),
+    path("api/", include("products.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",
@@ -41,4 +42,5 @@ urlpatterns = [
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/auth/logout/", LogoutView.as_view()),
     path("api/auth/register/", RegisterView.as_view()),
+    path("api/auth/me/", MeView.as_view(), name="auth_me"),
 ]

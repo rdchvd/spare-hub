@@ -1,5 +1,5 @@
-# spare-hub
-SpareHub – Online Tractor Parts Store SpareHub is a modern e-commerce platform for selling tractor spare parts online. It provides farmers and businesses with an easy way to browse, search, and order high-quality parts. The project focuses on simplicity, fast search, and clear categorization, making it convenient to find exactly what you need.
+# Spare Hub
+Spare Hub is an online marketplace for tractor parts and agronomy supplies. It helps farmers and agribusiness teams browse listings, compare options, and order trusted parts with clear categories and fast search.
 
 
 ## Installation
@@ -16,6 +16,31 @@ source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
+```
+
+Install frontend dependencies:
+
+```bash
+npm install
+```
+
+## Run frontend + backend for development
+
+From the repository root, run:
+
+```bash
+npm run dev:full
+```
+
+This starts:
+- frontend (Vite) on your local dev port (shown in terminal)
+- backend (Django) on `http://localhost:8000`
+
+If you want to run only one side:
+
+```bash
+npm run dev      # frontend only
+npm run dev:be   # backend only
 ```
 
 ## Code style and pre-commit

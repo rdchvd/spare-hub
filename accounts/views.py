@@ -1,7 +1,7 @@
 from django.utils import timezone
 from rest_framework import mixins, status, viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -63,3 +63,11 @@ class LogoutView(APIView):
 
 class RegisterView(CreateAPIView):
     serializer_class = RegisterSerializer
+
+
+class MeView(RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return UserProfile.objects.select_related("user").get(user=self.request.user)

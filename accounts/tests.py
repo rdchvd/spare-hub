@@ -90,6 +90,18 @@ class LoginTests(BaseAuthTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_login_invalid_email(self):
+        response = self.client.post(
+            self.login_url,
+            {
+                "email": "unknown@test.com",
+                "password": "StrongPass123",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
 
 class LogoutTests(BaseAuthTestCase):
 
@@ -114,22 +126,75 @@ class LogoutTests(BaseAuthTestCase):
             format="json",
         )
 
-        self.assertIn(response.status_code, [200, 205])
+        self.assertEqual(response.status_code, status.HTTP_205_RESET_CONTENT)
 
     def test_logout_without_token(self):
         response = self.client.post(self.logout_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_logout_with_access_token(self):
+        login_response = self.client.post(
+            self.login_url,
+            {
+                "email": "existing@test.com",
+                "password": "StrongPass123",
+            },
+            format="json",
+        )
+
+        access = login_response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access}")
+        response = self.client.post(
+            self.logout_url,
+            {"refresh": access},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
 class ProfileTests(BaseAuthTestCase):
 
     def test_get_profile(self):
+
         self.authorize()
         response = self.client.get(self.profile_me)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_get_profile_without_token(self):
+
+        response = self.client.get(
+            self.profile_me,
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_update_profile(self):
         self.authorize()
+
+        payload = {
+            "first_name": "Updated",
+            "last_name": "Smith",
+            "role": "seller",
+            "user": {
+                "email": "updated@test.com",
+            },
+        }
+
+        response = self.client.patch(self.profile_me, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        profile = UserProfile.objects.get(user=self.user)
+        profile.refresh_from_db()
+        self.user.refresh_from_db()
+
+        self.assertEqual(profile.first_name, payload["first_name"])
+        self.assertEqual(profile.last_name, payload["last_name"])
+        self.assertEqual(profile.role, payload["role"])
+
+        self.assertEqual(self.user.email, payload["user"]["email"])
+
+    def test_update_profile_without_token(self):
+
         response = self.client.patch(
             self.profile_me,
             {
@@ -137,4 +202,4 @@ class ProfileTests(BaseAuthTestCase):
             },
             format="json",
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

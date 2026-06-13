@@ -70,9 +70,4 @@ class MeView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        profile, _ = UserProfile.objects.get_or_create(user=self.request.user)
-        return profile
-
-    def patch(self, request, *args, **kwargs):
-        response = super().patch(request, *args, **kwargs)
-        return Response(response.data, status=status.HTTP_200_OK)
+        return UserProfile.objects.select_related("user").get(user=self.request.user)

@@ -1,15 +1,13 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
 )
 from rest_framework.response import Response
 
-from accounts.models import Seller
 from products.models import Product
-from products.permissions import IsProductOwner
+from products.permissions import IsProductOwner, IsSeller
 from products.serializers import ProductSerializer
 
 
@@ -19,16 +17,16 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
 
     def get_permissions(self):
-
-        if self.action in [
-            "create",
-            "update",
-            "partial_update",
-            "destroy",
-        ]:
+        if self.action in ["update", "partial_update", "destroy"]:
             return [
                 IsAuthenticated(),
                 IsProductOwner(),
+            ]
+
+        if self.action == "create":
+            return [
+                IsAuthenticated(),
+                IsSeller(),
             ]
 
         if self.action == "my":
@@ -37,18 +35,13 @@ class ProductViewSet(viewsets.ModelViewSet):
         return [AllowAny()]
 
     def get_queryset(self):
-
         if self.action == "my":
             return Product.objects.filter(seller__user=self.request.user)
+
         return Product.objects.all()
 
     def perform_create(self, serializer):
-
-        seller = Seller.objects.filter(user=self.request.user).first()
-        if not seller:
-            raise ValidationError("User is not connected to seller.")
-
-        serializer.save(seller=seller)
+        serializer.save(seller=self.request.user.seller)
 
     @action(
         detail=False,

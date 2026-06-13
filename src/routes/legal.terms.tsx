@@ -32,21 +32,6 @@ const content: Record<Lang, { intro: string; sections: { h: string; p: string }[
       { h: "9. Contact", p: "Questions about these terms: legal@sparehub.example." },
     ],
   },
-  es: {
-    intro:
-      "Estos términos regulan tu uso de Spare Hub. Al crear una cuenta o publicar un anuncio, los aceptas.",
-    sections: [
-      { h: "1. Quién puede usar Spare Hub", p: "Debes tener 18 años o más y capacidad para firmar contratos en tu país. Las empresas deben estar correctamente registradas." },
-      { h: "2. Anuncios", p: "El vendedor es responsable de la precisión de cada anuncio — título, estado, precio, compatibilidad y stock. Los anuncios engañosos se retiran." },
-      { h: "3. Operaciones", p: "Las operaciones ocurren directamente entre comprador y vendedor. Spare Hub no toma posesión de los bienes ni es parte de la venta." },
-      { h: "4. Tarifas", p: "Publicar es gratis. Puede aplicarse una pequeña comisión por trato cerrado; la tasa se muestra al vendedor antes de publicar." },
-      { h: "5. Contenido prohibido", p: "Sin piezas falsificadas, equipos retirados del mercado, químicos peligrosos fuera de su uso permitido, ni nada ilegal en el país del comprador o vendedor." },
-      { h: "6. Terminación", p: "Podemos suspender o cerrar cuentas que infrinjan estos términos o dañen el marketplace." },
-      { h: "7. Responsabilidad", p: "Spare Hub se ofrece tal cual. No respondemos por pérdidas indirectas derivadas de una transacción entre usuarios." },
-      { h: "8. Cambios", p: "Notificaremos cambios relevantes por email o dentro de la app." },
-      { h: "9. Contacto", p: "Dudas sobre estos términos: legal@sparehub.example." },
-    ],
-  },
   uk: {
     intro:
       "Ці умови регулюють використання Spare Hub. Створюючи акаунт або публікуючи оголошення, ви погоджуєтесь із ними.",

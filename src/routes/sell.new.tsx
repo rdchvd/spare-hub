@@ -5,10 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { MockFieldShell, mockFieldClass } from "@/components/mock-field-shell";
 import { useI18n } from "@/lib/i18n";
 import { categories, listings } from "@/lib/listings";
+import { uiConditionToApi } from "@/features/products/display";
+import type { ProductConditionUi, ProductCurrency } from "@/features/products/types";
 import { ArrowLeft, ArrowRight, Check, Loader2, PartyPopper } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -25,15 +34,21 @@ export const Route = createFileRoute("/sell/new")({
 type FormState = {
   name: string;
   description: string;
+  brand: string;
+  condition: ProductConditionUi;
   price: string;
   quantity: string;
+  currency: ProductCurrency;
 };
 
 const initial: FormState = {
   name: "",
   description: "",
+  brand: "",
+  condition: "new",
   price: "",
   quantity: "1",
+  currency: "EUR",
 };
 
 function SellNew() {
@@ -55,14 +70,20 @@ function SellNew() {
 
   const canContinue =
     step === 1
-      ? form.name.trim() !== "" && form.description.trim() !== ""
-      : form.price.trim() !== "" && Number(form.quantity) >= 0;
+      ? form.name.trim() !== "" && form.description.trim() !== "" && form.brand.trim() !== ""
+      : form.price.trim() !== "" &&
+        Number.isFinite(Number(form.price)) &&
+        Number(form.price) >= 0 &&
+        Number(form.quantity) >= 0;
 
   const submit = async () => {
     try {
       const product = await createProduct.mutateAsync({
         name: form.name.trim(),
+        brand: form.brand.trim(),
         description: form.description.trim(),
+        condition: uiConditionToApi(form.condition),
+        currency: form.currency,
         price: Number(form.price).toFixed(2),
         quantity: Number(form.quantity),
       });
@@ -177,6 +198,17 @@ function SellNew() {
                 </div>
 
                 <div className="space-y-1.5">
+                  <Label htmlFor="brand">{t("sell.field.brand")}</Label>
+                  <Input
+                    id="brand"
+                    value={form.brand}
+                    onChange={(e) => update("brand", e.target.value)}
+                    placeholder={t("sell.field.brand.ph")}
+                    className="h-11"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
                   <Label htmlFor="desc">{t("sell.field.description")}</Label>
                   <Textarea
                     id="desc"
@@ -187,18 +219,23 @@ function SellNew() {
                   />
                 </div>
 
+                <div className="space-y-1.5">
+                  <Label>{t("sell.field.condition")}</Label>
+                  <Select value={form.condition} onValueChange={(v) => update("condition", v as ProductConditionUi)}>
+                    <SelectTrigger className="h-11">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="new">{t("browse.condition.new")}</SelectItem>
+                      <SelectItem value="used">{t("browse.condition.used")}</SelectItem>
+                      <SelectItem value="refurb">{t("browse.condition.refurb")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <MockFieldShell label={t("listing.spec.category")}>
                   <Input readOnly value={t(`cat.${categories[0]!.key}` as const)} className={mockFieldClass} />
                 </MockFieldShell>
-
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <MockFieldShell label={t("sell.field.brand")}>
-                    <Input readOnly value={previewMock.brand} className={mockFieldClass} />
-                  </MockFieldShell>
-                  <MockFieldShell label={t("sell.field.condition")}>
-                    <Input readOnly value={t(`browse.condition.${previewMock.condition}` as const)} className={mockFieldClass} />
-                  </MockFieldShell>
-                </div>
 
                 <MockFieldShell label={t("sell.field.location")}>
                   <Input readOnly value={previewMock.location} className={mockFieldClass} />
@@ -213,7 +250,7 @@ function SellNew() {
                   <p className="text-sm text-muted-foreground mt-1">{t("sell.step3.subtitle")}</p>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid sm:grid-cols-[1fr_120px] gap-3">
                   <div className="space-y-1.5">
                     <Label htmlFor="price">{t("sell.field.price")}</Label>
                     <Input
@@ -229,23 +266,38 @@ function SellNew() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="qty">{t("products.quantity")}</Label>
-                    <Input
-                      id="qty"
-                      type="number"
-                      min="0"
-                      value={form.quantity}
-                      onChange={(e) => update("quantity", e.target.value)}
-                      className="h-11"
-                    />
+                    <Label>{t("sell.field.currency")}</Label>
+                    <Select value={form.currency} onValueChange={(v) => update("currency", v as ProductCurrency)}>
+                      <SelectTrigger className="h-11">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="EUR">EUR €</SelectItem>
+                        <SelectItem value="USD">USD $</SelectItem>
+                        <SelectItem value="UAH">UAH ₴</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="qty">{t("products.quantity")}</Label>
+                  <Input
+                    id="qty"
+                    type="number"
+                    min="0"
+                    value={form.quantity}
+                    onChange={(e) => update("quantity", e.target.value)}
+                    className="h-11"
+                  />
                 </div>
 
                 <dl className="divide-y divide-border/60 text-sm">
                   {[
                     { k: t("sell.field.title"), v: form.name || "—" },
-                    { k: t("sell.field.description"), v: form.description || "—" },
-                    { k: t("sell.field.price"), v: form.price ? Number(form.price).toLocaleString() : "—" },
+                    { k: t("sell.field.brand"), v: form.brand || "—" },
+                    { k: t("sell.field.condition"), v: t(`browse.condition.${form.condition}` as const) },
+                    { k: t("sell.field.price"), v: form.price ? `${form.currency} ${Number(form.price).toLocaleString()}` : "—" },
                     { k: t("products.quantity"), v: form.quantity || "—" },
                   ].map((row) => (
                     <div key={row.k} className="flex justify-between gap-6 py-3">

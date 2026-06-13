@@ -83,11 +83,11 @@ cute, neon, or hype-y.
 
 ## 5. Internationalization — every string, every locale
 
-- Spare Hub ships in **English and Ukrainian** (`en`, `es`, `uk`).
+- Spare Hub ships in **English and Ukrainian** (`en`, `uk`).
 - All user-facing copy is read through `useI18n().t("key")` from
   `src/lib/i18n.tsx`.
-- **When you add or change a user-facing string, you must update all
-  three locales in the same edit.** Never hardcode a string in JSX.
+- **When you add or change a user-facing string, you must update both
+  locales in the same edit.** Never hardcode a string in JSX.
 - Keys use dotted namespaces (`hero.title`, `auth.signin.title`, etc.).
   Keep the dictionary alphabetized within each namespace.
 - The product name `Spare Hub` is **not** translated.
@@ -172,7 +172,7 @@ Before declaring a task complete, verify:
 
 - [ ] No hardcoded color values (hex, `rgb()`, named Tailwind colors).
 - [ ] No hardcoded user-facing strings — every literal goes through `t(...)`.
-- [ ] All three locales (`en`, `es`, `uk`) updated for new strings.
+- [ ] Both locales (`en`, `uk`) updated for new strings.
 - [ ] Works in both light and dark themes.
 - [ ] No occurrence of `AgroMarket` reintroduced.
 - [ ] Product name written as "Spare Hub" (two words).

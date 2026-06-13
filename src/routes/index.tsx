@@ -174,11 +174,11 @@ function Index() {
                   <div className="mt-4 flex items-end justify-between">
                     <div>
                       <div className="font-display text-2xl font-semibold tracking-tight">
-                        {currencySymbol(spotlight.mock.currency)}{spotlight.price.toLocaleString()}
+                        {currencySymbol(spotlight.currency)}{spotlight.price.toLocaleString()}
                       </div>
                       <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-[color:var(--mock-foreground)]">
                         <BadgeCheck className="h-3.5 w-3.5" />
-                        {spotlight.mock.seller}
+                        {spotlight.sellerName}
                       </div>
                     </div>
                     <span className="inline-flex items-center gap-1 text-xs font-medium text-foreground/80">

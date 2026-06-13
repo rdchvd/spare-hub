@@ -51,13 +51,13 @@ function Browse() {
   const filtered = useMemo(() => {
     let out = displays.filter((l) => {
       if (category !== "all" && l.mock.category !== category) return false;
-      if (activeConds.length && !activeConds.includes(l.mock.condition)) return false;
+      if (activeConds.length && !activeConds.includes(l.condition)) return false;
       if (query) {
         const q = query.toLowerCase();
         return (
           l.name.toLowerCase().includes(q) ||
           l.description.toLowerCase().includes(q) ||
-          l.mock.brand.toLowerCase().includes(q) ||
+          l.brand.toLowerCase().includes(q) ||
           l.mock.location.toLowerCase().includes(q)
         );
       }

@@ -50,8 +50,10 @@ export function useCreateProduct() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (body: ProductInput) => createProduct(body),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: productKeys.all });
+    onSuccess: (product) => {
+      queryClient.setQueryData(productKeys.detail(product.id), product);
+      void queryClient.invalidateQueries({ queryKey: productKeys.list() });
+      void queryClient.invalidateQueries({ queryKey: productKeys.mine() });
     },
   });
 }
@@ -60,8 +62,10 @@ export function useUpdateProduct(id: number) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (body: Partial<ProductInput>) => updateProduct(id, body),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: productKeys.all });
+    onSuccess: (product) => {
+      queryClient.setQueryData(productKeys.detail(product.id), product);
+      void queryClient.invalidateQueries({ queryKey: productKeys.list() });
+      void queryClient.invalidateQueries({ queryKey: productKeys.mine() });
     },
   });
 }

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useI18n } from "@/lib/i18n";
 import { routeVisibility } from "@/lib/route-visibility";
 import { useMyProducts } from "@/features/products/queries";
+import { useSellerGuard } from "@/features/products/use-seller-guard";
 import { currencySymbol, productsToDisplay } from "@/features/products/display";
 import { ListChecks, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 
@@ -16,7 +17,17 @@ export const Route = createFileRoute("/account/listings")({
 function MyListings() {
   if (!routeVisibility.accountTabs.listings) return <ComingSoon embedded />;
   const { t } = useI18n();
-  const { data, isLoading, isError } = useMyProducts();
+  const { ready } = useSellerGuard("/account/listings");
+  const { data, isLoading, isError } = useMyProducts(ready);
+
+  if (!ready) {
+    return (
+      <div className="flex justify-center py-16 text-muted-foreground">
+        <Loader2 className="h-5 w-5 animate-spin" />
+      </div>
+    );
+  }
+
   const listings = productsToDisplay(data ?? []);
 
   if (isLoading) {
@@ -81,7 +92,7 @@ function MyListings() {
                     <div className="font-display font-semibold truncate">{listing.name}</div>
                     <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
                       <span className="font-medium">
-                        {currencySymbol(listing.mock.currency)}{listing.price.toLocaleString()}
+                        {currencySymbol(listing.currency)}{listing.price.toLocaleString()}
                       </span>
                       <span className="text-muted-foreground">·</span>
                       <span className="text-muted-foreground">
@@ -91,8 +102,8 @@ function MyListings() {
                         {t(`cat.${listing.mock.category}` as const)}
                       </Badge>
                     </div>
-                    <p className="mt-1 text-xs text-[color:var(--mock-foreground)] truncate">
-                      {listing.mock.brand} · {listing.mock.location}
+                    <p className="mt-1 text-xs text-muted-foreground truncate">
+                      {listing.brand} · <span className="text-[color:var(--mock-foreground)]">{listing.mock.location}</span>
                     </p>
                   </div>
                 </div>

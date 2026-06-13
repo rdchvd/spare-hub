@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ComingSoon } from "@/components/coming-soon";
 import { SiteLayout } from "@/components/site-layout";
@@ -6,6 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { MockFieldShell, mockFieldClass } from "@/components/mock-field-shell";
 import {
@@ -23,10 +30,15 @@ import { ArrowLeft, Check, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { routeVisibility } from "@/lib/route-visibility";
 import { ApiError } from "@/features/auth/client";
-import { productQueries, useDeleteProduct, useUpdateProduct } from "@/features/products/queries";
-import { mockListingForProduct, productToDisplay } from "@/features/products/display";
+import {
+  productQueries,
+  useDeleteProduct,
+  useMyProducts,
+  useUpdateProduct,
+} from "@/features/products/queries";
+import { apiConditionToUi, productToDisplay, uiConditionToApi } from "@/features/products/display";
+import type { ProductConditionUi, ProductCurrency } from "@/features/products/types";
 import { useSellerGuard } from "@/features/products/use-seller-guard";
-import { useMyProducts } from "@/features/products/queries";
 
 type EditSearch = { delete?: boolean };
 
@@ -52,16 +64,20 @@ function SellEdit() {
   if (!routeVisibility.header.sell) return <ComingSoon />;
   const { t } = useI18n();
   const navigate = useNavigate();
+  const router = useRouter();
   const { product, display } = Route.useLoaderData();
   const { delete: openDeleteOnMount } = Route.useSearch();
   const { ready } = useSellerGuard(`/sell/${product.id}/edit`);
   const { data: mine = [], isLoading: mineLoading } = useMyProducts(ready);
   const updateProduct = useUpdateProduct(product.id);
   const deleteProduct = useDeleteProduct();
-  const mock = mockListingForProduct(product);
+  const { mock } = display;
 
   const [name, setName] = useState(product.name);
+  const [brand, setBrand] = useState(product.brand);
   const [description, setDescription] = useState(product.description ?? "");
+  const [condition, setCondition] = useState<ProductConditionUi>(apiConditionToUi(product.condition));
+  const [currency, setCurrency] = useState<ProductCurrency>(product.currency);
   const [price, setPrice] = useState(String(Number(product.price)));
   const [quantity, setQuantity] = useState(String(product.quantity));
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -78,18 +94,25 @@ function SellEdit() {
 
   const canSave =
     name.trim() !== "" &&
+    brand.trim() !== "" &&
     description.trim() !== "" &&
     price.trim() !== "" &&
+    Number.isFinite(Number(price)) &&
+    Number(price) >= 0 &&
     Number(quantity) >= 0;
 
   const save = async () => {
     try {
       await updateProduct.mutateAsync({
         name: name.trim(),
+        brand: brand.trim(),
         description: description.trim(),
+        condition: uiConditionToApi(condition),
+        currency,
         price: Number(price).toFixed(2),
         quantity: Number(quantity),
       });
+      await router.invalidate();
       toast.success(t("products.saved"));
       navigate({ to: "/listings/$id", params: { id: String(product.id) } });
     } catch (error) {
@@ -148,11 +171,30 @@ function SellEdit() {
             </div>
 
             <div className="space-y-1.5">
+              <Label htmlFor="brand">{t("sell.field.brand")}</Label>
+              <Input id="brand" value={brand} onChange={(e) => setBrand(e.target.value)} className="h-11" />
+            </div>
+
+            <div className="space-y-1.5">
               <Label htmlFor="desc">{t("sell.field.description")}</Label>
               <Textarea id="desc" value={description} onChange={(e) => setDescription(e.target.value)} rows={5} />
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label>{t("sell.field.condition")}</Label>
+              <Select value={condition} onValueChange={(v) => setCondition(v as ProductConditionUi)}>
+                <SelectTrigger className="h-11">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="new">{t("browse.condition.new")}</SelectItem>
+                  <SelectItem value="used">{t("browse.condition.used")}</SelectItem>
+                  <SelectItem value="refurb">{t("browse.condition.refurb")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid sm:grid-cols-[1fr_120px] gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="price">{t("sell.field.price")}</Label>
                 <Input
@@ -166,30 +208,39 @@ function SellEdit() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="qty">{t("products.quantity")}</Label>
-                <Input
-                  id="qty"
-                  type="number"
-                  min="0"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  className="h-11"
-                />
+                <Label>{t("sell.field.currency")}</Label>
+                <Select value={currency} onValueChange={(v) => setCurrency(v as ProductCurrency)}>
+                  <SelectTrigger className="h-11">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="EUR">EUR €</SelectItem>
+                    <SelectItem value="USD">USD $</SelectItem>
+                    <SelectItem value="UAH">UAH ₴</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="qty">{t("products.quantity")}</Label>
+              <Input
+                id="qty"
+                type="number"
+                min="0"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                className="h-11"
+              />
             </div>
 
             <MockFieldShell label={t("listing.spec.category")}>
               <Input readOnly value={t(`cat.${mock.category}` as const)} className={mockFieldClass} />
             </MockFieldShell>
 
-            <div className="grid sm:grid-cols-2 gap-4">
-              <MockFieldShell label={t("sell.field.brand")}>
-                <Input readOnly value={mock.brand} className={mockFieldClass} />
-              </MockFieldShell>
-              <MockFieldShell label={t("sell.field.location")}>
-                <Input readOnly value={mock.location} className={mockFieldClass} />
-              </MockFieldShell>
-            </div>
+            <MockFieldShell label={t("sell.field.location")}>
+              <Input readOnly value={mock.location} className={mockFieldClass} />
+            </MockFieldShell>
           </CardContent>
         </Card>
 

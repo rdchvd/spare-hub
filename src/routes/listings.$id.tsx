@@ -19,6 +19,7 @@ import {
 } from "@/features/products/display";
 import { canManageProducts } from "@/features/products/client";
 import { useAuth } from "@/features/auth/auth-context";
+import { initials } from "@/lib/profile";
 import {
   ArrowLeft,
   BadgeCheck,
@@ -38,7 +39,7 @@ export const Route = createFileRoute("/listings/$id")({
     const numericId = Number(params.id);
     if (Number.isFinite(numericId)) {
       try {
-        const product = await queryClient.ensureQueryData(productQueries.detail(numericId));
+        const product = await queryClient.fetchQuery(productQueries.detail(numericId));
         const listing = productToDisplay(product);
         const all = await queryClient.ensureQueryData(productQueries.list());
         const related = productsToDisplay(all)
@@ -65,7 +66,7 @@ export const Route = createFileRoute("/listings/$id")({
           { title: `${loaderData.listing.name} — Spare Hub` },
           {
             name: "description",
-            content: `${loaderData.listing.mock.brand} · ${loaderData.listing.mock.location} · from ${loaderData.listing.mock.seller}.`,
+            content: `${loaderData.listing.brand} · ${loaderData.listing.mock.location} · from ${loaderData.listing.sellerName || "Spare Hub"}.`,
           },
         ]
       : [{ title: "Listing — Spare Hub" }],
@@ -82,6 +83,7 @@ function ListingDetail() {
   const { data: mine = [] } = useMyProducts(canManageProducts(user) && !mockOnly);
   const isOwner = !mockOnly && mine.some((p) => p.id === listing.product.id);
   const { mock } = listing;
+  const sellerInitials = initials(listing.sellerName, listing.sellerName);
 
   return (
     <SiteLayout>
@@ -148,10 +150,11 @@ function ListingDetail() {
               <h2 className="font-display text-xl font-semibold">{t("listing.specs")}</h2>
               <dl className="mt-4 grid sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
                 {[
-                  { k: t("listing.spec.brand"), v: mock.brand, mock: true },
-                  { k: t("listing.spec.condition"), v: t(`browse.condition.${mock.condition}` as const), mock: true },
+                  { k: t("listing.spec.brand"), v: listing.brand, mock: false },
+                  { k: t("listing.spec.condition"), v: t(`browse.condition.${listing.condition}` as const), mock: false },
                   { k: t("listing.spec.category"), v: t(`cat.${mock.category}` as const), mock: true },
                   { k: t("listing.spec.location"), v: mock.location, mock: true },
+                  { k: t("sell.field.currency"), v: listing.currency, mock: false },
                   {
                     k: t("products.quantity"),
                     v: String(listing.quantity),
@@ -188,13 +191,13 @@ function ListingDetail() {
           <aside className="lg:sticky lg:top-20 lg:self-start space-y-4">
             <Card className="border-border/70">
               <CardContent className="p-6">
-                <div className="flex items-center gap-2 text-xs text-[color:var(--mock-foreground)]">
-                  <span className="font-medium uppercase tracking-wide">{mock.brand}</span>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <span className="font-medium uppercase tracking-wide">{listing.brand}</span>
                   <span>·</span>
                   <Link
                     to="/c/$category"
                     params={{ category: mock.category }}
-                    className="hover:text-foreground"
+                    className="text-[color:var(--mock-foreground)] hover:text-foreground"
                   >
                     {t(`cat.${mock.category}` as const)}
                   </Link>
@@ -215,7 +218,7 @@ function ListingDetail() {
                 </div>
 
                 <div className="mt-5 font-display text-4xl font-semibold tracking-tight">
-                  {currencySymbol(mock.currency)}
+                  {currencySymbol(listing.currency)}
                   {listing.price.toLocaleString()}
                 </div>
 
@@ -244,15 +247,19 @@ function ListingDetail() {
                   </div>
                   <div className="mt-2 flex items-center gap-3">
                     <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-display font-semibold">
-                      {mock.seller.charAt(0)}
+                      {sellerInitials}
                     </div>
                     <div className="min-w-0">
-                      <div className="font-medium text-sm truncate text-[color:var(--mock-foreground)]">{mock.seller}</div>
-                      {mock.verified && (
+                      <div
+                        className={`font-medium text-sm truncate ${listing.sellerIsPreview ? "text-[color:var(--mock-foreground)]" : "text-foreground"}`}
+                      >
+                        {listing.sellerName || t("listing.seller")}
+                      </div>
+                      {listing.sellerIsPreview && mock.verified ? (
                         <div className="text-xs text-accent flex items-center gap-1">
                           <BadgeCheck className="h-3 w-3" /> {t("listings.verified")}
                         </div>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 </div>

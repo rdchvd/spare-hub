@@ -40,10 +40,10 @@ export function ListingCard({ listing }: { listing: ProductDisplay }) {
           </div>
         </div>
         <CardContent className="p-4">
-          <div className="flex items-center gap-2 text-xs text-[color:var(--mock-foreground)]">
-            <span className="font-medium uppercase tracking-wide">{mock.brand}</span>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-medium uppercase tracking-wide">{listing.brand}</span>
             <span>·</span>
-            <span className="capitalize">{t(`browse.condition.${mock.condition}` as const)}</span>
+            <span className="capitalize">{t(`browse.condition.${listing.condition}` as const)}</span>
           </div>
           <h3 className="mt-1.5 font-display text-base font-semibold leading-snug line-clamp-2 min-h-[2.75rem]">
             {listing.name}
@@ -55,9 +55,11 @@ export function ListingCard({ listing }: { listing: ProductDisplay }) {
           <div className="mt-4 flex items-end justify-between">
             <div>
               <div className="font-display text-xl font-semibold tracking-tight">
-                {currencySymbol(mock.currency)}{listing.price.toLocaleString()}
+                {currencySymbol(listing.currency)}{listing.price.toLocaleString()}
               </div>
-              <div className="text-xs text-[color:var(--mock-foreground)] truncate max-w-[10rem]">{mock.seller}</div>
+              <div className={`text-xs truncate max-w-[10rem] ${listing.sellerIsPreview ? "text-[color:var(--mock-foreground)]" : "text-muted-foreground"}`}>
+                {listing.sellerName}
+              </div>
             </div>
             <Button
               size="sm"

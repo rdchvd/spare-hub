@@ -17,6 +17,9 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
+const sellCtaClass =
+  "bg-[color:var(--gold)] text-[color:var(--gold-foreground)] hover:bg-[color:var(--gold)]/90 shadow-sm";
+
 export function SiteHeader() {
   const { theme, toggle } = useTheme();
   const { t, lang, setLang } = useI18n();
@@ -34,13 +37,9 @@ export function SiteHeader() {
     navigate({ to: "/" });
   };
 
-  const navLinks = [
-    ...(routeVisibility.backend.productsApiReady && routeVisibility.header.browse
-      ? [{ to: "/browse", label: t("nav.browse") }]
-      : []),
-    ...(canSell ? [{ to: "/sell", label: t("nav.sell") }] : []),
-    ...(routeVisibility.header.about ? [{ to: "/about", label: t("nav.about") }] : []),
-  ] as const;
+  const centerNavLinks = routeVisibility.header.about
+    ? [{ to: "/about", label: t("nav.about") }]
+    : [];
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -52,20 +51,28 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent/10 hover:text-foreground"
-              activeProps={{ className: "text-foreground bg-accent/10" }}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
+        {centerNavLinks.length > 0 ? (
+          <nav className="hidden md:flex items-center gap-1">
+            {centerNavLinks.map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent/10 hover:text-foreground"
+                activeProps={{ className: "text-foreground bg-accent/10" }}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+        ) : null}
 
         <div className="flex items-center gap-1.5">
+          {canSell ? (
+            <Button asChild size="sm" className={`hidden sm:inline-flex ${sellCtaClass}`}>
+              <Link to="/sell/new">{t("sell.cta")}</Link>
+            </Button>
+          ) : null}
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-1.5 hidden sm:inline-flex" aria-label={t("lang.label")}>
@@ -147,7 +154,14 @@ export function SiteHeader() {
       {open && (
         <div className="md:hidden border-t border-border bg-background">
           <div className="px-4 py-3 space-y-1">
-            {navLinks.map((l) => (
+            {canSell ? (
+              <Button asChild size="sm" className={`w-full ${sellCtaClass}`}>
+                <Link to="/sell/new" onClick={() => setOpen(false)}>
+                  {t("sell.cta")}
+                </Link>
+              </Button>
+            ) : null}
+            {centerNavLinks.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
@@ -220,7 +234,7 @@ export function SiteFooter() {
         <div className="text-sm">
           <div className="font-medium mb-2">{t("footer.product")}</div>
           <ul className="space-y-1.5 text-muted-foreground">
-            {routeVisibility.backend.productsApiReady && routeVisibility.header.browse ? <li><Link to="/browse" className="hover:text-foreground">{t("nav.browse")}</Link></li> : null}
+            {routeVisibility.backend.productsApiReady ? <li><Link to="/browse" className="hover:text-foreground">{t("nav.browse")}</Link></li> : null}
             {showSellLink ? <li><Link to="/sell" className="hover:text-foreground">{t("nav.sell")}</Link></li> : null}
             {routeVisibility.header.about ? <li><Link to="/about" className="hover:text-foreground">{t("nav.about")}</Link></li> : null}
           </ul>

@@ -114,7 +114,7 @@ class LogoutTests(BaseAuthTestCase):
             format="json",
         )
 
-        self.assertIn(response.status_code, [200, 205])
+        self.assertEqual(response.status_code, status.HTTP_205_RESET_CONTENT)
 
     def test_logout_without_token(self):
         response = self.client.post(self.logout_url)

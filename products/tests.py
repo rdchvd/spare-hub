@@ -50,6 +50,13 @@ class BaseProductTestCase(APITestCase):
             quantity=1,
         )
 
+        self.product_url = f"/api/products/{self.product.id}/"
+
+        self.admin = User.objects.create_superuser(
+            email="admin@test.com",
+            password="StrongPass123",
+        )
+
     def login(self, email, password):
         response = self.client.post(
             "/api/auth/token/",
@@ -75,6 +82,32 @@ class ProductListTests(BaseProductTestCase):
         self.assertEqual(response.data["count"], 1)
         self.assertEqual(len(response.data["results"]), 1)
 
+    def test_list_products_as_buyer(self):
+        self.login(
+            "buyer@test.com",
+            "StrongPass123",
+        )
+
+        response = self.client.get(self.products_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(len(response.data["results"]), 1)
+
+    def test_list_products_as_seller(self):
+        self.login(
+            "seller@test.com",
+            "StrongPass123",
+        )
+
+        response = self.client.get(self.products_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(
+            len(response.data["results"]),
+            1,
+        )
+
 
 class ProductCreateTests(BaseProductTestCase):
 
@@ -83,6 +116,8 @@ class ProductCreateTests(BaseProductTestCase):
             "seller@test.com",
             "StrongPass123",
         )
+
+        before_count = Product.objects.count()
 
         response = self.client.post(
             self.products_url,
@@ -98,7 +133,17 @@ class ProductCreateTests(BaseProductTestCase):
             format="json",
         )
 
+        after_count = Product.objects.count()
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(after_count, before_count + 1)
+
+        product = Product.objects.latest("id")
+
+        self.assertEqual(product.name, "MacBook")
+        self.assertEqual(product.brand, "Apple")
+        self.assertEqual(str(product.price), "2000.00")
+        self.assertEqual(product.quantity, 5)
 
     def test_buyer_cannot_create_product(self):
         self.login(
@@ -119,6 +164,53 @@ class ProductCreateTests(BaseProductTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_create_product_without_login(self):
+        before_count = Product.objects.count()
+
+        response = self.client.post(
+            self.products_url,
+            {
+                "name": "MacBook",
+                "brand": "Apple",
+                "description": "Laptop",
+                "price": "2000.00",
+                "currency": "USD",
+                "condition": "new",
+                "quantity": 5,
+            },
+            format="json",
+        )
+
+        after_count = Product.objects.count()
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(after_count, before_count)
+
+    def test_create_product_invalid_fields(self):
+        self.login(
+            "seller@test.com",
+            "StrongPass123",
+        )
+
+        before_count = Product.objects.count()
+
+        response = self.client.post(
+            self.products_url,
+            {
+                "name": "",
+                "brand": "",
+                "price": "-100",
+                "currency": "AAA",
+                "quantity": -1,
+            },
+            format="json",
+        )
+
+        after_count = Product.objects.count()
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(after_count, before_count)
+
 
 class ProductUpdateTests(BaseProductTestCase):
 
@@ -128,15 +220,33 @@ class ProductUpdateTests(BaseProductTestCase):
             "StrongPass123",
         )
 
+        payload = {
+            "name": "MacBook Pro",
+            "brand": "Apple Updated",
+            "description": "Updated laptop",
+            "price": "2500.00",
+            "currency": "EUR",
+            "condition": "used",
+            "quantity": 10,
+        }
+
         response = self.client.patch(
             f"{self.products_url}{self.product.id}/",
-            {
-                "name": "Updated",
-            },
+            payload,
             format="json",
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.product.refresh_from_db()
+
+        self.assertEqual(self.product.name, payload["name"])
+        self.assertEqual(self.product.brand, payload["brand"])
+        self.assertEqual(self.product.description, payload["description"])
+        self.assertEqual(str(self.product.price), payload["price"])
+        self.assertEqual(self.product.currency, payload["currency"])
+        self.assertEqual(self.product.condition, payload["condition"])
+        self.assertEqual(self.product.quantity, payload["quantity"])
 
     def test_non_owner_cannot_update(self):
         self.login(
@@ -154,10 +264,73 @@ class ProductUpdateTests(BaseProductTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_update_product_without_login(self):
+        response = self.client.patch(
+            self.product_url,
+            {
+                "name": "Updated",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_buyer_cannot_update_product(self):
+        self.login(
+            "buyer@test.com",
+            "StrongPass123",
+        )
+
+        response = self.client.patch(
+            self.product_url,
+            {
+                "name": "Updated",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_admin_update_product(self):
+        self.login(
+            "admin@test.com",
+            "StrongPass123",
+        )
+
+        response = self.client.patch(
+            self.product_url,
+            {
+                "name": "Admin Updated",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
 
 class ProductMyTests(BaseProductTestCase):
 
-    def test_my_products(self):
+    def setUp(self):
+        super().setUp()
+
+        Product.objects.create(
+            seller=self.seller,
+            name="MacBook",
+            brand="Apple",
+            price="2000.00",
+            quantity=2,
+        )
+
+        Product.objects.create(
+            seller=self.other_seller,
+            name="Samsung",
+            brand="Samsung",
+            price="1500.00",
+            quantity=3,
+        )
+
+    def test_my_products_as_seller(self):
+
         self.login(
             "seller@test.com",
             "StrongPass123",
@@ -165,4 +338,43 @@ class ProductMyTests(BaseProductTestCase):
 
         response = self.client.get(self.my_products_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_my_products_as_second_seller(self):
+
+        self.login(
+            "other@test.com",
+            "StrongPass123",
+        )
+
+        response = self.client.get(self.my_products_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+    def test_my_products_as_buyer(self):
+
+        self.login(
+            "buyer@test.com",
+            "StrongPass123",
+        )
+
+        response = self.client.get(self.my_products_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_my_products_as_admin(self):
+
+        self.login(
+            "admin@test.com",
+            "StrongPass123",
+        )
+
+        response = self.client.get(self.my_products_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_my_products_without_login(self):
+
+        response = self.client.get(self.my_products_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

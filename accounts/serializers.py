@@ -69,7 +69,9 @@ class LogoutSerializer(serializers.Serializer):
             token.blacklist()
 
         except Exception:
-            self.fail("bad_token")
+            raise serializers.ValidationError(
+                {"refresh": "Invalid refresh token"}
+            ) from None
 
 
 class RegisterSerializer(serializers.ModelSerializer):

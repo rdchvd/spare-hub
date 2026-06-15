@@ -126,14 +126,24 @@ function SellNew() {
           </h1>
           <p className="mt-2 text-muted-foreground">{t("sell.review.publishedBody")}</p>
           <div className="mt-6 flex justify-center gap-2">
-            <Button onClick={() => { setForm(initial); setStep(1); setDone(false); }} variant="outline">
+            <Button
+              onClick={() => {
+                setForm(initial);
+                setStep(1);
+                setDone(false);
+              }}
+              variant="outline"
+            >
               {t("sell.review.another")}
             </Button>
             <Button onClick={() => navigate({ to: "/account/listings" })}>
               {t("sell.review.viewListings")}
             </Button>
             {createdId ? (
-              <Button variant="secondary" onClick={() => navigate({ to: "/listings/$id", params: { id: createdId } })}>
+              <Button
+                variant="secondary"
+                onClick={() => navigate({ to: "/listings/$id", params: { id: createdId } })}
+              >
                 {t("account.listings.actions.view")}
               </Button>
             ) : null}
@@ -221,7 +231,10 @@ function SellNew() {
 
                 <div className="space-y-1.5">
                   <Label>{t("sell.field.condition")}</Label>
-                  <Select value={form.condition} onValueChange={(v) => update("condition", v as ProductConditionUi)}>
+                  <Select
+                    value={form.condition}
+                    onValueChange={(v) => update("condition", v as ProductConditionUi)}
+                  >
                     <SelectTrigger className="h-11">
                       <SelectValue />
                     </SelectTrigger>
@@ -234,7 +247,11 @@ function SellNew() {
                 </div>
 
                 <MockFieldShell label={t("listing.spec.category")}>
-                  <Input readOnly value={t(`cat.${categories[0]!.key}` as const)} className={mockFieldClass} />
+                  <Input
+                    readOnly
+                    value={t(`cat.${categories[0]!.key}` as const)}
+                    className={mockFieldClass}
+                  />
                 </MockFieldShell>
 
                 <MockFieldShell label={t("sell.field.location")}>
@@ -267,7 +284,10 @@ function SellNew() {
                   </div>
                   <div className="space-y-1.5">
                     <Label>{t("sell.field.currency")}</Label>
-                    <Select value={form.currency} onValueChange={(v) => update("currency", v as ProductCurrency)}>
+                    <Select
+                      value={form.currency}
+                      onValueChange={(v) => update("currency", v as ProductCurrency)}
+                    >
                       <SelectTrigger className="h-11">
                         <SelectValue />
                       </SelectTrigger>
@@ -296,13 +316,23 @@ function SellNew() {
                   {[
                     { k: t("sell.field.title"), v: form.name || "—" },
                     { k: t("sell.field.brand"), v: form.brand || "—" },
-                    { k: t("sell.field.condition"), v: t(`browse.condition.${form.condition}` as const) },
-                    { k: t("sell.field.price"), v: form.price ? `${form.currency} ${Number(form.price).toLocaleString()}` : "—" },
+                    {
+                      k: t("sell.field.condition"),
+                      v: t(`browse.condition.${form.condition}` as const),
+                    },
+                    {
+                      k: t("sell.field.price"),
+                      v: form.price
+                        ? `${form.currency} ${Number(form.price).toLocaleString()}`
+                        : "—",
+                    },
                     { k: t("products.quantity"), v: form.quantity || "—" },
                   ].map((row) => (
                     <div key={row.k} className="flex justify-between gap-6 py-3">
                       <dt className="text-muted-foreground">{row.k}</dt>
-                      <dd className="font-medium text-foreground text-right max-w-[60%]">{row.v}</dd>
+                      <dd className="font-medium text-foreground text-right max-w-[60%]">
+                        {row.v}
+                      </dd>
                     </div>
                   ))}
                 </dl>
@@ -332,8 +362,16 @@ function SellNew() {
               <ArrowRight className="h-4 w-4" />
             </Button>
           ) : (
-            <Button onClick={() => void submit()} disabled={!canContinue || createProduct.isPending} className="gap-1.5">
-              {createProduct.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+            <Button
+              onClick={() => void submit()}
+              disabled={!canContinue || createProduct.isPending}
+              className="gap-1.5"
+            >
+              {createProduct.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Check className="h-4 w-4" />
+              )}
               {t("sell.submit")}
             </Button>
           )}

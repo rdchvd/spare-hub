@@ -15,8 +15,7 @@ import heroField from "@/assets/hero-field.jpg";
 import { routeVisibility } from "@/lib/route-visibility";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData(productQueries.list()),
+  loader: ({ context: { queryClient } }) => queryClient.ensureQueryData(productQueries.list()),
   component: Index,
 });
 
@@ -139,54 +138,55 @@ function Index() {
             {/* Right: floating spotlight card — layered depth */}
             <div className="md:col-span-5 hidden md:block">
               {spotlight ? (
-              <div
-                className="relative ml-auto max-w-sm animate-fade-in"
-                style={{ animationDelay: "320ms", animationFillMode: "both" }}
-              >
-                {/* Back card (depth) */}
-                <div className="absolute -top-6 -right-3 h-full w-full rounded-2xl bg-[color:var(--gold)]/20 backdrop-blur-sm border border-[color:var(--gold)]/30" />
-                <div className="absolute top-3 -left-4 h-full w-full rounded-2xl bg-[color:var(--primary-foreground)]/5 backdrop-blur-sm border border-[color:var(--primary-foreground)]/10" />
-
-                {/* Front spotlight card */}
-                <Link
-                  to="/listings/$id"
-                  params={{ id: spotlight.id }}
-                  className="relative block rounded-2xl bg-background/95 backdrop-blur border border-border/40 shadow-2xl p-5 transition-all hover:-translate-y-1 hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.4)]"
+                <div
+                  className="relative ml-auto max-w-sm animate-fade-in"
+                  style={{ animationDelay: "320ms", animationFillMode: "both" }}
                 >
-                  <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--gold)] animate-pulse" />
-                    {t("hero.spotlight")}
-                  </div>
-                  <div className="mt-4 flex items-start gap-4">
-                    <div className="h-20 w-20 rounded-xl bg-secondary flex items-center justify-center text-4xl shrink-0">
-                      {spotlight.mock.emoji}
+                  {/* Back card (depth) */}
+                  <div className="absolute -top-6 -right-3 h-full w-full rounded-2xl bg-[color:var(--gold)]/20 backdrop-blur-sm border border-[color:var(--gold)]/30" />
+                  <div className="absolute top-3 -left-4 h-full w-full rounded-2xl bg-[color:var(--primary-foreground)]/5 backdrop-blur-sm border border-[color:var(--primary-foreground)]/10" />
+
+                  {/* Front spotlight card */}
+                  <Link
+                    to="/listings/$id"
+                    params={{ id: spotlight.id }}
+                    className="relative block rounded-2xl bg-background/95 backdrop-blur border border-border/40 shadow-2xl p-5 transition-all hover:-translate-y-1 hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.4)]"
+                  >
+                    <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--gold)] animate-pulse" />
+                      {t("hero.spotlight")}
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="font-display text-base font-semibold leading-tight line-clamp-2">
-                        {spotlight.name}
+                    <div className="mt-4 flex items-start gap-4">
+                      <div className="h-20 w-20 rounded-xl bg-secondary flex items-center justify-center text-4xl shrink-0">
+                        {spotlight.mock.emoji}
                       </div>
-                      <div className="mt-1.5 flex items-center gap-1.5 text-xs text-[color:var(--mock-foreground)]">
-                        <MapPin className="h-3 w-3" />
-                        {spotlight.mock.location}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-4 flex items-end justify-between">
-                    <div>
-                      <div className="font-display text-2xl font-semibold tracking-tight">
-                        {currencySymbol(spotlight.currency)}{spotlight.price.toLocaleString()}
-                      </div>
-                      <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-[color:var(--mock-foreground)]">
-                        <BadgeCheck className="h-3.5 w-3.5" />
-                        {spotlight.sellerName}
+                      <div className="min-w-0 flex-1">
+                        <div className="font-display text-base font-semibold leading-tight line-clamp-2">
+                          {spotlight.name}
+                        </div>
+                        <div className="mt-1.5 flex items-center gap-1.5 text-xs text-[color:var(--mock-foreground)]">
+                          <MapPin className="h-3 w-3" />
+                          {spotlight.mock.location}
+                        </div>
                       </div>
                     </div>
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-foreground/80">
-                      {t("hero.viewListing")} <ArrowRight className="h-3.5 w-3.5" />
-                    </span>
-                  </div>
-                </Link>
-              </div>
+                    <div className="mt-4 flex items-end justify-between">
+                      <div>
+                        <div className="font-display text-2xl font-semibold tracking-tight">
+                          {currencySymbol(spotlight.currency)}
+                          {spotlight.price.toLocaleString()}
+                        </div>
+                        <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-[color:var(--mock-foreground)]">
+                          <BadgeCheck className="h-3.5 w-3.5" />
+                          {spotlight.sellerName}
+                        </div>
+                      </div>
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-foreground/80">
+                        {t("hero.viewListing")} <ArrowRight className="h-3.5 w-3.5" />
+                      </span>
+                    </div>
+                  </Link>
+                </div>
               ) : null}
             </div>
           </div>

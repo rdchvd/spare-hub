@@ -22,10 +22,7 @@ export type ProductDisplay = {
   currency: ProductCurrency;
   sellerName: string;
   sellerIsPreview: boolean;
-  mock: Pick<
-    Listing,
-    "category" | "location" | "verified" | "rating" | "reviews" | "emoji"
-  >;
+  mock: Pick<Listing, "category" | "location" | "verified" | "rating" | "reviews" | "emoji">;
 };
 
 export function apiConditionToUi(condition: ProductConditionApi): ProductConditionUi {

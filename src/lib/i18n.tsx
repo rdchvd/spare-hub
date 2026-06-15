@@ -40,14 +40,18 @@ const dict = {
 
     "trust.title": "Why Spare Hub",
     "trust.t1.title": "Verified sellers",
-    "trust.t1.body": "Every seller is reviewed — business license, references and on-farm checks where possible.",
+    "trust.t1.body":
+      "Every seller is reviewed — business license, references and on-farm checks where possible.",
     "trust.t2.title": "Right part, first time",
-    "trust.t2.body": "Filter by make, model and year. Compatibility shown on every listing — no guesswork.",
+    "trust.t2.body":
+      "Filter by make, model and year. Compatibility shown on every listing — no guesswork.",
     "trust.t3.title": "Built for the field",
-    "trust.t3.body": "Works on slow connections, on a phone in the cab. Save listings, contact sellers in one tap.",
+    "trust.t3.body":
+      "Works on slow connections, on a phone in the cab. Save listings, contact sellers in one tap.",
 
     "cta.title": "Selling parts, machinery or inputs?",
-    "cta.body": "Reach 12,000+ buyers across farms and cooperatives. Free to list — pay only when you close a deal.",
+    "cta.body":
+      "Reach 12,000+ buyers across farms and cooperatives. Free to list — pay only when you close a deal.",
     "cta.button": "Open a seller account",
 
     "footer.tagline": "An honest marketplace for agronomy.",
@@ -121,11 +125,13 @@ const dict = {
     "listing.spec.stock": "Availability",
     "listing.spec.sku": "Reference",
     "listing.description": "Description",
-    "listing.description.body": "Sourced from a verified seller. Compatibility, condition and shipping confirmed before listing. Message the seller for invoicing, delivery and bulk pricing.",
+    "listing.description.body":
+      "Sourced from a verified seller. Compatibility, condition and shipping confirmed before listing. Message the seller for invoicing, delivery and bulk pricing.",
     "listing.seller": "Seller",
     "listing.seller.viewProfile": "View seller profile",
     "listing.shipping": "Shipping & returns",
-    "listing.shipping.body": "Ships from seller's warehouse in 1–3 business days. Returns accepted within 14 days on unused parts.",
+    "listing.shipping.body":
+      "Ships from seller's warehouse in 1–3 business days. Returns accepted within 14 days on unused parts.",
     "listing.related": "Related listings",
     "listing.message": "Message seller",
     "listing.call": "Call seller",
@@ -137,7 +143,8 @@ const dict = {
     "category.results": "listings",
     "category.empty": "No listings in this category yet.",
     "comingSoon.backHome": "Back to home",
-    "comingSoon.body": "This page is planned and will be available later. For now, we keep the core buying flow only.",
+    "comingSoon.body":
+      "This page is planned and will be available later. For now, we keep the core buying flow only.",
     "comingSoon.title": "Coming soon",
 
     "notFound.title": "Page not found",
@@ -151,7 +158,8 @@ const dict = {
     "products.edit.title": "Edit listing",
     "products.edit.subtitle": "Update live fields or remove the listing.",
     "products.error.forbidden": "You cannot change this listing.",
-    "products.error.notSeller": "You need a seller account to list parts. Create an account with the seller role.",
+    "products.error.notSeller":
+      "You need a seller account to list parts. Create an account with the seller role.",
     "products.loading": "Loading listings…",
     "products.mock.badge": "Preview",
     "products.mock.hint": "This field will sync with the catalog soon.",
@@ -251,7 +259,8 @@ const dict = {
     "footer.legal": "Legal",
 
     "cookies.title": "Cookies on Spare Hub",
-    "cookies.body": "We use a small set of cookies to keep you signed in, remember your language and theme, and measure how the marketplace performs. You can change this anytime in Settings.",
+    "cookies.body":
+      "We use a small set of cookies to keep you signed in, remember your language and theme, and measure how the marketplace performs. You can change this anytime in Settings.",
     "cookies.accept": "Accept all",
     "cookies.essential": "Essential only",
     "cookies.learn": "Cookie policy",
@@ -267,38 +276,52 @@ const dict = {
     "seller.about": "About this seller",
 
     "trust.howItWorks.title": "How Spare Hub works",
-    "trust.howItWorks.subtitle": "Buy with confidence, sell with reach. Here's the flow end to end.",
+    "trust.howItWorks.subtitle":
+      "Buy with confidence, sell with reach. Here's the flow end to end.",
     "trust.howItWorks.b1.title": "Search and compare",
-    "trust.howItWorks.b1.body": "Filter by make, model, year and crop. Compatibility is shown on every listing — no guesswork.",
+    "trust.howItWorks.b1.body":
+      "Filter by make, model, year and crop. Compatibility is shown on every listing — no guesswork.",
     "trust.howItWorks.b2.title": "Talk to the seller",
-    "trust.howItWorks.b2.body": "Message or call directly from the listing. Most sellers reply the same day.",
+    "trust.howItWorks.b2.body":
+      "Message or call directly from the listing. Most sellers reply the same day.",
     "trust.howItWorks.b3.title": "Agree the deal",
-    "trust.howItWorks.b3.body": "Pick up locally, arrange shipping, or use a cooperative logistics partner. You decide what works.",
+    "trust.howItWorks.b3.body":
+      "Pick up locally, arrange shipping, or use a cooperative logistics partner. You decide what works.",
     "trust.howItWorks.b4.title": "Rate the experience",
-    "trust.howItWorks.b4.body": "Honest reviews keep verified sellers visible and help everyone get better parts faster.",
+    "trust.howItWorks.b4.body":
+      "Honest reviews keep verified sellers visible and help everyone get better parts faster.",
 
     "trust.safety.title": "Buying and selling safely",
     "trust.safety.subtitle": "Practical guardrails that keep the marketplace trustworthy.",
     "trust.safety.s1.title": "Verified sellers",
-    "trust.safety.s1.body": "Every seller goes through business-license, reference and on-farm checks where possible.",
+    "trust.safety.s1.body":
+      "Every seller goes through business-license, reference and on-farm checks where possible.",
     "trust.safety.s2.title": "Pay only when you collect",
-    "trust.safety.s2.body": "Never wire money before you've seen the part or signed a delivery note. We never ask for crypto.",
+    "trust.safety.s2.body":
+      "Never wire money before you've seen the part or signed a delivery note. We never ask for crypto.",
     "trust.safety.s3.title": "Keep conversations on Spare Hub",
-    "trust.safety.s3.body": "Messaging through the platform protects both sides if something goes wrong.",
+    "trust.safety.s3.body":
+      "Messaging through the platform protects both sides if something goes wrong.",
     "trust.safety.s4.title": "Report anything off",
-    "trust.safety.s4.body": "Use the report button on any listing. We review every report within two business days.",
+    "trust.safety.s4.body":
+      "Use the report button on any listing. We review every report within two business days.",
 
     "trust.help.title": "Help centre",
     "trust.help.subtitle": "Common questions from buyers and sellers.",
     "trust.help.q1": "Is Spare Hub free to use?",
-    "trust.help.a1": "Yes — browsing and messaging are free. Sellers only pay a small fee when a deal closes.",
+    "trust.help.a1":
+      "Yes — browsing and messaging are free. Sellers only pay a small fee when a deal closes.",
     "trust.help.q2": "Which countries do you operate in?",
-    "trust.help.a2": "Spain, Ukraine, France, Italy and several US states today, with more regions opening each quarter.",
+    "trust.help.a2":
+      "Spain, Ukraine, France, Italy and several US states today, with more regions opening each quarter.",
     "trust.help.q3": "How do I know a seller is genuine?",
-    "trust.help.a3": "Look for the verified badge — that means we've checked their business license and at least three independent references.",
+    "trust.help.a3":
+      "Look for the verified badge — that means we've checked their business license and at least three independent references.",
     "trust.help.q4": "What if the part isn't what was described?",
-    "trust.help.a4": "Tell the seller first, then open a report. Verified sellers honour returns within 14 days of delivery.",
-    "trust.help.contact": "Still need help? Write to help@sparehub.example and we'll reply within one business day.",
+    "trust.help.a4":
+      "Tell the seller first, then open a report. Verified sellers honour returns within 14 days of delivery.",
+    "trust.help.contact":
+      "Still need help? Write to help@sparehub.example and we'll reply within one business day.",
 
     "legal.lastUpdated": "Last updated",
     "legal.terms.title": "Terms of service",
@@ -306,9 +329,7 @@ const dict = {
     "legal.cookies.title": "Cookie policy",
   },
 
-
   uk: {
-
     "nav.browse": "Каталог запчастин",
     "nav.sell": "Продавати",
     "nav.about": "Про нас",
@@ -424,11 +445,13 @@ const dict = {
     "listing.spec.stock": "Наявність",
     "listing.spec.sku": "Артикул",
     "listing.description": "Опис",
-    "listing.description.body": "Від перевіреного продавця. Сумісність, стан і доставка підтверджені перед публікацією. Напишіть продавцю щодо рахунку, доставки та оптових цін.",
+    "listing.description.body":
+      "Від перевіреного продавця. Сумісність, стан і доставка підтверджені перед публікацією. Напишіть продавцю щодо рахунку, доставки та оптових цін.",
     "listing.seller": "Продавець",
     "listing.seller.viewProfile": "Профіль продавця",
     "listing.shipping": "Доставка і повернення",
-    "listing.shipping.body": "Відправлення зі складу продавця за 1–3 робочих дні. Повернення приймаються протягом 14 днів на невикористані деталі.",
+    "listing.shipping.body":
+      "Відправлення зі складу продавця за 1–3 робочих дні. Повернення приймаються протягом 14 днів на невикористані деталі.",
     "listing.related": "Схожі оголошення",
     "listing.message": "Написати продавцю",
     "listing.call": "Зателефонувати",
@@ -440,7 +463,8 @@ const dict = {
     "category.results": "оголошень",
     "category.empty": "У цій категорії ще немає оголошень.",
     "comingSoon.backHome": "На головну",
-    "comingSoon.body": "Ця сторінка запланована і буде доступна пізніше. Наразі залишаємо лише основний сценарій покупки.",
+    "comingSoon.body":
+      "Ця сторінка запланована і буде доступна пізніше. Наразі залишаємо лише основний сценарій покупки.",
     "comingSoon.title": "Скоро буде",
 
     "notFound.title": "Сторінку не знайдено",
@@ -454,7 +478,8 @@ const dict = {
     "products.edit.title": "Редагувати оголошення",
     "products.edit.subtitle": "Оновіть активні поля або видаліть оголошення.",
     "products.error.forbidden": "Ви не можете змінити це оголошення.",
-    "products.error.notSeller": "Щоб публікувати оголошення, потрібен обліковий запис продавця. Створіть акаунт із роллю продавця.",
+    "products.error.notSeller":
+      "Щоб публікувати оголошення, потрібен обліковий запис продавця. Створіть акаунт із роллю продавця.",
     "products.loading": "Завантаження оголошень…",
     "products.mock.badge": "Попередній перегляд",
     "products.mock.hint": "Це поле незабаром синхронізується з каталогом.",
@@ -494,7 +519,8 @@ const dict = {
     "sell.field.stock.in": "В наявності",
     "sell.field.stock.low": "Закінчується",
     "sell.field.photos": "Фото",
-    "sell.field.photos.hint": "Перетягніть зображення або натисніть, щоб завантажити. Перше фото — обкладинка.",
+    "sell.field.photos.hint":
+      "Перетягніть зображення або натисніть, щоб завантажити. Перше фото — обкладинка.",
     "sell.review.published": "Оголошення опубліковано",
     "sell.review.publishedBody": "Ваше оголошення активне на Spare Hub.",
     "sell.review.viewListings": "Мої оголошення",
@@ -513,7 +539,7 @@ const dict = {
     "account.profile.title": "Ваш профіль",
     "account.profile.subtitle": "Так вас бачать покупці й продавці на Spare Hub.",
     "account.field.displayName": "Відображуване ім'я",
-    "account.field.displayName.ph": "напр. Іван Коваленко або Кооператив \"Лан\"",
+    "account.field.displayName.ph": 'напр. Іван Коваленко або Кооператив "Лан"',
     "account.field.email": "Email",
     "account.field.role": "Роль",
     "account.role.admin": "Адмін",
@@ -534,7 +560,8 @@ const dict = {
     "account.favorites.title": "Обране",
     "account.favorites.subtitle": "Оголошення, які ви зберегли.",
     "account.favorites.emptyTitle": "Поки нічого не збережено",
-    "account.favorites.emptyBody": "Натисніть на сердечко в будь-якому оголошенні, щоб зберегти його тут.",
+    "account.favorites.emptyBody":
+      "Натисніть на сердечко в будь-якому оголошенні, щоб зберегти його тут.",
     "account.settings.title": "Налаштування",
     "account.settings.subtitle": "Мова та оформлення для цього пристрою.",
     "account.settings.theme": "Тема",
@@ -554,7 +581,8 @@ const dict = {
     "footer.legal": "Юридичне",
 
     "cookies.title": "Cookies на Spare Hub",
-    "cookies.body": "Ми використовуємо невеликий набір cookies, щоб тримати вас у системі, пам'ятати мову й тему та вимірювати роботу маркетплейсу. Це можна змінити в Налаштуваннях.",
+    "cookies.body":
+      "Ми використовуємо невеликий набір cookies, щоб тримати вас у системі, пам'ятати мову й тему та вимірювати роботу маркетплейсу. Це можна змінити в Налаштуваннях.",
     "cookies.accept": "Прийняти все",
     "cookies.essential": "Лише необхідні",
     "cookies.learn": "Політика cookies",
@@ -572,36 +600,49 @@ const dict = {
     "trust.howItWorks.title": "Як працює Spare Hub",
     "trust.howItWorks.subtitle": "Купуйте впевнено, продавайте з охопленням. Ось як це працює.",
     "trust.howItWorks.b1.title": "Шукайте і порівнюйте",
-    "trust.howItWorks.b1.body": "Фільтри за маркою, моделлю, роком та культурою. Сумісність вказана в кожному оголошенні — без здогадок.",
+    "trust.howItWorks.b1.body":
+      "Фільтри за маркою, моделлю, роком та культурою. Сумісність вказана в кожному оголошенні — без здогадок.",
     "trust.howItWorks.b2.title": "Зв'яжіться з продавцем",
-    "trust.howItWorks.b2.body": "Напишіть або зателефонуйте прямо з оголошення. Більшість відповідає того ж дня.",
+    "trust.howItWorks.b2.body":
+      "Напишіть або зателефонуйте прямо з оголошення. Більшість відповідає того ж дня.",
     "trust.howItWorks.b3.title": "Домовтеся про угоду",
-    "trust.howItWorks.b3.body": "Самовивіз, доставка чи логістика кооперативу — обирайте те, що зручно.",
+    "trust.howItWorks.b3.body":
+      "Самовивіз, доставка чи логістика кооперативу — обирайте те, що зручно.",
     "trust.howItWorks.b4.title": "Оцініть досвід",
-    "trust.howItWorks.b4.body": "Чесні відгуки тримають перевірених продавців на видноті й допомагають усім.",
+    "trust.howItWorks.b4.body":
+      "Чесні відгуки тримають перевірених продавців на видноті й допомагають усім.",
 
     "trust.safety.title": "Купувати і продавати безпечно",
     "trust.safety.subtitle": "Прості правила, що тримають маркетплейс надійним.",
     "trust.safety.s1.title": "Перевірені продавці",
-    "trust.safety.s1.body": "Кожного продавця ми перевіряємо: ліцензія, рекомендації, по можливості — візит у господарство.",
+    "trust.safety.s1.body":
+      "Кожного продавця ми перевіряємо: ліцензія, рекомендації, по можливості — візит у господарство.",
     "trust.safety.s2.title": "Платіть тільки при отриманні",
-    "trust.safety.s2.body": "Ніколи не переказуйте кошти, доки не побачили деталь або не підписали накладну. Крипту ми не просимо.",
+    "trust.safety.s2.body":
+      "Ніколи не переказуйте кошти, доки не побачили деталь або не підписали накладну. Крипту ми не просимо.",
     "trust.safety.s3.title": "Тримайте розмови на Spare Hub",
-    "trust.safety.s3.body": "Спілкування через платформу захищає обидві сторони, якщо щось піде не так.",
+    "trust.safety.s3.body":
+      "Спілкування через платформу захищає обидві сторони, якщо щось піде не так.",
     "trust.safety.s4.title": "Повідомляйте про підозріле",
-    "trust.safety.s4.body": "Кнопка «Поскаржитись» є в кожному оголошенні. Ми розглядаємо протягом двох робочих днів.",
+    "trust.safety.s4.body":
+      "Кнопка «Поскаржитись» є в кожному оголошенні. Ми розглядаємо протягом двох робочих днів.",
 
     "trust.help.title": "Довідковий центр",
     "trust.help.subtitle": "Поширені запитання покупців і продавців.",
     "trust.help.q1": "Spare Hub безкоштовний?",
-    "trust.help.a1": "Так — переглядати й писати повідомлення безкоштовно. Продавець платить невелику комісію тільки за закриту угоду.",
+    "trust.help.a1":
+      "Так — переглядати й писати повідомлення безкоштовно. Продавець платить невелику комісію тільки за закриту угоду.",
     "trust.help.q2": "У яких країнах ви працюєте?",
-    "trust.help.a2": "Іспанія, Україна, Франція, Італія та кілька штатів США сьогодні. Щоквартально додаємо нові регіони.",
+    "trust.help.a2":
+      "Іспанія, Україна, Франція, Італія та кілька штатів США сьогодні. Щоквартально додаємо нові регіони.",
     "trust.help.q3": "Як зрозуміти, що продавець справжній?",
-    "trust.help.a3": "Шукайте позначку «Перевірений» — це означає, що ми підтвердили ліцензію і щонайменше три незалежні рекомендації.",
+    "trust.help.a3":
+      "Шукайте позначку «Перевірений» — це означає, що ми підтвердили ліцензію і щонайменше три незалежні рекомендації.",
     "trust.help.q4": "А якщо деталь не відповідає опису?",
-    "trust.help.a4": "Спершу зв'яжіться з продавцем, потім подайте скаргу. Перевірені продавці приймають повернення протягом 14 днів.",
-    "trust.help.contact": "Потрібна ще допомога? Напишіть на help@sparehub.example — відповімо протягом робочого дня.",
+    "trust.help.a4":
+      "Спершу зв'яжіться з продавцем, потім подайте скаргу. Перевірені продавці приймають повернення протягом 14 днів.",
+    "trust.help.contact":
+      "Потрібна ще допомога? Напишіть на help@sparehub.example — відповімо протягом робочого дня.",
 
     "legal.lastUpdated": "Оновлено",
     "legal.terms.title": "Умови надання послуг",
@@ -609,7 +650,6 @@ const dict = {
     "legal.cookies.title": "Політика щодо cookies",
   },
 } as const;
-
 
 type Key = keyof (typeof dict)["en"];
 
@@ -640,7 +680,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     () => ({
       lang,
       setLang,
-      t: (k) => (dict[lang] as Record<string, string>)[k] ?? (dict.en as Record<string, string>)[k] ?? k,
+      t: (k) =>
+        (dict[lang] as Record<string, string>)[k] ?? (dict.en as Record<string, string>)[k] ?? k,
     }),
     [lang],
   );

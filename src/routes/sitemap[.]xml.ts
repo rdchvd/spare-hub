@@ -20,14 +20,30 @@ export const Route = createFileRoute("/sitemap.xml")({
           ...(routeVisibility.backend.productsApiReady
             ? [{ path: "/browse", changefreq: "daily", priority: "0.9" as const }]
             : []),
-          ...(routeVisibility.sitemap.sell ? [{ path: "/sell", changefreq: "weekly", priority: "0.8" as const }] : []),
-          ...(routeVisibility.sitemap.about ? [{ path: "/about", changefreq: "monthly", priority: "0.5" as const }] : []),
-          ...(routeVisibility.sitemap.howItWorks ? [{ path: "/how-it-works", changefreq: "monthly", priority: "0.6" as const }] : []),
-          ...(routeVisibility.sitemap.safety ? [{ path: "/safety", changefreq: "monthly", priority: "0.5" as const }] : []),
-          ...(routeVisibility.sitemap.help ? [{ path: "/help", changefreq: "monthly", priority: "0.5" as const }] : []),
-          ...(routeVisibility.sitemap.legal ? [{ path: "/legal/terms", changefreq: "yearly", priority: "0.3" as const }] : []),
-          ...(routeVisibility.sitemap.legal ? [{ path: "/legal/privacy", changefreq: "yearly", priority: "0.3" as const }] : []),
-          ...(routeVisibility.sitemap.legal ? [{ path: "/legal/cookies", changefreq: "yearly", priority: "0.3" as const }] : []),
+          ...(routeVisibility.sitemap.sell
+            ? [{ path: "/sell", changefreq: "weekly", priority: "0.8" as const }]
+            : []),
+          ...(routeVisibility.sitemap.about
+            ? [{ path: "/about", changefreq: "monthly", priority: "0.5" as const }]
+            : []),
+          ...(routeVisibility.sitemap.howItWorks
+            ? [{ path: "/how-it-works", changefreq: "monthly", priority: "0.6" as const }]
+            : []),
+          ...(routeVisibility.sitemap.safety
+            ? [{ path: "/safety", changefreq: "monthly", priority: "0.5" as const }]
+            : []),
+          ...(routeVisibility.sitemap.help
+            ? [{ path: "/help", changefreq: "monthly", priority: "0.5" as const }]
+            : []),
+          ...(routeVisibility.sitemap.legal
+            ? [{ path: "/legal/terms", changefreq: "yearly", priority: "0.3" as const }]
+            : []),
+          ...(routeVisibility.sitemap.legal
+            ? [{ path: "/legal/privacy", changefreq: "yearly", priority: "0.3" as const }]
+            : []),
+          ...(routeVisibility.sitemap.legal
+            ? [{ path: "/legal/cookies", changefreq: "yearly", priority: "0.3" as const }]
+            : []),
           { path: "/login", changefreq: "yearly", priority: "0.3" },
           { path: "/register", changefreq: "yearly", priority: "0.3" },
         ];
@@ -44,17 +60,16 @@ export const Route = createFileRoute("/sitemap.xml")({
           }
         }
 
-        const urls = entries.map(
-          (e) =>
-            [
-              "  <url>",
-              `    <loc>${BASE_URL}${e.path}</loc>`,
-              e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-              e.priority ? `    <priority>${e.priority}</priority>` : null,
-              "  </url>",
-            ]
-              .filter(Boolean)
-              .join("\n"),
+        const urls = entries.map((e) =>
+          [
+            "  <url>",
+            `    <loc>${BASE_URL}${e.path}</loc>`,
+            e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
+            e.priority ? `    <priority>${e.priority}</priority>` : null,
+            "  </url>",
+          ]
+            .filter(Boolean)
+            .join("\n"),
         );
 
         const xml = [

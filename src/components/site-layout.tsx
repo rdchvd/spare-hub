@@ -46,9 +46,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-2.5 group">
           <BrandLogo className="h-9 w-9 text-primary transition group-hover:scale-105" />
-          <span className="font-display text-lg font-semibold tracking-tight">
-            Spare Hub
-          </span>
+          <span className="font-display text-lg font-semibold tracking-tight">Spare Hub</span>
         </Link>
 
         {centerNavLinks.length > 0 ? (
@@ -75,7 +73,12 @@ export function SiteHeader() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-1.5 hidden sm:inline-flex" aria-label={t("lang.label")}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-1.5 hidden sm:inline-flex"
+                aria-label={t("lang.label")}
+              >
                 <Globe className="h-4 w-4" />
                 <span className="text-sm font-medium uppercase">{lang}</span>
               </Button>
@@ -96,12 +99,7 @@ export function SiteHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggle}
-            aria-label={t("theme.toggle")}
-          >
+          <Button variant="ghost" size="icon" onClick={toggle} aria-label={t("theme.toggle")}>
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
 
@@ -121,7 +119,10 @@ export function SiteHeader() {
                     <Link to="/account">{t("nav.account")}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-destructive focus:text-destructive"
+                  >
                     <LogOut className="h-4 w-4 mr-2" />
                     {t("auth.signout")}
                   </DropdownMenuItem>
@@ -175,13 +176,18 @@ export function SiteHeader() {
               {isAuthed ? (
                 <>
                   <Button asChild variant="outline" size="sm" className="flex-1">
-                    <Link to="/account" onClick={() => setOpen(false)}>{t("nav.account")}</Link>
+                    <Link to="/account" onClick={() => setOpen(false)}>
+                      {t("nav.account")}
+                    </Link>
                   </Button>
                   <Button
                     size="sm"
                     variant="destructive"
                     className="flex-1"
-                    onClick={() => { setOpen(false); void handleLogout(); }}
+                    onClick={() => {
+                      setOpen(false);
+                      void handleLogout();
+                    }}
                   >
                     {t("auth.signout")}
                   </Button>
@@ -189,10 +195,14 @@ export function SiteHeader() {
               ) : (
                 <>
                   <Button asChild variant="outline" size="sm" className="flex-1">
-                    <Link to="/login" onClick={() => setOpen(false)}>{t("nav.signin")}</Link>
+                    <Link to="/login" onClick={() => setOpen(false)}>
+                      {t("nav.signin")}
+                    </Link>
                   </Button>
                   <Button asChild size="sm" className="flex-1">
-                    <Link to="/register" onClick={() => setOpen(false)}>{t("nav.signup")}</Link>
+                    <Link to="/register" onClick={() => setOpen(false)}>
+                      {t("nav.signup")}
+                    </Link>
                   </Button>
                 </>
               )}
@@ -203,7 +213,9 @@ export function SiteHeader() {
                   key={l.code}
                   onClick={() => setLang(l.code as Lang)}
                   className={`rounded-md border px-2.5 py-1 text-xs uppercase ${
-                    lang === l.code ? "border-primary bg-primary/10 text-foreground" : "border-border text-muted-foreground"
+                    lang === l.code
+                      ? "border-primary bg-primary/10 text-foreground"
+                      : "border-border text-muted-foreground"
                   }`}
                 >
                   {l.code}
@@ -220,7 +232,8 @@ export function SiteHeader() {
 export function SiteFooter() {
   const { t } = useI18n();
   const { status, user } = useAuth();
-  const showSellLink = canManageProducts(user) && routeVisibility.header.sell && status === "authenticated";
+  const showSellLink =
+    canManageProducts(user) && routeVisibility.header.sell && status === "authenticated";
   return (
     <footer className="border-t border-border bg-background mt-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 grid gap-8 md:grid-cols-5">
@@ -234,25 +247,79 @@ export function SiteFooter() {
         <div className="text-sm">
           <div className="font-medium mb-2">{t("footer.product")}</div>
           <ul className="space-y-1.5 text-muted-foreground">
-            {routeVisibility.backend.productsApiReady ? <li><Link to="/browse" className="hover:text-foreground">{t("nav.browse")}</Link></li> : null}
-            {showSellLink ? <li><Link to="/sell" className="hover:text-foreground">{t("nav.sell")}</Link></li> : null}
-            {routeVisibility.header.about ? <li><Link to="/about" className="hover:text-foreground">{t("nav.about")}</Link></li> : null}
+            {routeVisibility.backend.productsApiReady ? (
+              <li>
+                <Link to="/browse" className="hover:text-foreground">
+                  {t("nav.browse")}
+                </Link>
+              </li>
+            ) : null}
+            {showSellLink ? (
+              <li>
+                <Link to="/sell" className="hover:text-foreground">
+                  {t("nav.sell")}
+                </Link>
+              </li>
+            ) : null}
+            {routeVisibility.header.about ? (
+              <li>
+                <Link to="/about" className="hover:text-foreground">
+                  {t("nav.about")}
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </div>
         <div className="text-sm">
           <div className="font-medium mb-2">{t("footer.support")}</div>
           <ul className="space-y-1.5 text-muted-foreground">
-            {routeVisibility.supportFooter.howItWorks ? <li><Link to="/how-it-works" className="hover:text-foreground">{t("nav.howItWorks")}</Link></li> : null}
-            {routeVisibility.supportFooter.safety ? <li><Link to="/safety" className="hover:text-foreground">{t("nav.safety")}</Link></li> : null}
-            {routeVisibility.supportFooter.help ? <li><Link to="/help" className="hover:text-foreground">{t("nav.help")}</Link></li> : null}
+            {routeVisibility.supportFooter.howItWorks ? (
+              <li>
+                <Link to="/how-it-works" className="hover:text-foreground">
+                  {t("nav.howItWorks")}
+                </Link>
+              </li>
+            ) : null}
+            {routeVisibility.supportFooter.safety ? (
+              <li>
+                <Link to="/safety" className="hover:text-foreground">
+                  {t("nav.safety")}
+                </Link>
+              </li>
+            ) : null}
+            {routeVisibility.supportFooter.help ? (
+              <li>
+                <Link to="/help" className="hover:text-foreground">
+                  {t("nav.help")}
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </div>
         <div className="text-sm">
           <div className="font-medium mb-2">{t("footer.legal")}</div>
           <ul className="space-y-1.5 text-muted-foreground">
-            {routeVisibility.legalFooter.terms ? <li><Link to="/legal/terms" className="hover:text-foreground">{t("nav.terms")}</Link></li> : null}
-            {routeVisibility.legalFooter.privacy ? <li><Link to="/legal/privacy" className="hover:text-foreground">{t("nav.privacy")}</Link></li> : null}
-            {routeVisibility.legalFooter.cookies ? <li><Link to="/legal/cookies" className="hover:text-foreground">{t("nav.cookies")}</Link></li> : null}
+            {routeVisibility.legalFooter.terms ? (
+              <li>
+                <Link to="/legal/terms" className="hover:text-foreground">
+                  {t("nav.terms")}
+                </Link>
+              </li>
+            ) : null}
+            {routeVisibility.legalFooter.privacy ? (
+              <li>
+                <Link to="/legal/privacy" className="hover:text-foreground">
+                  {t("nav.privacy")}
+                </Link>
+              </li>
+            ) : null}
+            {routeVisibility.legalFooter.cookies ? (
+              <li>
+                <Link to="/legal/cookies" className="hover:text-foreground">
+                  {t("nav.cookies")}
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </div>
       </div>

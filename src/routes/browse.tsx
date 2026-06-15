@@ -23,8 +23,7 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/browse")({
-  loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData(productQueries.list()),
+  loader: ({ context: { queryClient } }) => queryClient.ensureQueryData(productQueries.list()),
   component: Browse,
 });
 

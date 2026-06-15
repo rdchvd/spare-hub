@@ -47,7 +47,7 @@ npm run dev:be   # backend only
 
 GitHub Actions runs on every push and pull request (`.github/workflows/ci.yml`):
 
-- **Backend:** Ruff, Black, `manage.py check`, migrations, tests (PostgreSQL service)
+- **Backend:** Ruff, Black, `manage.py check`, migrations, tests (SQLite in CI via `CI=true`)
 - **Frontend:** ESLint, Prettier, TypeScript, production build
 
 ## Code style and pre-commit

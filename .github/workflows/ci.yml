@@ -13,29 +13,10 @@ jobs:
   backend:
     name: Backend (lint & tests)
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: sparehub_user
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: sparehub_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U sparehub_user -d sparehub_db"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     env:
-      SECRET_KEY: ci-secret-key-not-for-production
+      CI: "true"
       DEBUG: "True"
       ALLOWED_HOSTS: localhost,127.0.0.1
-      DB_NAME: sparehub_db
-      DB_USER: sparehub_user
-      DB_PASSWORD: postgres
-      DB_HOST: localhost
-      DB_PORT: "5432"
     steps:
       - uses: actions/checkout@v4
 

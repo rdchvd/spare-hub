@@ -1,6 +1,6 @@
 export type Listing = {
   id: string;
-  title: { en: string; es: string; uk: string };
+  title: { en: string; uk: string };
   category: "tractor" | "irrigation" | "sprayers" | "harvest" | "seeds" | "tools";
   brand: string;
   condition: "new" | "used" | "refurb";
@@ -20,7 +20,6 @@ export const listings: Listing[] = [
     id: "l-1001",
     title: {
       en: "John Deere 6M hydraulic pump — OEM",
-      es: "Bomba hidráulica John Deere 6M — OEM",
       uk: "Гідронасос John Deere 6M — OEM",
     },
     category: "tractor",
@@ -40,7 +39,6 @@ export const listings: Listing[] = [
     id: "l-1002",
     title: {
       en: "Drip irrigation kit — 1 hectare, Netafim",
-      es: "Kit de riego por goteo — 1 ha, Netafim",
       uk: "Комплект крапельного поливу — 1 га, Netafim",
     },
     category: "irrigation",
@@ -60,7 +58,6 @@ export const listings: Listing[] = [
     id: "l-1003",
     title: {
       en: "Case IH Magnum 340 — 2019, 3,200 h",
-      es: "Case IH Magnum 340 — 2019, 3.200 h",
       uk: "Case IH Magnum 340 — 2019, 3 200 м/г",
     },
     category: "harvest",
@@ -80,7 +77,6 @@ export const listings: Listing[] = [
     id: "l-1004",
     title: {
       en: "Sprayer nozzles set — TeeJet AIXR (24×)",
-      es: "Set de boquillas — TeeJet AIXR (24 uds)",
       uk: "Набір форсунок — TeeJet AIXR (24 шт)",
     },
     category: "sprayers",
@@ -100,7 +96,6 @@ export const listings: Listing[] = [
     id: "l-1005",
     title: {
       en: "Certified hybrid maize seed — 25 kg",
-      es: "Semilla de maíz híbrido certificada — 25 kg",
       uk: "Сертифіковане насіння кукурудзи — 25 кг",
     },
     category: "seeds",
@@ -120,7 +115,6 @@ export const listings: Listing[] = [
     id: "l-1006",
     title: {
       en: "Diagnostic scanner — CAN-bus for AG machinery",
-      es: "Escáner de diagnóstico — CAN-bus agrícola",
       uk: "Діагностичний сканер — CAN-bus для агротехніки",
     },
     category: "tools",
@@ -140,7 +134,6 @@ export const listings: Listing[] = [
     id: "l-1007",
     title: {
       en: "Centrifugal water pump 7.5 kW",
-      es: "Bomba centrífuga de agua 7,5 kW",
       uk: "Відцентровий водяний насос 7,5 кВт",
     },
     category: "irrigation",
@@ -160,7 +153,6 @@ export const listings: Listing[] = [
     id: "l-1008",
     title: {
       en: "Engine oil filter — multi-fit (10×)",
-      es: "Filtro de aceite — multimarca (10 uds)",
       uk: "Масляний фільтр — універсальний (10 шт)",
     },
     category: "tractor",
@@ -180,7 +172,6 @@ export const listings: Listing[] = [
     id: "l-1009",
     title: {
       en: "Round baler New Holland Roll-Belt 150",
-      es: "Empacadora New Holland Roll-Belt 150",
       uk: "Прес-підбирач New Holland Roll-Belt 150",
     },
     category: "harvest",

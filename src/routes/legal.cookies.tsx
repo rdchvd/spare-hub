@@ -8,48 +8,22 @@ export const Route = createFileRoute("/legal/cookies")({
   head: () => ({
     meta: [
       { title: "Cookie policy — Spare Hub" },
-      {
-        name: "description",
-        content: "The small set of cookies Spare Hub uses, and how to control them.",
-      },
+      { name: "description", content: "The small set of cookies Spare Hub uses, and how to control them." },
       { property: "og:title", content: "Cookie policy — Spare Hub" },
-      {
-        property: "og:description",
-        content: "Essential, preference and analytics cookies — explained plainly.",
-      },
+      { property: "og:description", content: "Essential, preference and analytics cookies — explained plainly." },
     ],
   }),
   component: Cookies,
 });
 
-const content: Record<
-  Lang,
-  { intro: string; rows: { name: string; purpose: string; type: string }[] }
-> = {
+const content: Record<Lang, { intro: string; rows: { name: string; purpose: string; type: string }[] }> = {
   en: {
     intro: "We keep cookies minimal. Here's the full list and what each one does.",
     rows: [
       { name: "sparehub.lang", purpose: "Remember your language", type: "Preference" },
       { name: "sparehub.theme", purpose: "Remember light/dark theme", type: "Preference" },
       { name: "sparehub.cookies", purpose: "Remember your cookie choice", type: "Essential" },
-      {
-        name: "sparehub.profile",
-        purpose: "Store your profile draft on this device",
-        type: "Essential",
-      },
-    ],
-  },
-  es: {
-    intro: "Usamos las cookies al mínimo. Esta es la lista completa y qué hace cada una.",
-    rows: [
-      { name: "sparehub.lang", purpose: "Recordar tu idioma", type: "Preferencia" },
-      { name: "sparehub.theme", purpose: "Recordar tema claro/oscuro", type: "Preferencia" },
-      { name: "sparehub.cookies", purpose: "Recordar tu elección de cookies", type: "Esencial" },
-      {
-        name: "sparehub.profile",
-        purpose: "Guardar el borrador de tu perfil en este dispositivo",
-        type: "Esencial",
-      },
+      { name: "sparehub.profile", purpose: "Store your profile draft on this device", type: "Essential" },
     ],
   },
   uk: {
@@ -58,11 +32,7 @@ const content: Record<
       { name: "sparehub.lang", purpose: "Пам'ятати вашу мову", type: "Налаштування" },
       { name: "sparehub.theme", purpose: "Пам'ятати світлу/темну тему", type: "Налаштування" },
       { name: "sparehub.cookies", purpose: "Пам'ятати ваш вибір щодо cookies", type: "Необхідний" },
-      {
-        name: "sparehub.profile",
-        purpose: "Зберегти чернетку профілю на цьому пристрої",
-        type: "Необхідний",
-      },
+      { name: "sparehub.profile", purpose: "Зберегти чернетку профілю на цьому пристрої", type: "Необхідний" },
     ],
   },
 };
@@ -77,7 +47,9 @@ function Cookies() {
         <h1 className="font-display text-4xl font-semibold tracking-tight">
           {t("legal.cookies.title")}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">{t("legal.lastUpdated")}: 2026-05-01</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t("legal.lastUpdated")}: 2026-05-01
+        </p>
         <p className="mt-6 text-foreground/90">{c.intro}</p>
         <div className="mt-8 overflow-hidden rounded-xl border border-border/60">
           <table className="w-full text-sm">

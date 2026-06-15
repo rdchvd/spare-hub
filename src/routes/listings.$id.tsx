@@ -8,32 +8,65 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useI18n } from "@/lib/i18n";
 import { routeVisibility } from "@/lib/route-visibility";
-import { listings, type Listing } from "@/lib/listings";
+import { listings } from "@/lib/listings";
+import { ApiError } from "@/features/auth/client";
+import { productQueries, useMyProducts } from "@/features/products/queries";
+import {
+  currencySymbol,
+  mockListingToDisplay,
+  productToDisplay,
+  productsToDisplay,
+} from "@/features/products/display";
+import { canManageProducts } from "@/features/products/client";
+import { useAuth } from "@/features/auth/auth-context";
+import { initials } from "@/lib/profile";
 import {
   ArrowLeft,
   BadgeCheck,
   Heart,
   MapPin,
   MessageSquare,
+  Pencil,
   Phone,
   Share2,
   Star,
+  Trash2,
   Truck,
 } from "lucide-react";
 
 export const Route = createFileRoute("/listings/$id")({
-  loader: ({ params }) => {
-    const listing = listings.find((l) => l.id === params.id);
-    if (!listing) throw notFound();
-    return { listing };
+  loader: async ({ params, context: { queryClient } }) => {
+    const numericId = Number(params.id);
+    if (Number.isFinite(numericId)) {
+      try {
+        const product = await queryClient.fetchQuery(productQueries.detail(numericId));
+        const listing = productToDisplay(product);
+        const all = await queryClient.ensureQueryData(productQueries.list());
+        const related = productsToDisplay(all)
+          .filter((l) => l.id !== listing.id && l.mock.category === listing.mock.category)
+          .slice(0, 4);
+        return { listing, related, mockOnly: false as const };
+      } catch (error) {
+        if (!(error instanceof ApiError && error.status === 404)) throw error;
+      }
+    }
+
+    const mock = listings.find((l) => l.id === params.id);
+    if (!mock) throw notFound();
+    const listing = mockListingToDisplay(mock);
+    const related = listings
+      .filter((l) => l.id !== mock.id && l.category === mock.category)
+      .slice(0, 4)
+      .map((l) => mockListingToDisplay(l));
+    return { listing, related, mockOnly: true as const };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.listing.title.en} — Spare Hub` },
+          { title: `${loaderData.listing.name} — Spare Hub` },
           {
             name: "description",
-            content: `${loaderData.listing.brand} · ${loaderData.listing.location} · from ${loaderData.listing.seller}.`,
+            content: `${loaderData.listing.brand} · ${loaderData.listing.mock.location} · from ${loaderData.listing.sellerName || "Spare Hub"}.`,
           },
         ]
       : [{ title: "Listing — Spare Hub" }],
@@ -42,16 +75,15 @@ export const Route = createFileRoute("/listings/$id")({
   notFoundComponent: ListingNotFound,
 });
 
-const currencySymbol = (c: Listing["currency"]) => (c === "EUR" ? "€" : "$");
-
 function ListingDetail() {
   if (!routeVisibility.backend.productsApiReady) return <ComingSoon showBrowse={false} />;
-  const { listing } = Route.useLoaderData();
-  const { t, lang } = useI18n();
-
-  const related = listings
-    .filter((l) => l.id !== listing.id && l.category === listing.category)
-    .slice(0, 4);
+  const { listing, related, mockOnly } = Route.useLoaderData();
+  const { t } = useI18n();
+  const { user } = useAuth();
+  const { data: mine = [] } = useMyProducts(canManageProducts(user) && !mockOnly);
+  const isOwner = !mockOnly && mine.some((p) => p.id === listing.product.id);
+  const { mock } = listing;
+  const sellerInitials = initials(listing.sellerName, listing.sellerName);
 
   return (
     <SiteLayout>
@@ -64,13 +96,29 @@ function ListingDetail() {
           {t("listing.back")}
         </Link>
 
+        {isOwner ? (
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button asChild variant="outline" size="sm" className="gap-1.5">
+              <Link to="/sell/$id/edit" params={{ id: listing.id }}>
+                <Pencil className="h-4 w-4" />
+                {t("account.listings.actions.edit")}
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm" className="gap-1.5 text-destructive hover:text-destructive">
+              <Link to="/sell/$id/edit" params={{ id: listing.id }} search={{ delete: true }}>
+                <Trash2 className="h-4 w-4" />
+                {t("products.delete")}
+              </Link>
+            </Button>
+          </div>
+        ) : null}
+
         <div className="mt-6 grid lg:grid-cols-[1.4fr_1fr] gap-8">
-          {/* Media + content */}
           <div>
             <div className="aspect-[4/3] rounded-2xl border border-border/70 bg-gradient-to-br from-secondary to-muted flex items-center justify-center relative overflow-hidden">
-              <span className="text-9xl select-none">{listing.emoji}</span>
+              <span className="text-9xl select-none">{mock.emoji}</span>
               <div className="absolute top-4 left-4 flex gap-2">
-                {listing.verified && (
+                {mock.verified && (
                   <Badge
                     variant="secondary"
                     className="bg-background/90 text-foreground border border-border/60 gap-1 backdrop-blur"
@@ -91,21 +139,10 @@ function ListingDetail() {
               </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-4 gap-3">
-              {[listing.emoji, "📸", "📸", "📸"].map((e, i) => (
-                <div
-                  key={i}
-                  className="aspect-square rounded-lg border border-border/60 bg-secondary/50 flex items-center justify-center text-2xl"
-                >
-                  {e}
-                </div>
-              ))}
-            </div>
-
             <section className="mt-10">
               <h2 className="font-display text-xl font-semibold">{t("listing.description")}</h2>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                {t("listing.description.body")}
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                {listing.description || t("listing.description.body")}
               </p>
             </section>
 
@@ -113,40 +150,44 @@ function ListingDetail() {
               <h2 className="font-display text-xl font-semibold">{t("listing.specs")}</h2>
               <dl className="mt-4 grid sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
                 {[
-                  { k: t("listing.spec.brand"), v: listing.brand },
+                  { k: t("listing.spec.brand"), v: listing.brand, mock: false },
+                  { k: t("listing.spec.condition"), v: t(`browse.condition.${listing.condition}` as const), mock: false },
+                  { k: t("listing.spec.category"), v: t(`cat.${mock.category}` as const), mock: true },
+                  { k: t("listing.spec.location"), v: mock.location, mock: true },
+                  { k: t("sell.field.currency"), v: listing.currency, mock: false },
                   {
-                    k: t("listing.spec.condition"),
-                    v: t(`browse.condition.${listing.condition}` as any),
+                    k: t("products.quantity"),
+                    v: String(listing.quantity),
+                    mock: false,
                   },
-                  { k: t("listing.spec.category"), v: t(`cat.${listing.category}` as any) },
-                  { k: t("listing.spec.location"), v: listing.location },
                   {
                     k: t("listing.spec.stock"),
                     v: listing.stock === "in" ? t("listings.inStock") : t("listings.lowStock"),
+                    mock: false,
                   },
-                  { k: t("listing.spec.sku"), v: listing.id.toUpperCase() },
+                  { k: t("listing.spec.sku"), v: listing.id.toUpperCase(), mock: false },
                 ].map((row) => (
-                  <div
-                    key={row.k}
-                    className="flex justify-between gap-4 border-b border-border/50 py-2"
-                  >
+                  <div key={row.k} className="flex justify-between gap-4 border-b border-border/50 py-2">
                     <dt className="text-muted-foreground">{row.k}</dt>
-                    <dd className="font-medium text-foreground text-right">{row.v}</dd>
+                    <dd
+                      className={`font-medium text-right ${row.mock ? "text-[color:var(--mock-foreground)] italic" : "text-foreground"}`}
+                    >
+                      {row.v}
+                    </dd>
                   </div>
                 ))}
               </dl>
             </section>
 
-            <section className="mt-10 flex items-start gap-3 rounded-xl border border-border/70 bg-secondary/40 p-4">
-              <Truck className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+            <section className="mt-10 flex items-start gap-3 rounded-xl border border-dashed border-[color:var(--mock)] bg-[color:var(--mock)]/10 p-4">
+              <Truck className="h-5 w-5 text-[color:var(--mock-foreground)] shrink-0 mt-0.5" />
               <div>
-                <div className="font-medium text-sm">{t("listing.shipping")}</div>
-                <p className="text-sm text-muted-foreground mt-1">{t("listing.shipping.body")}</p>
+                <div className="font-medium text-sm text-[color:var(--mock-foreground)]">{t("listing.shipping")}</div>
+                <p className="text-sm text-[color:var(--mock-foreground)]/80 mt-1">{t("listing.shipping.body")}</p>
               </div>
             </section>
           </div>
 
-          {/* Sticky buy panel */}
           <aside className="lg:sticky lg:top-20 lg:self-start space-y-4">
             <Card className="border-border/70">
               <CardContent className="p-6">
@@ -155,24 +196,24 @@ function ListingDetail() {
                   <span>·</span>
                   <Link
                     to="/c/$category"
-                    params={{ category: listing.category }}
-                    className="hover:text-foreground"
+                    params={{ category: mock.category }}
+                    className="text-[color:var(--mock-foreground)] hover:text-foreground"
                   >
-                    {t(`cat.${listing.category}` as any)}
+                    {t(`cat.${mock.category}` as const)}
                   </Link>
                 </div>
                 <h1 className="mt-2 font-display text-2xl font-semibold leading-tight tracking-tight">
-                  {listing.title[lang]}
+                  {listing.name}
                 </h1>
 
-                <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
+                <div className="mt-3 flex items-center gap-4 text-xs text-[color:var(--mock-foreground)]">
                   <span className="flex items-center gap-1">
-                    <MapPin className="h-3.5 w-3.5" /> {listing.location}
+                    <MapPin className="h-3.5 w-3.5" /> {mock.location}
                   </span>
                   <span className="flex items-center gap-1">
                     <Star className="h-3.5 w-3.5 fill-[color:var(--gold)] text-[color:var(--gold)]" />
-                    {listing.rating}
-                    <span className="opacity-60">({listing.reviews})</span>
+                    {mock.rating}
+                    <span className="opacity-60">({mock.reviews})</span>
                   </span>
                 </div>
 
@@ -206,15 +247,19 @@ function ListingDetail() {
                   </div>
                   <div className="mt-2 flex items-center gap-3">
                     <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-display font-semibold">
-                      {listing.seller.charAt(0)}
+                      {sellerInitials}
                     </div>
                     <div className="min-w-0">
-                      <div className="font-medium text-sm truncate">{listing.seller}</div>
-                      {listing.verified && (
+                      <div
+                        className={`font-medium text-sm truncate ${listing.sellerIsPreview ? "text-[color:var(--mock-foreground)]" : "text-foreground"}`}
+                      >
+                        {listing.sellerName || t("listing.seller")}
+                      </div>
+                      {listing.sellerIsPreview && mock.verified ? (
                         <div className="text-xs text-accent flex items-center gap-1">
                           <BadgeCheck className="h-3 w-3" /> {t("listings.verified")}
                         </div>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 </div>

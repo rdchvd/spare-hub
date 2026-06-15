@@ -114,7 +114,10 @@ function ListingDetail() {
               <dl className="mt-4 grid sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
                 {[
                   { k: t("listing.spec.brand"), v: listing.brand },
-                  { k: t("listing.spec.condition"), v: t(`browse.condition.${listing.condition}` as any) },
+                  {
+                    k: t("listing.spec.condition"),
+                    v: t(`browse.condition.${listing.condition}` as any),
+                  },
                   { k: t("listing.spec.category"), v: t(`cat.${listing.category}` as any) },
                   { k: t("listing.spec.location"), v: listing.location },
                   {
@@ -123,7 +126,10 @@ function ListingDetail() {
                   },
                   { k: t("listing.spec.sku"), v: listing.id.toUpperCase() },
                 ].map((row) => (
-                  <div key={row.k} className="flex justify-between gap-4 border-b border-border/50 py-2">
+                  <div
+                    key={row.k}
+                    className="flex justify-between gap-4 border-b border-border/50 py-2"
+                  >
                     <dt className="text-muted-foreground">{row.k}</dt>
                     <dd className="font-medium text-foreground text-right">{row.v}</dd>
                   </div>

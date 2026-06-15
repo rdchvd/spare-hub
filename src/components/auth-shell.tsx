@@ -72,15 +72,14 @@ export function AuthShell({
 
       {/* Brand side */}
       <div className="hidden lg:flex relative bg-primary text-primary-foreground overflow-hidden">
-        <div className="absolute inset-0 opacity-30"
+        <div
+          className="absolute inset-0 opacity-30"
           style={{
             backgroundImage:
               "radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--gold) 40%, transparent), transparent 50%), radial-gradient(circle at 80% 70%, color-mix(in oklab, var(--accent) 60%, transparent), transparent 55%)",
           }}
         />
-        <div className="relative flex flex-col justify-between p-10 xl:p-14 w-full">
-          {side}
-        </div>
+        <div className="relative flex flex-col justify-between p-10 xl:p-14 w-full">{side}</div>
       </div>
     </div>
   );

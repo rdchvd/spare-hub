@@ -8,9 +8,15 @@ export const Route = createFileRoute("/legal/privacy")({
   head: () => ({
     meta: [
       { title: "Privacy policy — Spare Hub" },
-      { name: "description", content: "What data we collect, why we collect it, and how we keep it safe." },
+      {
+        name: "description",
+        content: "What data we collect, why we collect it, and how we keep it safe.",
+      },
       { property: "og:title", content: "Privacy policy — Spare Hub" },
-      { property: "og:description", content: "Clear, plain-language privacy practices for buyers and sellers." },
+      {
+        property: "og:description",
+        content: "Clear, plain-language privacy practices for buyers and sellers.",
+      },
     ],
   }),
   component: Privacy,
@@ -18,35 +24,86 @@ export const Route = createFileRoute("/legal/privacy")({
 
 const content: Record<Lang, { intro: string; sections: { h: string; p: string }[] }> = {
   en: {
-    intro: "Your data belongs to you. We only collect what's needed to run the marketplace, and we never sell it.",
+    intro:
+      "Your data belongs to you. We only collect what's needed to run the marketplace, and we never sell it.",
     sections: [
-      { h: "What we collect", p: "Account details (name, email, optional phone), listings you publish, messages you send through the platform, and basic usage analytics." },
-      { h: "Why we collect it", p: "To authenticate you, deliver messages, show relevant listings, prevent fraud and improve the service." },
-      { h: "Who we share with", p: "Service providers that host our infrastructure and send transactional email. Never with advertisers." },
-      { h: "Retention", p: "Account data is retained while your account is active. Closed accounts are deleted within 30 days, except where law requires otherwise." },
-      { h: "Your rights", p: "Access, correction, deletion and export — write to privacy@sparehub.example and we'll respond within 30 days." },
+      {
+        h: "What we collect",
+        p: "Account details (name, email, optional phone), listings you publish, messages you send through the platform, and basic usage analytics.",
+      },
+      {
+        h: "Why we collect it",
+        p: "To authenticate you, deliver messages, show relevant listings, prevent fraud and improve the service.",
+      },
+      {
+        h: "Who we share with",
+        p: "Service providers that host our infrastructure and send transactional email. Never with advertisers.",
+      },
+      {
+        h: "Retention",
+        p: "Account data is retained while your account is active. Closed accounts are deleted within 30 days, except where law requires otherwise.",
+      },
+      {
+        h: "Your rights",
+        p: "Access, correction, deletion and export — write to privacy@sparehub.example and we'll respond within 30 days.",
+      },
       { h: "Cookies", p: "See our cookie policy for the small set of cookies we use." },
     ],
   },
   es: {
-    intro: "Tus datos son tuyos. Solo recogemos lo necesario para operar el marketplace y nunca los vendemos.",
+    intro:
+      "Tus datos son tuyos. Solo recogemos lo necesario para operar el marketplace y nunca los vendemos.",
     sections: [
-      { h: "Qué recogemos", p: "Datos de cuenta (nombre, email, teléfono opcional), tus anuncios, mensajes enviados en la plataforma y métricas básicas de uso." },
-      { h: "Por qué los recogemos", p: "Para autenticarte, entregar mensajes, mostrar anuncios relevantes, prevenir fraude y mejorar el servicio." },
-      { h: "Con quién los compartimos", p: "Proveedores que alojan nuestra infraestructura y envían emails transaccionales. Nunca con anunciantes." },
-      { h: "Retención", p: "Los datos se conservan mientras tu cuenta esté activa. Las cuentas cerradas se eliminan en 30 días, salvo obligación legal." },
-      { h: "Tus derechos", p: "Acceso, rectificación, supresión y portabilidad — escribe a privacy@sparehub.example y respondemos en 30 días." },
-      { h: "Cookies", p: "Consulta nuestra política de cookies para ver el pequeño conjunto que usamos." },
+      {
+        h: "Qué recogemos",
+        p: "Datos de cuenta (nombre, email, teléfono opcional), tus anuncios, mensajes enviados en la plataforma y métricas básicas de uso.",
+      },
+      {
+        h: "Por qué los recogemos",
+        p: "Para autenticarte, entregar mensajes, mostrar anuncios relevantes, prevenir fraude y mejorar el servicio.",
+      },
+      {
+        h: "Con quién los compartimos",
+        p: "Proveedores que alojan nuestra infraestructura y envían emails transaccionales. Nunca con anunciantes.",
+      },
+      {
+        h: "Retención",
+        p: "Los datos se conservan mientras tu cuenta esté activa. Las cuentas cerradas se eliminan en 30 días, salvo obligación legal.",
+      },
+      {
+        h: "Tus derechos",
+        p: "Acceso, rectificación, supresión y portabilidad — escribe a privacy@sparehub.example y respondemos en 30 días.",
+      },
+      {
+        h: "Cookies",
+        p: "Consulta nuestra política de cookies para ver el pequeño conjunto que usamos.",
+      },
     ],
   },
   uk: {
-    intro: "Ваші дані належать вам. Ми збираємо лише необхідне для роботи маркетплейсу і ніколи їх не продаємо.",
+    intro:
+      "Ваші дані належать вам. Ми збираємо лише необхідне для роботи маркетплейсу і ніколи їх не продаємо.",
     sections: [
-      { h: "Що ми збираємо", p: "Дані акаунта (ім'я, email, телефон за бажанням), ваші оголошення, повідомлення на платформі та базову аналітику використання." },
-      { h: "Навіщо ми це збираємо", p: "Щоб ідентифікувати вас, доставляти повідомлення, показувати релевантні оголошення, запобігати шахрайству і покращувати сервіс." },
-      { h: "З ким ми ділимось", p: "Постачальники, які хостять інфраструктуру й надсилають транзакційні листи. Ніколи з рекламодавцями." },
-      { h: "Зберігання", p: "Дані зберігаються поки ваш акаунт активний. Закриті акаунти видаляються протягом 30 днів, окрім випадків, передбачених законом." },
-      { h: "Ваші права", p: "Доступ, виправлення, видалення та експорт — напишіть на privacy@sparehub.example, ми відповімо протягом 30 днів." },
+      {
+        h: "Що ми збираємо",
+        p: "Дані акаунта (ім'я, email, телефон за бажанням), ваші оголошення, повідомлення на платформі та базову аналітику використання.",
+      },
+      {
+        h: "Навіщо ми це збираємо",
+        p: "Щоб ідентифікувати вас, доставляти повідомлення, показувати релевантні оголошення, запобігати шахрайству і покращувати сервіс.",
+      },
+      {
+        h: "З ким ми ділимось",
+        p: "Постачальники, які хостять інфраструктуру й надсилають транзакційні листи. Ніколи з рекламодавцями.",
+      },
+      {
+        h: "Зберігання",
+        p: "Дані зберігаються поки ваш акаунт активний. Закриті акаунти видаляються протягом 30 днів, окрім випадків, передбачених законом.",
+      },
+      {
+        h: "Ваші права",
+        p: "Доступ, виправлення, видалення та експорт — напишіть на privacy@sparehub.example, ми відповімо протягом 30 днів.",
+      },
       { h: "Cookies", p: "Див. політику cookies про невеликий набір, який ми використовуємо." },
     ],
   },
@@ -62,9 +119,7 @@ function Privacy() {
         <h1 className="font-display text-4xl font-semibold tracking-tight">
           {t("legal.privacy.title")}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {t("legal.lastUpdated")}: 2026-05-01
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{t("legal.lastUpdated")}: 2026-05-01</p>
         <p className="mt-6 text-foreground/90">{c.intro}</p>
         <div className="mt-8 space-y-6">
           {c.sections.map((s) => (

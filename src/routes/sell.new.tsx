@@ -67,7 +67,10 @@ function SellNew() {
 
   const canContinue =
     (step === 1 && form.category !== "") ||
-    (step === 2 && form.title.trim() !== "" && form.brand.trim() !== "" && form.location.trim() !== "") ||
+    (step === 2 &&
+      form.title.trim() !== "" &&
+      form.brand.trim() !== "" &&
+      form.location.trim() !== "") ||
     (step === 3 && form.price.trim() !== "") ||
     step === 4;
 
@@ -88,7 +91,14 @@ function SellNew() {
           </h1>
           <p className="mt-2 text-muted-foreground">{t("sell.review.publishedBody")}</p>
           <div className="mt-6 flex justify-center gap-2">
-            <Button onClick={() => { setForm(initial); setStep(1); setDone(false); }} variant="outline">
+            <Button
+              onClick={() => {
+                setForm(initial);
+                setStep(1);
+                setDone(false);
+              }}
+              variant="outline"
+            >
               {t("sell.review.another")}
             </Button>
             <Button onClick={() => navigate({ to: "/browse" })}>
@@ -201,7 +211,10 @@ function SellNew() {
                   </div>
                   <div className="space-y-1.5">
                     <Label>{t("sell.field.condition")}</Label>
-                    <Select value={form.condition} onValueChange={(v) => update("condition", v as Condition)}>
+                    <Select
+                      value={form.condition}
+                      onValueChange={(v) => update("condition", v as Condition)}
+                    >
                       <SelectTrigger className="h-11">
                         <SelectValue />
                       </SelectTrigger>
@@ -271,7 +284,10 @@ function SellNew() {
                   </div>
                   <div className="space-y-1.5">
                     <Label>{t("sell.field.currency")}</Label>
-                    <Select value={form.currency} onValueChange={(v) => update("currency", v as Currency)}>
+                    <Select
+                      value={form.currency}
+                      onValueChange={(v) => update("currency", v as Currency)}
+                    >
                       <SelectTrigger className="h-11">
                         <SelectValue />
                       </SelectTrigger>
@@ -314,19 +330,29 @@ function SellNew() {
                   {[
                     { k: t("sell.field.title"), v: form.title || "—" },
                     { k: t("sell.field.brand"), v: form.brand || "—" },
-                    { k: t("listing.spec.category"), v: form.category ? t(`cat.${form.category}` as any) : "—" },
-                    { k: t("sell.field.condition"), v: t(`browse.condition.${form.condition}` as const) },
+                    {
+                      k: t("listing.spec.category"),
+                      v: form.category ? t(`cat.${form.category}` as any) : "—",
+                    },
+                    {
+                      k: t("sell.field.condition"),
+                      v: t(`browse.condition.${form.condition}` as const),
+                    },
                     { k: t("sell.field.location"), v: form.location || "—" },
                     {
                       k: t("sell.field.price"),
-                      v: form.price ? `${form.currency === "EUR" ? "€" : "$"}${Number(form.price).toLocaleString()}` : "—",
+                      v: form.price
+                        ? `${form.currency === "EUR" ? "€" : "$"}${Number(form.price).toLocaleString()}`
+                        : "—",
                     },
                     { k: t("sell.field.stock"), v: t(`sell.field.stock.${form.stock}` as const) },
                     { k: t("sell.field.description"), v: form.description || "—" },
                   ].map((row) => (
                     <div key={row.k} className="flex justify-between gap-6 py-3">
                       <dt className="text-muted-foreground">{row.k}</dt>
-                      <dd className="font-medium text-foreground text-right max-w-[60%]">{row.v}</dd>
+                      <dd className="font-medium text-foreground text-right max-w-[60%]">
+                        {row.v}
+                      </dd>
                     </div>
                   ))}
                 </dl>

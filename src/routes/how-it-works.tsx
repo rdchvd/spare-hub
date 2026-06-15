@@ -11,9 +11,16 @@ export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
       { title: "How Spare Hub works — the marketplace for agronomy" },
-      { name: "description", content: "Search verified sellers, talk directly, agree the deal, rate the experience. Spare Hub keeps it simple." },
+      {
+        name: "description",
+        content:
+          "Search verified sellers, talk directly, agree the deal, rate the experience. Spare Hub keeps it simple.",
+      },
       { property: "og:title", content: "How Spare Hub works" },
-      { property: "og:description", content: "Search, talk, agree, rate. Four steps that keep agronomy buying honest." },
+      {
+        property: "og:description",
+        content: "Search, talk, agree, rate. Four steps that keep agronomy buying honest.",
+      },
     ],
   }),
   component: HowItWorks,

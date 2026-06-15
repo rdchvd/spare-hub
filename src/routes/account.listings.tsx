@@ -28,7 +28,10 @@ function MyListings() {
           <p className="text-sm text-muted-foreground mt-1 max-w-sm mx-auto">
             {t("account.listings.emptyBody")}
           </p>
-          <Button asChild className="mt-5 gap-2 bg-[color:var(--gold)] text-[color:var(--gold-foreground)] hover:bg-[color:var(--gold)]/90">
+          <Button
+            asChild
+            className="mt-5 gap-2 bg-[color:var(--gold)] text-[color:var(--gold-foreground)] hover:bg-[color:var(--gold)]/90"
+          >
             <Link to="/sell/new">
               <Plus className="h-4 w-4" />
               {t("sell.cta")}

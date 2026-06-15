@@ -14,7 +14,11 @@ export const Route = createFileRoute("/help")({
   head: () => ({
     meta: [
       { title: "Help centre — Spare Hub" },
-      { name: "description", content: "Pricing, regions, verification and returns — quick answers for buyers and sellers." },
+      {
+        name: "description",
+        content:
+          "Pricing, regions, verification and returns — quick answers for buyers and sellers.",
+      },
       { property: "og:title", content: "Help centre — Spare Hub" },
       { property: "og:description", content: "Common questions answered in plain language." },
     ],
@@ -25,10 +29,38 @@ export const Route = createFileRoute("/help")({
           "@context": "https://schema.org",
           "@type": "FAQPage",
           mainEntity: [
-            { "@type": "Question", name: "Is Spare Hub free to use?", acceptedAnswer: { "@type": "Answer", text: "Yes — browsing and messaging are free. Sellers only pay a small fee when a deal closes." } },
-            { "@type": "Question", name: "Which countries do you operate in?", acceptedAnswer: { "@type": "Answer", text: "Spain, Ukraine, France, Italy and several US states today." } },
-            { "@type": "Question", name: "How do I know a seller is genuine?", acceptedAnswer: { "@type": "Answer", text: "Look for the verified badge — we've checked their licence and at least three references." } },
-            { "@type": "Question", name: "What if the part isn't what was described?", acceptedAnswer: { "@type": "Answer", text: "Talk to the seller, then open a report. Verified sellers honour returns within 14 days." } },
+            {
+              "@type": "Question",
+              name: "Is Spare Hub free to use?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes — browsing and messaging are free. Sellers only pay a small fee when a deal closes.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Which countries do you operate in?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Spain, Ukraine, France, Italy and several US states today.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "How do I know a seller is genuine?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Look for the verified badge — we've checked their licence and at least three references.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "What if the part isn't what was described?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Talk to the seller, then open a report. Verified sellers honour returns within 14 days.",
+              },
+            },
           ],
         }),
       },
@@ -62,12 +94,8 @@ function Help() {
         <Accordion type="single" collapsible className="w-full">
           {qa.map((item) => (
             <AccordionItem key={item.q} value={item.q}>
-              <AccordionTrigger className="text-left font-medium">
-                {t(item.q)}
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                {t(item.a)}
-              </AccordionContent>
+              <AccordionTrigger className="text-left font-medium">{t(item.q)}</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">{t(item.a)}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>

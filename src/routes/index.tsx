@@ -199,8 +199,6 @@ function Index() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {categories.map((c) => (
             <Link key={c.key} to="/c/$category" params={{ category: c.key }} className="group">
-
-
               <Card className="h-full border-border/70 transition-all hover:border-accent/60 hover:shadow-sm hover:-translate-y-0.5">
                 <CardContent className="p-4">
                   <div className="text-3xl mb-2">{c.emoji}</div>
@@ -261,8 +259,12 @@ function Index() {
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
                   <Icon className="h-5 w-5" />
                 </span>
-                <h3 className="mt-3 font-display text-lg font-semibold">{t(`trust.${key}.title` as const)}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{t(`trust.${key}.body` as const)}</p>
+                <h3 className="mt-3 font-display text-lg font-semibold">
+                  {t(`trust.${key}.title` as const)}
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t(`trust.${key}.body` as const)}
+                </p>
               </div>
             ))}
           </div>
@@ -278,7 +280,11 @@ function Index() {
             </h2>
             <p className="mt-2 text-primary-foreground/85">{t("cta.body")}</p>
           </div>
-          <Button asChild size="lg" className="bg-[color:var(--gold)] text-[color:var(--gold-foreground)] hover:bg-[color:var(--gold)]/90 shrink-0">
+          <Button
+            asChild
+            size="lg"
+            className="bg-[color:var(--gold)] text-[color:var(--gold-foreground)] hover:bg-[color:var(--gold)]/90 shrink-0"
+          >
             <Link to="/register">{t("cta.button")}</Link>
           </Button>
         </div>

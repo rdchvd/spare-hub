@@ -26,15 +26,6 @@ const content: Record<Lang, { intro: string; rows: { name: string; purpose: stri
       { name: "sparehub.profile", purpose: "Store your profile draft on this device", type: "Essential" },
     ],
   },
-  es: {
-    intro: "Usamos las cookies al mínimo. Esta es la lista completa y qué hace cada una.",
-    rows: [
-      { name: "sparehub.lang", purpose: "Recordar tu idioma", type: "Preferencia" },
-      { name: "sparehub.theme", purpose: "Recordar tema claro/oscuro", type: "Preferencia" },
-      { name: "sparehub.cookies", purpose: "Recordar tu elección de cookies", type: "Esencial" },
-      { name: "sparehub.profile", purpose: "Guardar el borrador de tu perfil en este dispositivo", type: "Esencial" },
-    ],
-  },
   uk: {
     intro: "Ми використовуємо cookies по мінімуму. Ось повний перелік і що кожен з них робить.",
     rows: [

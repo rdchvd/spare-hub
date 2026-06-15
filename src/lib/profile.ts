@@ -64,3 +64,7 @@ export function initials(name: string, email: string) {
   const b = parts[1]?.[0] ?? "";
   return (a + b).toUpperCase() || base[0].toUpperCase();
 }
+
+export function profileDisplayName(first: string, last: string, email: string) {
+  return [first, last].filter(Boolean).join(" ") || email.trim() || "";
+}

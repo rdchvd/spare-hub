@@ -31,6 +31,7 @@ import { Route as CCategoryRouteImport } from './routes/c.$category'
 import { Route as AccountSettingsRouteImport } from './routes/account.settings'
 import { Route as AccountListingsRouteImport } from './routes/account.listings'
 import { Route as AccountFavoritesRouteImport } from './routes/account.favorites'
+import { Route as SellIdEditRouteImport } from './routes/sell.$id.edit'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -142,6 +143,11 @@ const AccountFavoritesRoute = AccountFavoritesRouteImport.update({
   path: '/favorites',
   getParentRoute: () => AccountRoute,
 } as any)
+const SellIdEditRoute = SellIdEditRouteImport.update({
+  id: '/sell/$id/edit',
+  path: '/sell/$id/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/sellers/$slug': typeof SellersSlugRoute
   '/account/': typeof AccountIndexRoute
   '/sell/': typeof SellIndexRoute
+  '/sell/$id/edit': typeof SellIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/sellers/$slug': typeof SellersSlugRoute
   '/account': typeof AccountIndexRoute
   '/sell': typeof SellIndexRoute
+  '/sell/$id/edit': typeof SellIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -214,6 +222,7 @@ export interface FileRoutesById {
   '/sellers/$slug': typeof SellersSlugRoute
   '/account/': typeof AccountIndexRoute
   '/sell/': typeof SellIndexRoute
+  '/sell/$id/edit': typeof SellIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -240,6 +249,7 @@ export interface FileRouteTypes {
     | '/sellers/$slug'
     | '/account/'
     | '/sell/'
+    | '/sell/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/sellers/$slug'
     | '/account'
     | '/sell'
+    | '/sell/$id/edit'
   id:
     | '__root__'
     | '/'
@@ -287,6 +298,7 @@ export interface FileRouteTypes {
     | '/sellers/$slug'
     | '/account/'
     | '/sell/'
+    | '/sell/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -308,6 +320,7 @@ export interface RootRouteChildren {
   SellNewRoute: typeof SellNewRoute
   SellersSlugRoute: typeof SellersSlugRoute
   SellIndexRoute: typeof SellIndexRoute
+  SellIdEditRoute: typeof SellIdEditRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -466,6 +479,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountFavoritesRouteImport
       parentRoute: typeof AccountRoute
     }
+    '/sell/$id/edit': {
+      id: '/sell/$id/edit'
+      path: '/sell/$id/edit'
+      fullPath: '/sell/$id/edit'
+      preLoaderRoute: typeof SellIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -505,6 +525,7 @@ const rootRouteChildren: RootRouteChildren = {
   SellNewRoute: SellNewRoute,
   SellersSlugRoute: SellersSlugRoute,
   SellIndexRoute: SellIndexRoute,
+  SellIdEditRoute: SellIdEditRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

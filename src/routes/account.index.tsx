@@ -9,6 +9,14 @@ import { useAuth } from "@/features/auth/auth-context";
 import { updateProfile } from "@/features/auth/django-client";
 import { toast } from "sonner";
 import { Save, Loader2 } from "lucide-react";
+import type { Role } from "@/features/auth/types";
+
+function roleLabel(role: Role | undefined, t: ReturnType<typeof useI18n>["t"]) {
+  if (role === "buyer") return t("account.role.buyer");
+  if (role === "seller") return t("account.role.seller");
+  if (role === "admin") return t("account.role.admin");
+  return "—";
+}
 
 export const Route = createFileRoute("/account/")({
   component: ProfileForm,
@@ -80,8 +88,8 @@ function ProfileForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="role">{t("auth.role")}</Label>
-            <Input id="role" value={user?.role ?? ""} disabled className="capitalize" />
+            <Label htmlFor="role">{t("account.field.role")}</Label>
+            <Input id="role" value={roleLabel(user?.role, t)} disabled readOnly />
           </div>
         </CardContent>
       </Card>

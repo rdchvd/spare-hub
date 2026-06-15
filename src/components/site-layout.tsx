@@ -6,6 +6,7 @@ import { useTheme } from "@/lib/theme";
 import { useI18n, LANGS, type Lang } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/auth-context";
+import { canManageProducts } from "@/features/products/client";
 import { routeVisibility } from "@/lib/route-visibility";
 import {
   DropdownMenu,
@@ -16,6 +17,9 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
+const sellCtaClass =
+  "bg-[color:var(--gold)] text-[color:var(--gold-foreground)] hover:bg-[color:var(--gold)]/90 shadow-sm";
+
 export function SiteHeader() {
   const { theme, toggle } = useTheme();
   const { t, lang, setLang } = useI18n();
@@ -23,6 +27,7 @@ export function SiteHeader() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const isAuthed = status === "authenticated";
+  const canSell = routeVisibility.header.sell && isAuthed && canManageProducts(user);
   const displayName = user
     ? [user.first_name, user.last_name].filter(Boolean).join(" ") || user.user?.email
     : "";
@@ -32,13 +37,9 @@ export function SiteHeader() {
     navigate({ to: "/" });
   };
 
-  const navLinks = [
-    ...(routeVisibility.backend.productsApiReady && routeVisibility.header.browse
-      ? [{ to: "/browse", label: t("nav.browse") }]
-      : []),
-    ...(routeVisibility.header.sell ? [{ to: "/sell", label: t("nav.sell") }] : []),
-    ...(routeVisibility.header.about ? [{ to: "/about", label: t("nav.about") }] : []),
-  ] as const;
+  const centerNavLinks = routeVisibility.header.about
+    ? [{ to: "/about", label: t("nav.about") }]
+    : [];
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -50,20 +51,28 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent/10 hover:text-foreground"
-              activeProps={{ className: "text-foreground bg-accent/10" }}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
+        {centerNavLinks.length > 0 ? (
+          <nav className="hidden md:flex items-center gap-1">
+            {centerNavLinks.map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent/10 hover:text-foreground"
+                activeProps={{ className: "text-foreground bg-accent/10" }}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+        ) : null}
 
         <div className="flex items-center gap-1.5">
+          {canSell ? (
+            <Button asChild size="sm" className={`hidden sm:inline-flex ${sellCtaClass}`}>
+              <Link to="/sell/new">{t("sell.cta")}</Link>
+            </Button>
+          ) : null}
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-1.5 hidden sm:inline-flex" aria-label={t("lang.label")}>
@@ -145,7 +154,14 @@ export function SiteHeader() {
       {open && (
         <div className="md:hidden border-t border-border bg-background">
           <div className="px-4 py-3 space-y-1">
-            {navLinks.map((l) => (
+            {canSell ? (
+              <Button asChild size="sm" className={`w-full ${sellCtaClass}`}>
+                <Link to="/sell/new" onClick={() => setOpen(false)}>
+                  {t("sell.cta")}
+                </Link>
+              </Button>
+            ) : null}
+            {centerNavLinks.map((l) => (
               <Link
                 key={l.to}
                 to={l.to}
@@ -203,6 +219,8 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   const { t } = useI18n();
+  const { status, user } = useAuth();
+  const showSellLink = canManageProducts(user) && routeVisibility.header.sell && status === "authenticated";
   return (
     <footer className="border-t border-border bg-background mt-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 grid gap-8 md:grid-cols-5">
@@ -216,8 +234,8 @@ export function SiteFooter() {
         <div className="text-sm">
           <div className="font-medium mb-2">{t("footer.product")}</div>
           <ul className="space-y-1.5 text-muted-foreground">
-            {routeVisibility.backend.productsApiReady && routeVisibility.header.browse ? <li><Link to="/browse" className="hover:text-foreground">{t("nav.browse")}</Link></li> : null}
-            {routeVisibility.header.sell ? <li><Link to="/sell" className="hover:text-foreground">{t("nav.sell")}</Link></li> : null}
+            {routeVisibility.backend.productsApiReady ? <li><Link to="/browse" className="hover:text-foreground">{t("nav.browse")}</Link></li> : null}
+            {showSellLink ? <li><Link to="/sell" className="hover:text-foreground">{t("nav.sell")}</Link></li> : null}
             {routeVisibility.header.about ? <li><Link to="/about" className="hover:text-foreground">{t("nav.about")}</Link></li> : null}
           </ul>
         </div>

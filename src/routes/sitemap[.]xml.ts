@@ -17,7 +17,7 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const entries: Entry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
-          ...(routeVisibility.backend.productsApiReady && routeVisibility.header.browse
+          ...(routeVisibility.backend.productsApiReady
             ? [{ path: "/browse", changefreq: "daily", priority: "0.9" as const }]
             : []),
           ...(routeVisibility.sitemap.sell ? [{ path: "/sell", changefreq: "weekly", priority: "0.8" as const }] : []),

@@ -212,3 +212,4 @@ __marimo__/
 .env
 /agriflow-marketplace-ignore/
 /node_modules/
+.wrangler/

@@ -159,8 +159,8 @@ colors in components.** Use semantic Tailwind classes (`bg-primary`,
 - **Numbers earn trust.** Use concrete stats ("850+ verified sellers")
   over vague claims ("trusted by many").
 - **Localization:** every user-facing string lives in `src/lib/i18n.tsx`
-  under all three locales (`en`, `es`, `uk`). Never hardcode user-facing
-  text in JSX. When adding a string, add it to all three dictionaries
+  under both locales (`en`, `uk`). Never hardcode user-facing
+  text in JSX. When adding a string, add it to both dictionaries
   in the same edit.
 
 ### Required terminology
@@ -198,13 +198,12 @@ colors in components.** Use semantic Tailwind classes (`bg-primary`,
 
 ## 11. Internationalization
 
-Spare Hub ships in **English (en)**, **Spanish (es)**, and **Ukrainian
-(uk)**. Language is persisted in `localStorage` under `sparehub.lang` and
+Spare Hub ships in **English (en)** and **Ukrainian (uk)**. Language is persisted in `localStorage` under `sparehub.lang` and
 set on `<html lang>`.
 
 When adding any user-facing string:
 
-1. Add the key + translation to all three locales in `src/lib/i18n.tsx`.
+1. Add the key + translation to both locales in `src/lib/i18n.tsx`.
 2. Use the `t("key")` accessor — never inline literal strings in JSX.
 3. Names of the product ("Spare Hub") are **not** translated.
 

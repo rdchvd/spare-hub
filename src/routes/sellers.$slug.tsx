@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useI18n } from "@/lib/i18n";
 import { routeVisibility } from "@/lib/route-visibility";
-import { getSellerBySlug, type Listing } from "@/lib/listings";
+import { getSellerBySlug } from "@/lib/listings";
+import { mockListingToDisplay } from "@/features/products/display";
 import { BadgeCheck, Clock, MapPin, MessageSquare, Phone, Star, Store } from "lucide-react";
 
 export const Route = createFileRoute("/sellers/$slug")({
@@ -37,7 +38,7 @@ export const Route = createFileRoute("/sellers/$slug")({
 function SellerPage() {
   if (!routeVisibility.backend.productsApiReady) return <ComingSoon showBrowse={false} />;
   const { seller } = Route.useLoaderData();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   return (
     <SiteLayout>
@@ -94,8 +95,8 @@ function SellerPage() {
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {seller.listings.map((l: Listing) => (
-              <ListingCard key={l.id} listing={l} />
+            {seller.listings.map((l) => (
+              <ListingCard key={l.id} listing={mockListingToDisplay(l, lang)} />
             ))}
           </div>
         </div>

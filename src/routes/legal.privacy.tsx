@@ -28,17 +28,6 @@ const content: Record<Lang, { intro: string; sections: { h: string; p: string }[
       { h: "Cookies", p: "See our cookie policy for the small set of cookies we use." },
     ],
   },
-  es: {
-    intro: "Tus datos son tuyos. Solo recogemos lo necesario para operar el marketplace y nunca los vendemos.",
-    sections: [
-      { h: "Qué recogemos", p: "Datos de cuenta (nombre, email, teléfono opcional), tus anuncios, mensajes enviados en la plataforma y métricas básicas de uso." },
-      { h: "Por qué los recogemos", p: "Para autenticarte, entregar mensajes, mostrar anuncios relevantes, prevenir fraude y mejorar el servicio." },
-      { h: "Con quién los compartimos", p: "Proveedores que alojan nuestra infraestructura y envían emails transaccionales. Nunca con anunciantes." },
-      { h: "Retención", p: "Los datos se conservan mientras tu cuenta esté activa. Las cuentas cerradas se eliminan en 30 días, salvo obligación legal." },
-      { h: "Tus derechos", p: "Acceso, rectificación, supresión y portabilidad — escribe a privacy@sparehub.example y respondemos en 30 días." },
-      { h: "Cookies", p: "Consulta nuestra política de cookies para ver el pequeño conjunto que usamos." },
-    ],
-  },
   uk: {
     intro: "Ваші дані належать вам. Ми збираємо лише необхідне для роботи маркетплейсу і ніколи їх не продаємо.",
     sections: [

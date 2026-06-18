@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
 import { routeVisibility } from "@/lib/route-visibility";
 import { listings, categories } from "@/lib/listings";
+import { mockListingToDisplay } from "@/features/products/display";
 import { ArrowLeft } from "lucide-react";
 
 const CATEGORY_KEYS = categories.map((c) => c.key) as readonly string[];
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/c/$category")({
 function CategoryPage() {
   if (!routeVisibility.backend.productsApiReady) return <ComingSoon showBrowse={false} />;
   const { category } = Route.useLoaderData();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   const meta = categories.find((c) => c.key === category)!;
   const items = listings.filter((l) => l.category === category);
@@ -65,7 +66,7 @@ function CategoryPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {items.map((l) => (
-              <ListingCard key={l.id} listing={l} />
+              <ListingCard key={l.id} listing={mockListingToDisplay(l, lang)} />
             ))}
           </div>
         )}

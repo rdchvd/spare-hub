@@ -83,6 +83,9 @@
   --gold: oklch(0.78 0.13 88);                  /* #c9a84c */
   --gold-foreground: oklch(0.25 0.04 165);
 
+  --mock: oklch(0.72 0.06 250);
+  --mock-foreground: oklch(0.42 0.06 250);
+
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(0.98 0.01 95);
 
@@ -130,6 +133,9 @@
 
   --gold: oklch(0.78 0.13 88);
   --gold-foreground: oklch(0.2 0.03 165);
+
+  --mock: oklch(0.45 0.05 250);
+  --mock-foreground: oklch(0.78 0.04 250);
 
   --destructive: oklch(0.62 0.2 25);
   --destructive-foreground: oklch(0.98 0.01 95);

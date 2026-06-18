@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { SiteLayout } from "@/components/site-layout";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/features/auth/auth-context";
+import { canManageProducts } from "@/features/products/client";
 import { routeVisibility } from "@/lib/route-visibility";
 import { User, ListChecks, Heart, Settings, Loader2 } from "lucide-react";
 
@@ -34,7 +35,7 @@ function AccountLayout() {
     ...(routeVisibility.accountTabs.profile
       ? [{ to: "/account", label: t("account.nav.profile"), icon: User, exact: true }]
       : []),
-    ...(routeVisibility.accountTabs.listings
+    ...(routeVisibility.accountTabs.listings && canManageProducts(user)
       ? [{ to: "/account/listings", label: t("account.nav.listings"), icon: ListChecks }]
       : []),
     ...(routeVisibility.accountTabs.favorites

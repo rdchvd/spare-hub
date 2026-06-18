@@ -13,68 +13,106 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
+import { MockFieldShell, mockFieldClass } from "@/components/mock-field-shell";
 import { useI18n } from "@/lib/i18n";
-import { categories } from "@/lib/listings";
-import { ArrowLeft, ArrowRight, Check, ImagePlus, PartyPopper } from "lucide-react";
+import { categories, listings } from "@/lib/listings";
+import { uiConditionToApi } from "@/features/products/display";
+import type { ProductConditionUi, ProductCurrency } from "@/features/products/types";
+import { ArrowLeft, ArrowRight, Check, Loader2, PartyPopper } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { routeVisibility } from "@/lib/route-visibility";
+import { useCreateProduct } from "@/features/products/queries";
+import { useSellerGuard } from "@/features/products/use-seller-guard";
+import { ApiError } from "@/features/auth/client";
 
 export const Route = createFileRoute("/sell/new")({
   component: SellNew,
 });
 
-type Condition = "new" | "used" | "refurb";
-type Currency = "EUR" | "USD";
-type Stock = "in" | "low";
-
 type FormState = {
-  category: string;
-  title: string;
-  brand: string;
-  condition: Condition;
+  name: string;
   description: string;
-  location: string;
+  brand: string;
+  condition: ProductConditionUi;
   price: string;
-  currency: Currency;
-  stock: Stock;
+  quantity: string;
+  currency: ProductCurrency;
 };
 
 const initial: FormState = {
-  category: "",
-  title: "",
+  name: "",
+  description: "",
   brand: "",
   condition: "new",
-  description: "",
-  location: "",
   price: "",
+  quantity: "1",
   currency: "EUR",
-  stock: "in",
 };
 
 function SellNew() {
   if (!routeVisibility.header.sell) return <ComingSoon />;
   const { t } = useI18n();
   const navigate = useNavigate();
+  const { ready } = useSellerGuard("/sell/new");
+  const createProduct = useCreateProduct();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormState>(initial);
   const [done, setDone] = useState(false);
+  const [createdId, setCreatedId] = useState<string | null>(null);
 
-  const totalSteps = 4;
+  const totalSteps = 2;
   const update = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm((p) => ({ ...p, [k]: v }));
 
-  const canContinue =
-    (step === 1 && form.category !== "") ||
-    (step === 2 && form.title.trim() !== "" && form.brand.trim() !== "" && form.location.trim() !== "") ||
-    (step === 3 && form.price.trim() !== "") ||
-    step === 4;
+  const previewMock = listings[0]!;
 
-  const submit = () => {
-    setDone(true);
-    toast.success(t("sell.review.published"));
+  const canContinue =
+    step === 1
+      ? form.name.trim() !== "" && form.description.trim() !== "" && form.brand.trim() !== ""
+      : form.price.trim() !== "" &&
+        Number.isFinite(Number(form.price)) &&
+        Number(form.price) >= 0 &&
+        Number(form.quantity) >= 0;
+
+  const submit = async () => {
+    try {
+      const product = await createProduct.mutateAsync({
+        name: form.name.trim(),
+        brand: form.brand.trim(),
+        description: form.description.trim(),
+        condition: uiConditionToApi(form.condition),
+        currency: form.currency,
+        price: Number(form.price).toFixed(2),
+        quantity: Number(form.quantity),
+      });
+      setCreatedId(String(product.id));
+      setDone(true);
+      toast.success(t("sell.review.published"));
+    } catch (error) {
+      const message =
+        error instanceof ApiError &&
+        typeof error.data === "object" &&
+        error.data &&
+        "detail" in error.data
+          ? String((error.data as { detail: unknown }).detail)
+          : error instanceof ApiError
+            ? error.message
+            : t("products.error.notSeller");
+      toast.error(message.includes("seller") ? t("products.error.notSeller") : message);
+    }
   };
+
+  if (!ready) {
+    return (
+      <SiteLayout>
+        <div className="mx-auto max-w-7xl px-4 py-20 flex justify-center text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" />
+        </div>
+      </SiteLayout>
+    );
+  }
 
   if (done) {
     return (
@@ -91,9 +129,14 @@ function SellNew() {
             <Button onClick={() => { setForm(initial); setStep(1); setDone(false); }} variant="outline">
               {t("sell.review.another")}
             </Button>
-            <Button onClick={() => navigate({ to: "/browse" })}>
+            <Button onClick={() => navigate({ to: "/account/listings" })}>
               {t("sell.review.viewListings")}
             </Button>
+            {createdId ? (
+              <Button variant="secondary" onClick={() => navigate({ to: "/listings/$id", params: { id: createdId } })}>
+                {t("account.listings.actions.view")}
+              </Button>
+            ) : null}
           </div>
         </div>
       </SiteLayout>
@@ -121,7 +164,6 @@ function SellNew() {
           <p className="text-sm text-muted-foreground mt-1">{t("sell.new.subtitle")}</p>
         </header>
 
-        {/* Stepper */}
         <ol className="mt-6 flex items-center gap-2">
           {Array.from({ length: totalSteps }, (_, i) => i + 1).map((n) => (
             <li key={n} className="flex-1">
@@ -138,39 +180,6 @@ function SellNew() {
         <Card className="mt-6 border-border/70">
           <CardContent className="p-6 sm:p-8">
             {step === 1 && (
-              <div>
-                <h2 className="font-display text-xl font-semibold">{t("sell.step1.title")}</h2>
-                <p className="text-sm text-muted-foreground mt-1">{t("sell.step1.subtitle")}</p>
-                <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {categories.map((c) => {
-                    const active = form.category === c.key;
-                    return (
-                      <button
-                        key={c.key}
-                        type="button"
-                        onClick={() => update("category", c.key)}
-                        className={cn(
-                          "text-left rounded-xl border p-4 transition",
-                          active
-                            ? "border-primary bg-primary/5 ring-1 ring-primary"
-                            : "border-border hover:border-accent/60 hover:bg-accent/5",
-                        )}
-                      >
-                        <div className="text-2xl">{c.emoji}</div>
-                        <div className="mt-2 font-display font-semibold text-sm leading-tight">
-                          {t(`cat.${c.key}` as any)}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                          {t(`cat.${c.key}.desc` as any)}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {step === 2 && (
               <div className="space-y-5">
                 <div>
                   <h2 className="font-display text-xl font-semibold">{t("sell.step2.title")}</h2>
@@ -178,49 +187,23 @@ function SellNew() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="title">{t("sell.field.title")}</Label>
+                  <Label htmlFor="name">{t("sell.field.title")}</Label>
                   <Input
-                    id="title"
-                    value={form.title}
-                    onChange={(e) => update("title", e.target.value)}
+                    id="name"
+                    value={form.name}
+                    onChange={(e) => update("name", e.target.value)}
                     placeholder={t("sell.field.title.ph")}
                     className="h-11"
                   />
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="brand">{t("sell.field.brand")}</Label>
-                    <Input
-                      id="brand"
-                      value={form.brand}
-                      onChange={(e) => update("brand", e.target.value)}
-                      placeholder={t("sell.field.brand.ph")}
-                      className="h-11"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label>{t("sell.field.condition")}</Label>
-                    <Select value={form.condition} onValueChange={(v) => update("condition", v as Condition)}>
-                      <SelectTrigger className="h-11">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="new">{t("browse.condition.new")}</SelectItem>
-                        <SelectItem value="used">{t("browse.condition.used")}</SelectItem>
-                        <SelectItem value="refurb">{t("browse.condition.refurb")}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
                 <div className="space-y-1.5">
-                  <Label htmlFor="location">{t("sell.field.location")}</Label>
+                  <Label htmlFor="brand">{t("sell.field.brand")}</Label>
                   <Input
-                    id="location"
-                    value={form.location}
-                    onChange={(e) => update("location", e.target.value)}
-                    placeholder={t("sell.field.location.ph")}
+                    id="brand"
+                    value={form.brand}
+                    onChange={(e) => update("brand", e.target.value)}
+                    placeholder={t("sell.field.brand.ph")}
                     className="h-11"
                   />
                 </div>
@@ -236,20 +219,31 @@ function SellNew() {
                   />
                 </div>
 
-                <div>
-                  <Label className="mb-2 block">{t("sell.field.photos")}</Label>
-                  <button
-                    type="button"
-                    className="w-full rounded-xl border border-dashed border-border bg-secondary/40 p-8 text-center text-sm text-muted-foreground hover:border-accent hover:text-foreground transition"
-                  >
-                    <ImagePlus className="mx-auto h-6 w-6 mb-2 opacity-70" />
-                    {t("sell.field.photos.hint")}
-                  </button>
+                <div className="space-y-1.5">
+                  <Label>{t("sell.field.condition")}</Label>
+                  <Select value={form.condition} onValueChange={(v) => update("condition", v as ProductConditionUi)}>
+                    <SelectTrigger className="h-11">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="new">{t("browse.condition.new")}</SelectItem>
+                      <SelectItem value="used">{t("browse.condition.used")}</SelectItem>
+                      <SelectItem value="refurb">{t("browse.condition.refurb")}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
+
+                <MockFieldShell label={t("listing.spec.category")}>
+                  <Input readOnly value={t(`cat.${categories[0]!.key}` as const)} className={mockFieldClass} />
+                </MockFieldShell>
+
+                <MockFieldShell label={t("sell.field.location")}>
+                  <Input readOnly value={previewMock.location} className={mockFieldClass} />
+                </MockFieldShell>
               </div>
             )}
 
-            {step === 3 && (
+            {step === 2 && (
               <div className="space-y-5">
                 <div>
                   <h2 className="font-display text-xl font-semibold">{t("sell.step3.title")}</h2>
@@ -263,6 +257,8 @@ function SellNew() {
                       id="price"
                       type="number"
                       inputMode="decimal"
+                      min="0"
+                      step="0.01"
                       value={form.price}
                       onChange={(e) => update("price", e.target.value)}
                       placeholder="0"
@@ -271,58 +267,38 @@ function SellNew() {
                   </div>
                   <div className="space-y-1.5">
                     <Label>{t("sell.field.currency")}</Label>
-                    <Select value={form.currency} onValueChange={(v) => update("currency", v as Currency)}>
+                    <Select value={form.currency} onValueChange={(v) => update("currency", v as ProductCurrency)}>
                       <SelectTrigger className="h-11">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="EUR">EUR €</SelectItem>
                         <SelectItem value="USD">USD $</SelectItem>
+                        <SelectItem value="UAH">UAH ₴</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label>{t("sell.field.stock")}</Label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {(["in", "low"] as Stock[]).map((s) => (
-                      <button
-                        key={s}
-                        type="button"
-                        onClick={() => update("stock", s)}
-                        className={cn(
-                          "rounded-lg border p-3 text-sm font-medium transition",
-                          form.stock === s
-                            ? "border-primary bg-primary/5 ring-1 ring-primary"
-                            : "border-border hover:bg-accent/5",
-                        )}
-                      >
-                        {t(`sell.field.stock.${s}` as const)}
-                      </button>
-                    ))}
-                  </div>
+                  <Label htmlFor="qty">{t("products.quantity")}</Label>
+                  <Input
+                    id="qty"
+                    type="number"
+                    min="0"
+                    value={form.quantity}
+                    onChange={(e) => update("quantity", e.target.value)}
+                    className="h-11"
+                  />
                 </div>
-              </div>
-            )}
 
-            {step === 4 && (
-              <div>
-                <h2 className="font-display text-xl font-semibold">{t("sell.step4.title")}</h2>
-                <p className="text-sm text-muted-foreground mt-1">{t("sell.step4.subtitle")}</p>
-                <dl className="mt-5 divide-y divide-border/60 text-sm">
+                <dl className="divide-y divide-border/60 text-sm">
                   {[
-                    { k: t("sell.field.title"), v: form.title || "—" },
+                    { k: t("sell.field.title"), v: form.name || "—" },
                     { k: t("sell.field.brand"), v: form.brand || "—" },
-                    { k: t("listing.spec.category"), v: form.category ? t(`cat.${form.category}` as any) : "—" },
                     { k: t("sell.field.condition"), v: t(`browse.condition.${form.condition}` as const) },
-                    { k: t("sell.field.location"), v: form.location || "—" },
-                    {
-                      k: t("sell.field.price"),
-                      v: form.price ? `${form.currency === "EUR" ? "€" : "$"}${Number(form.price).toLocaleString()}` : "—",
-                    },
-                    { k: t("sell.field.stock"), v: t(`sell.field.stock.${form.stock}` as const) },
-                    { k: t("sell.field.description"), v: form.description || "—" },
+                    { k: t("sell.field.price"), v: form.price ? `${form.currency} ${Number(form.price).toLocaleString()}` : "—" },
+                    { k: t("products.quantity"), v: form.quantity || "—" },
                   ].map((row) => (
                     <div key={row.k} className="flex justify-between gap-6 py-3">
                       <dt className="text-muted-foreground">{row.k}</dt>
@@ -356,8 +332,8 @@ function SellNew() {
               <ArrowRight className="h-4 w-4" />
             </Button>
           ) : (
-            <Button onClick={submit} className="gap-1.5">
-              <Check className="h-4 w-4" />
+            <Button onClick={() => void submit()} disabled={!canContinue || createProduct.isPending} className="gap-1.5">
+              {createProduct.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
               {t("sell.submit")}
             </Button>
           )}

@@ -58,10 +58,12 @@ class ProductViewSet(viewsets.ModelViewSet):
         return [AllowAny()]
 
     def get_queryset(self):
-        if self.action == "my":
-            return Product.objects.filter(seller__user=self.request.user)
+        qs = Product.objects.all()
 
-        return Product.objects.all()
+        if self.action == "my":
+            qs = qs.filter(seller__user=self.request.user)
+
+        return qs.select_related("seller")
 
     def perform_create(self, serializer):
         serializer.save(seller=self.request.user.seller)

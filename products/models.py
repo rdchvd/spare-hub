@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from accounts.models import Seller
@@ -33,6 +34,7 @@ class Product(Audit):
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
+        validators=[MinValueValidator(0)],
     )
 
     currency = models.CharField(

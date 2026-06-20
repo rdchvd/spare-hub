@@ -121,3 +121,14 @@ class RegisterSerializer(serializers.ModelSerializer):
             )
 
         return user
+
+
+class SellerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Seller
+        fields = [
+            "id",
+            "company_name",
+            "address",
+            "phone_number",
+        ]

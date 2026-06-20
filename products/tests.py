@@ -290,6 +290,32 @@ class ProductCreateTests(BaseProductTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(after_count, before_count)
 
+    def test_create_product_negative_price(self):
+        self.login(
+            "seller@test.com",
+            "StrongPass123",
+        )
+
+        before_count = Product.objects.count()
+
+        response = self.client.post(
+            self.products_url,
+            {
+                "name": "Test",
+                "brand": "Test",
+                "price": -10,
+                "currency": "USD",
+                "condition": "new",
+                "quantity": 1,
+            },
+            format="json",
+        )
+
+        after_count = Product.objects.count()
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(after_count, before_count)
+
 
 class ProductUpdateTests(BaseProductTestCase):
 

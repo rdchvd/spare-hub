@@ -23,8 +23,7 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/browse")({
-  loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData(productQueries.list()),
+  loader: ({ context: { queryClient } }) => queryClient.ensureQueryData(productQueries.list()),
   component: Browse,
 });
 
@@ -136,7 +135,9 @@ function Browse() {
                 <button
                   onClick={() => setCategory("all")}
                   className={`w-full text-left rounded-md px-2.5 py-1.5 text-sm transition ${
-                    category === "all" ? "bg-accent/10 font-medium text-foreground" : "hover:bg-accent/5 text-muted-foreground"
+                    category === "all"
+                      ? "bg-accent/10 font-medium text-foreground"
+                      : "hover:bg-accent/5 text-muted-foreground"
                   }`}
                 >
                   {t("browse.category.all")}
@@ -146,7 +147,9 @@ function Browse() {
                     key={c.key}
                     onClick={() => setCategory(c.key)}
                     className={`w-full text-left flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition ${
-                      category === c.key ? "bg-accent/10 font-medium text-foreground" : "hover:bg-accent/5 text-muted-foreground"
+                      category === c.key
+                        ? "bg-accent/10 font-medium text-foreground"
+                        : "hover:bg-accent/5 text-muted-foreground"
                     }`}
                   >
                     <span>{c.emoji}</span>

@@ -24,7 +24,9 @@ function Favorites() {
           <div className="mx-auto h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
             <Heart className="h-5 w-5 text-primary" />
           </div>
-          <h3 className="font-display text-lg font-semibold">{t("account.favorites.emptyTitle")}</h3>
+          <h3 className="font-display text-lg font-semibold">
+            {t("account.favorites.emptyTitle")}
+          </h3>
           <p className="text-sm text-muted-foreground mt-1 max-w-sm mx-auto">
             {t("account.favorites.emptyBody")}
           </p>

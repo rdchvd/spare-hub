@@ -9,6 +9,9 @@ indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 
+[*.{ts,tsx,js,jsx,css,json}]
+indent_size = 2
+
 [*.md]
 # Keep intentional trailing spaces in Markdown for hard line breaks
 trim_trailing_whitespace = false

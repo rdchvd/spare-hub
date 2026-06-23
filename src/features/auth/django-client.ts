@@ -1,12 +1,7 @@
 // Typed Django API methods for Spare Hub auth + profile.
 
 import { apiRequest, tokenStore } from "./client";
-import type {
-  LoginInput,
-  RegisterInput,
-  TokenPair,
-  UserProfile,
-} from "./types";
+import type { LoginInput, RegisterInput, TokenPair, UserProfile } from "./types";
 
 export async function login(input: LoginInput): Promise<TokenPair> {
   const pair = await apiRequest<TokenPair>("/api/auth/token/", {

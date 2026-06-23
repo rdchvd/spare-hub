@@ -70,8 +70,12 @@ function Login() {
             </h2>
             <p className="mt-4 text-primary-foreground/85 max-w-md">{t("hero.subtitle")}</p>
             <ul className="mt-8 space-y-3 text-sm">
-              <li className="flex items-center gap-2"><BadgeCheck className="h-4 w-4 text-[color:var(--gold)]" /> {t("trust.t1.title")}</li>
-              <li className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[color:var(--gold)]" /> {t("trust.t2.title")}</li>
+              <li className="flex items-center gap-2">
+                <BadgeCheck className="h-4 w-4 text-[color:var(--gold)]" /> {t("trust.t1.title")}
+              </li>
+              <li className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-[color:var(--gold)]" /> {t("trust.t2.title")}
+              </li>
             </ul>
           </div>
           <div className="text-xs opacity-70">© {new Date().getFullYear()} Spare Hub</div>

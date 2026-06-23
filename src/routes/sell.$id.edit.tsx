@@ -76,7 +76,9 @@ function SellEdit() {
   const [name, setName] = useState(product.name);
   const [brand, setBrand] = useState(product.brand);
   const [description, setDescription] = useState(product.description ?? "");
-  const [condition, setCondition] = useState<ProductConditionUi>(apiConditionToUi(product.condition));
+  const [condition, setCondition] = useState<ProductConditionUi>(
+    apiConditionToUi(product.condition),
+  );
   const [currency, setCurrency] = useState<ProductCurrency>(product.currency);
   const [price, setPrice] = useState(String(Number(product.price)));
   const [quantity, setQuantity] = useState(String(product.quantity));
@@ -154,10 +156,17 @@ function SellEdit() {
 
         <header className="mt-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
-            <h1 className="font-display text-3xl font-semibold tracking-tight">{t("products.edit.title")}</h1>
+            <h1 className="font-display text-3xl font-semibold tracking-tight">
+              {t("products.edit.title")}
+            </h1>
             <p className="text-sm text-muted-foreground mt-1">{t("products.edit.subtitle")}</p>
           </div>
-          <Button variant="outline" size="sm" className="gap-1.5 text-destructive hover:text-destructive" onClick={() => setDeleteOpen(true)}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 text-destructive hover:text-destructive"
+            onClick={() => setDeleteOpen(true)}
+          >
             <Trash2 className="h-4 w-4" />
             {t("products.delete")}
           </Button>
@@ -167,22 +176,40 @@ function SellEdit() {
           <CardContent className="p-6 sm:p-8 space-y-5">
             <div className="space-y-1.5">
               <Label htmlFor="name">{t("sell.field.title")}</Label>
-              <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="h-11" />
+              <Input
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="h-11"
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="brand">{t("sell.field.brand")}</Label>
-              <Input id="brand" value={brand} onChange={(e) => setBrand(e.target.value)} className="h-11" />
+              <Input
+                id="brand"
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+                className="h-11"
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="desc">{t("sell.field.description")}</Label>
-              <Textarea id="desc" value={description} onChange={(e) => setDescription(e.target.value)} rows={5} />
+              <Textarea
+                id="desc"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={5}
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label>{t("sell.field.condition")}</Label>
-              <Select value={condition} onValueChange={(v) => setCondition(v as ProductConditionUi)}>
+              <Select
+                value={condition}
+                onValueChange={(v) => setCondition(v as ProductConditionUi)}
+              >
                 <SelectTrigger className="h-11">
                   <SelectValue />
                 </SelectTrigger>
@@ -235,7 +262,11 @@ function SellEdit() {
             </div>
 
             <MockFieldShell label={t("listing.spec.category")}>
-              <Input readOnly value={t(`cat.${mock.category}` as const)} className={mockFieldClass} />
+              <Input
+                readOnly
+                value={t(`cat.${mock.category}` as const)}
+                className={mockFieldClass}
+              />
             </MockFieldShell>
 
             <MockFieldShell label={t("sell.field.location")}>
@@ -248,8 +279,16 @@ function SellEdit() {
           <Button variant="outline" asChild>
             <Link to="/account/listings">{t("sell.back")}</Link>
           </Button>
-          <Button onClick={() => void save()} disabled={!canSave || updateProduct.isPending} className="gap-1.5">
-            {updateProduct.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+          <Button
+            onClick={() => void save()}
+            disabled={!canSave || updateProduct.isPending}
+            className="gap-1.5"
+          >
+            {updateProduct.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Check className="h-4 w-4" />
+            )}
             {t("account.save")}
           </Button>
         </div>
@@ -270,7 +309,11 @@ function SellEdit() {
                 void remove();
               }}
             >
-              {deleteProduct.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : t("products.delete")}
+              {deleteProduct.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                t("products.delete")
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

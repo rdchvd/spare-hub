@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import * as api from "./django-client";
 import { tokenStore } from "./client";
 import type { LoginInput, RegisterInput, UserProfile } from "./types";

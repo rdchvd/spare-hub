@@ -59,8 +59,8 @@
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.985 0.012 95);          /* warm cream */
-  --foreground: oklch(0.22 0.04 165);           /* deep emerald ink */
+  --background: oklch(0.985 0.012 95); /* warm cream */
+  --foreground: oklch(0.22 0.04 165); /* deep emerald ink */
 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.22 0.04 165);
@@ -68,19 +68,19 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.04 165);
 
-  --primary: oklch(0.36 0.09 165);              /* deep emerald #064e3b-ish */
+  --primary: oklch(0.36 0.09 165); /* deep emerald #064e3b-ish */
   --primary-foreground: oklch(0.97 0.02 95);
 
-  --secondary: oklch(0.94 0.02 95);             /* cream secondary */
+  --secondary: oklch(0.94 0.02 95); /* cream secondary */
   --secondary-foreground: oklch(0.28 0.06 165);
 
   --muted: oklch(0.95 0.015 95);
   --muted-foreground: oklch(0.48 0.03 160);
 
-  --accent: oklch(0.5 0.1 165);                 /* mid emerald #0d7a5f */
+  --accent: oklch(0.5 0.1 165); /* mid emerald #0d7a5f */
   --accent-foreground: oklch(0.98 0.01 95);
 
-  --gold: oklch(0.78 0.13 88);                  /* #c9a84c */
+  --gold: oklch(0.78 0.13 88); /* #c9a84c */
   --gold-foreground: oklch(0.25 0.04 165);
 
   --mock: oklch(0.72 0.06 250);
@@ -110,7 +110,7 @@
 }
 
 .dark {
-  --background: oklch(0.18 0.025 165);          /* deep forest night */
+  --background: oklch(0.18 0.025 165); /* deep forest night */
   --foreground: oklch(0.96 0.02 95);
 
   --card: oklch(0.23 0.03 165);
@@ -119,7 +119,7 @@
   --popover: oklch(0.23 0.03 165);
   --popover-foreground: oklch(0.96 0.02 95);
 
-  --primary: oklch(0.78 0.13 88);               /* gold becomes primary cta in dark */
+  --primary: oklch(0.78 0.13 88); /* gold becomes primary cta in dark */
   --primary-foreground: oklch(0.2 0.03 165);
 
   --secondary: oklch(0.28 0.04 165);
@@ -165,14 +165,21 @@
     border-color: var(--color-border);
   }
 
-  html, body {
+  html,
+  body {
     font-family: var(--font-sans);
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-feature-settings: "ss01", "cv11";
   }
 
-  h1, h2, h3, h4, h5, h6, .font-display {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .font-display {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
@@ -181,7 +188,15 @@
 /* Subtle textured field background — earthy feel */
 .bg-field {
   background-image:
-    radial-gradient(circle at 20% 10%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 40%),
-    radial-gradient(circle at 80% 0%, color-mix(in oklab, var(--gold) 14%, transparent), transparent 45%),
+    radial-gradient(
+      circle at 20% 10%,
+      color-mix(in oklab, var(--accent) 12%, transparent),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 0%,
+      color-mix(in oklab, var(--gold) 14%, transparent),
+      transparent 45%
+    ),
     linear-gradient(180deg, var(--background), var(--background));
 }

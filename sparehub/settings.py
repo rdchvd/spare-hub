@@ -108,16 +108,24 @@ WSGI_APPLICATION = "sparehub.wsgi.application"
 
 # Database
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DB_NAME", default="sparehub_db"),
-        "USER": config("DB_USER", default="sparehub_user"),
-        "PASSWORD": config("DB_PASSWORD", default="postgres"),
-        "HOST": config("DB_HOST", default="localhost"),
-        "PORT": config("DB_PORT", default="5432"),
+if config("CI", default=False, cast=bool):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "ci.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": config("DB_NAME", default="sparehub_db"),
+            "USER": config("DB_USER", default="sparehub_user"),
+            "PASSWORD": config("DB_PASSWORD", default="postgres"),
+            "HOST": config("DB_HOST", default="localhost"),
+            "PORT": config("DB_PORT", default="5432"),
+        }
+    }
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 

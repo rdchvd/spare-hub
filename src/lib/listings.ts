@@ -238,8 +238,7 @@ export function getSellers(): Seller[] {
   for (const s of map.values()) {
     const totalReviews = s.listings.reduce((a, l) => a + l.reviews, 0);
     const weighted =
-      s.listings.reduce((a, l) => a + l.rating * l.reviews, 0) /
-      Math.max(totalReviews, 1);
+      s.listings.reduce((a, l) => a + l.rating * l.reviews, 0) / Math.max(totalReviews, 1);
     s.rating = Math.round(weighted * 10) / 10;
     s.reviews = totalReviews;
     s.verified = s.listings.every((l) => l.verified);

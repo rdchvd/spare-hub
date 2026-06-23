@@ -14,9 +14,21 @@ function Sell() {
   if (!routeVisibility.header.sell) return <ComingSoon />;
   const { t } = useI18n();
   const perks = [
-    { icon: Users, title: "12,000+ active buyers", body: "Farms, agronomists and cooperatives looking for parts every week." },
-    { icon: TrendingUp, title: "Free to list", body: "No upfront fee — you pay only when you close a deal." },
-    { icon: Zap, title: "Fast onboarding", body: "Open a storefront, upload your catalog and start selling in under an hour." },
+    {
+      icon: Users,
+      title: "12,000+ active buyers",
+      body: "Farms, agronomists and cooperatives looking for parts every week.",
+    },
+    {
+      icon: TrendingUp,
+      title: "Free to list",
+      body: "No upfront fee — you pay only when you close a deal.",
+    },
+    {
+      icon: Zap,
+      title: "Fast onboarding",
+      body: "Open a storefront, upload your catalog and start selling in under an hour.",
+    },
   ];
   return (
     <SiteLayout>
@@ -30,14 +42,17 @@ function Sell() {
           </h1>
           <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">{t("cta.body")}</p>
           <div className="mt-6 flex items-center justify-center gap-2">
-            <Button asChild size="lg" className="bg-[color:var(--gold)] text-[color:var(--gold-foreground)] hover:bg-[color:var(--gold)]/90">
+            <Button
+              asChild
+              size="lg"
+              className="bg-[color:var(--gold)] text-[color:var(--gold-foreground)] hover:bg-[color:var(--gold)]/90"
+            >
               <Link to="/sell/new">{t("sell.cta")}</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link to="/register">{t("cta.button")}</Link>
             </Button>
           </div>
-
         </div>
       </section>
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 grid md:grid-cols-3 gap-4">

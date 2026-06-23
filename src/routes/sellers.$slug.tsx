@@ -26,7 +26,10 @@ export const Route = createFileRoute("/sellers/$slug")({
             content: `${loaderData.seller.name} on Spare Hub — ${loaderData.seller.listings.length} listings from ${loaderData.seller.location}.`,
           },
           { property: "og:title", content: `${loaderData.seller.name} — Spare Hub` },
-          { property: "og:description", content: `${loaderData.seller.listings.length} listings from ${loaderData.seller.location}.` },
+          {
+            property: "og:description",
+            content: `${loaderData.seller.listings.length} listings from ${loaderData.seller.location}.`,
+          },
           { property: "og:type", content: "profile" },
         ]
       : [{ title: "Seller — Spare Hub" }],

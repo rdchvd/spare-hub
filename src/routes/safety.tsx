@@ -10,9 +10,16 @@ export const Route = createFileRoute("/safety")({
   head: () => ({
     meta: [
       { title: "Safety on Spare Hub — buy and sell with confidence" },
-      { name: "description", content: "Verified sellers, on-platform messaging, pay-on-collection rules, and a report flow reviewed within two business days." },
+      {
+        name: "description",
+        content:
+          "Verified sellers, on-platform messaging, pay-on-collection rules, and a report flow reviewed within two business days.",
+      },
       { property: "og:title", content: "Safety on Spare Hub" },
-      { property: "og:description", content: "Practical guardrails that keep the marketplace trustworthy." },
+      {
+        property: "og:description",
+        content: "Practical guardrails that keep the marketplace trustworthy.",
+      },
     ],
   }),
   component: Safety,

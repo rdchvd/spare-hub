@@ -145,10 +145,14 @@ export async function apiRequest<T = unknown>(
 
   if (!res.ok) {
     const data = await parseBody(res);
-    const message =
-      (data && typeof data === "object" && "detail" in data && typeof (data as { detail: unknown }).detail === "string"
+    const message = (
+      data &&
+      typeof data === "object" &&
+      "detail" in data &&
+      typeof (data as { detail: unknown }).detail === "string"
         ? (data as { detail: string }).detail
-        : `Request failed with ${res.status}`) as string;
+        : `Request failed with ${res.status}`
+    ) as string;
     throw new ApiError(message, res.status, data);
   }
 

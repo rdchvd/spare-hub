@@ -51,11 +51,17 @@ function AccountSettings() {
         <CardContent className="p-6 flex items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-sm font-medium">
-              {theme === "dark" ? <Moon className="h-4 w-4 text-primary" /> : <Sun className="h-4 w-4 text-primary" />}
+              {theme === "dark" ? (
+                <Moon className="h-4 w-4 text-primary" />
+              ) : (
+                <Sun className="h-4 w-4 text-primary" />
+              )}
               <Label>{t("account.settings.theme")}</Label>
             </div>
             <p className="text-xs text-muted-foreground">
-              {theme === "dark" ? t("account.settings.theme.dark") : t("account.settings.theme.light")}
+              {theme === "dark"
+                ? t("account.settings.theme.dark")
+                : t("account.settings.theme.light")}
             </p>
           </div>
           <Button variant="outline" size="sm" onClick={toggle} className="gap-2">

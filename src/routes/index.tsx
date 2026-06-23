@@ -15,8 +15,7 @@ import heroField from "@/assets/hero-field.jpg";
 import { routeVisibility } from "@/lib/route-visibility";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData(productQueries.list()),
+  loader: ({ context: { queryClient } }) => queryClient.ensureQueryData(productQueries.list()),
   component: Index,
 });
 
@@ -139,54 +138,55 @@ function Index() {
             {/* Right: floating spotlight card — layered depth */}
             <div className="md:col-span-5 hidden md:block">
               {spotlight ? (
-              <div
-                className="relative ml-auto max-w-sm animate-fade-in"
-                style={{ animationDelay: "320ms", animationFillMode: "both" }}
-              >
-                {/* Back card (depth) */}
-                <div className="absolute -top-6 -right-3 h-full w-full rounded-2xl bg-[color:var(--gold)]/20 backdrop-blur-sm border border-[color:var(--gold)]/30" />
-                <div className="absolute top-3 -left-4 h-full w-full rounded-2xl bg-[color:var(--primary-foreground)]/5 backdrop-blur-sm border border-[color:var(--primary-foreground)]/10" />
-
-                {/* Front spotlight card */}
-                <Link
-                  to="/listings/$id"
-                  params={{ id: spotlight.id }}
-                  className="relative block rounded-2xl bg-background/95 backdrop-blur border border-border/40 shadow-2xl p-5 transition-all hover:-translate-y-1 hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.4)]"
+                <div
+                  className="relative ml-auto max-w-sm animate-fade-in"
+                  style={{ animationDelay: "320ms", animationFillMode: "both" }}
                 >
-                  <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--gold)] animate-pulse" />
-                    {t("hero.spotlight")}
-                  </div>
-                  <div className="mt-4 flex items-start gap-4">
-                    <div className="h-20 w-20 rounded-xl bg-secondary flex items-center justify-center text-4xl shrink-0">
-                      {spotlight.mock.emoji}
+                  {/* Back card (depth) */}
+                  <div className="absolute -top-6 -right-3 h-full w-full rounded-2xl bg-[color:var(--gold)]/20 backdrop-blur-sm border border-[color:var(--gold)]/30" />
+                  <div className="absolute top-3 -left-4 h-full w-full rounded-2xl bg-[color:var(--primary-foreground)]/5 backdrop-blur-sm border border-[color:var(--primary-foreground)]/10" />
+
+                  {/* Front spotlight card */}
+                  <Link
+                    to="/listings/$id"
+                    params={{ id: spotlight.id }}
+                    className="relative block rounded-2xl bg-background/95 backdrop-blur border border-border/40 shadow-2xl p-5 transition-all hover:-translate-y-1 hover:shadow-[0_20px_50px_-10px_rgba(0,0,0,0.4)]"
+                  >
+                    <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--gold)] animate-pulse" />
+                      {t("hero.spotlight")}
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="font-display text-base font-semibold leading-tight line-clamp-2">
-                        {spotlight.name}
+                    <div className="mt-4 flex items-start gap-4">
+                      <div className="h-20 w-20 rounded-xl bg-secondary flex items-center justify-center text-4xl shrink-0">
+                        {spotlight.mock.emoji}
                       </div>
-                      <div className="mt-1.5 flex items-center gap-1.5 text-xs text-[color:var(--mock-foreground)]">
-                        <MapPin className="h-3 w-3" />
-                        {spotlight.mock.location}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-4 flex items-end justify-between">
-                    <div>
-                      <div className="font-display text-2xl font-semibold tracking-tight">
-                        {currencySymbol(spotlight.currency)}{spotlight.price.toLocaleString()}
-                      </div>
-                      <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-[color:var(--mock-foreground)]">
-                        <BadgeCheck className="h-3.5 w-3.5" />
-                        {spotlight.sellerName}
+                      <div className="min-w-0 flex-1">
+                        <div className="font-display text-base font-semibold leading-tight line-clamp-2">
+                          {spotlight.name}
+                        </div>
+                        <div className="mt-1.5 flex items-center gap-1.5 text-xs text-[color:var(--mock-foreground)]">
+                          <MapPin className="h-3 w-3" />
+                          {spotlight.mock.location}
+                        </div>
                       </div>
                     </div>
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-foreground/80">
-                      {t("hero.viewListing")} <ArrowRight className="h-3.5 w-3.5" />
-                    </span>
-                  </div>
-                </Link>
-              </div>
+                    <div className="mt-4 flex items-end justify-between">
+                      <div>
+                        <div className="font-display text-2xl font-semibold tracking-tight">
+                          {currencySymbol(spotlight.currency)}
+                          {spotlight.price.toLocaleString()}
+                        </div>
+                        <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-[color:var(--mock-foreground)]">
+                          <BadgeCheck className="h-3.5 w-3.5" />
+                          {spotlight.sellerName}
+                        </div>
+                      </div>
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-foreground/80">
+                        {t("hero.viewListing")} <ArrowRight className="h-3.5 w-3.5" />
+                      </span>
+                    </div>
+                  </Link>
+                </div>
               ) : null}
             </div>
           </div>
@@ -206,8 +206,6 @@ function Index() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {categories.map((c) => (
             <Link key={c.key} to="/c/$category" params={{ category: c.key }} className="group">
-
-
               <Card className="h-full border-border/70 transition-all hover:border-accent/60 hover:shadow-sm hover:-translate-y-0.5">
                 <CardContent className="p-4">
                   <div className="text-3xl mb-2">{c.emoji}</div>
@@ -268,8 +266,12 @@ function Index() {
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
                   <Icon className="h-5 w-5" />
                 </span>
-                <h3 className="mt-3 font-display text-lg font-semibold">{t(`trust.${key}.title` as const)}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{t(`trust.${key}.body` as const)}</p>
+                <h3 className="mt-3 font-display text-lg font-semibold">
+                  {t(`trust.${key}.title` as const)}
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t(`trust.${key}.body` as const)}
+                </p>
               </div>
             ))}
           </div>
@@ -285,7 +287,11 @@ function Index() {
             </h2>
             <p className="mt-2 text-primary-foreground/85">{t("cta.body")}</p>
           </div>
-          <Button asChild size="lg" className="bg-[color:var(--gold)] text-[color:var(--gold-foreground)] hover:bg-[color:var(--gold)]/90 shrink-0">
+          <Button
+            asChild
+            size="lg"
+            className="bg-[color:var(--gold)] text-[color:var(--gold-foreground)] hover:bg-[color:var(--gold)]/90 shrink-0"
+          >
             <Link to="/register">{t("cta.button")}</Link>
           </Button>
         </div>

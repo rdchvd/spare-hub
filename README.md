@@ -43,6 +43,13 @@ npm run dev      # frontend only
 npm run dev:be   # backend only
 ```
 
+## CI
+
+GitHub Actions runs on every push and pull request (`.github/workflows/ci.yml`):
+
+- **Backend:** Ruff, Black, `manage.py check`, migrations, tests (SQLite in CI via `CI=true`)
+- **Frontend:** ESLint, Prettier, TypeScript, production build
+
 ## Code style and pre-commit
 
 This repository enforces consistent code style and best practices using Black (formatter), Ruff (linter and import sorter), and pre-commit hooks.

@@ -21,7 +21,9 @@ export function ComingSoon({
           <Clock3 className="h-5 w-5 text-primary" />
         </div>
         <h2 className="font-display text-2xl font-semibold">{t("comingSoon.title")}</h2>
-        <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">{t("comingSoon.body")}</p>
+        <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
+          {t("comingSoon.body")}
+        </p>
         <div className="mt-6 flex items-center justify-center gap-2">
           <Button asChild variant="outline">
             <Link to="/">{t("comingSoon.backHome")}</Link>

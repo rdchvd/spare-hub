@@ -45,7 +45,10 @@ export function CookieConsent() {
           <div className="font-display text-sm font-semibold">{t("cookies.title")}</div>
           <p className="text-sm text-muted-foreground mt-0.5">
             {t("cookies.body")}{" "}
-            <Link to="/legal/cookies" className="underline underline-offset-2 hover:text-foreground">
+            <Link
+              to="/legal/cookies"
+              className="underline underline-offset-2 hover:text-foreground"
+            >
               {t("cookies.learn")}
             </Link>
           </p>

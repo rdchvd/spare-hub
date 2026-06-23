@@ -10,8 +10,11 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
-    "lint": "eslint .",
-    "format": "prettier --write ."
+    "lint": "eslint src eslint.config.js vite.config.ts",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" eslint.config.js vite.config.ts",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" eslint.config.js vite.config.ts",
+    "format:fix": "prettier --write \"src/**/*.{ts,tsx,css}\" eslint.config.js vite.config.ts && eslint src eslint.config.js vite.config.ts --fix"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",

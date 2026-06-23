@@ -104,7 +104,12 @@ function ListingDetail() {
                 {t("account.listings.actions.edit")}
               </Link>
             </Button>
-            <Button asChild variant="outline" size="sm" className="gap-1.5 text-destructive hover:text-destructive">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="gap-1.5 text-destructive hover:text-destructive"
+            >
               <Link to="/sell/$id/edit" params={{ id: listing.id }} search={{ delete: true }}>
                 <Trash2 className="h-4 w-4" />
                 {t("products.delete")}
@@ -151,8 +156,16 @@ function ListingDetail() {
               <dl className="mt-4 grid sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
                 {[
                   { k: t("listing.spec.brand"), v: listing.brand, mock: false },
-                  { k: t("listing.spec.condition"), v: t(`browse.condition.${listing.condition}` as const), mock: false },
-                  { k: t("listing.spec.category"), v: t(`cat.${mock.category}` as const), mock: true },
+                  {
+                    k: t("listing.spec.condition"),
+                    v: t(`browse.condition.${listing.condition}` as const),
+                    mock: false,
+                  },
+                  {
+                    k: t("listing.spec.category"),
+                    v: t(`cat.${mock.category}` as const),
+                    mock: true,
+                  },
                   { k: t("listing.spec.location"), v: mock.location, mock: true },
                   { k: t("sell.field.currency"), v: listing.currency, mock: false },
                   {
@@ -167,7 +180,10 @@ function ListingDetail() {
                   },
                   { k: t("listing.spec.sku"), v: listing.id.toUpperCase(), mock: false },
                 ].map((row) => (
-                  <div key={row.k} className="flex justify-between gap-4 border-b border-border/50 py-2">
+                  <div
+                    key={row.k}
+                    className="flex justify-between gap-4 border-b border-border/50 py-2"
+                  >
                     <dt className="text-muted-foreground">{row.k}</dt>
                     <dd
                       className={`font-medium text-right ${row.mock ? "text-[color:var(--mock-foreground)] italic" : "text-foreground"}`}
@@ -182,8 +198,12 @@ function ListingDetail() {
             <section className="mt-10 flex items-start gap-3 rounded-xl border border-dashed border-[color:var(--mock)] bg-[color:var(--mock)]/10 p-4">
               <Truck className="h-5 w-5 text-[color:var(--mock-foreground)] shrink-0 mt-0.5" />
               <div>
-                <div className="font-medium text-sm text-[color:var(--mock-foreground)]">{t("listing.shipping")}</div>
-                <p className="text-sm text-[color:var(--mock-foreground)]/80 mt-1">{t("listing.shipping.body")}</p>
+                <div className="font-medium text-sm text-[color:var(--mock-foreground)]">
+                  {t("listing.shipping")}
+                </div>
+                <p className="text-sm text-[color:var(--mock-foreground)]/80 mt-1">
+                  {t("listing.shipping.body")}
+                </p>
               </div>
             </section>
           </div>

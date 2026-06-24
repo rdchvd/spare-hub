@@ -38,6 +38,22 @@ class CategoryApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Category.objects.count(), 1)
 
+    def test_user_cannot_update_category(self):
+        category = Category.objects.create(name="Engine")
+        self.client.force_authenticate(self.user)
+        response = self.client.patch(
+            f"{self.url}{category.id}/",
+            {"name": "Updated"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_user_cannot_delete_category(self):
+        category = Category.objects.create(name="Engine")
+        self.client.force_authenticate(self.user)
+        response = self.client.delete(f"{self.url}{category.id}/")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_user_cannot_create_category(self):
 
         self.client.force_authenticate(self.user)

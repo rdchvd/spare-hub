@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from accounts.models import Seller
-from products.models import Product
+from products.models import Category, Product
 
 User = get_user_model()
 
@@ -516,3 +516,82 @@ class ProductMyTests(BaseProductTestCase):
 
         response = self.client.get(self.my_products_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class ProductCategoryRelationTests(APITestCase):
+
+    def setUp(self):
+        self.seller_user = User.objects.create_user(
+            email="seller@test.com",
+            password="StrongPass123",
+        )
+        self.seller_user.seller = Seller.objects.create(
+            user=self.seller_user,
+            company_name="Test company",
+            phone_number="+380501234567",
+            address="Test address",
+        )
+        self.category1 = Category.objects.create(name="Engine-1")
+        self.category2 = Category.objects.create(name="Engine-2")
+
+    def test_create_product_with_category(self):
+        self.client.force_authenticate(user=self.seller_user)
+        category = Category.objects.create(name="Engine")
+        payload = {
+            "name": "Brake pads",
+            "brand": "Bosch",
+            "description": "Test",
+            "price": "100.00",
+            "currency": "USD",
+            "condition": "new",
+            "quantity": 5,
+            "category_id": category.id,
+        }
+        response = self.client.post("/api/products/", payload, format="json")
+        self.assertEqual(response.status_code, 201)
+        product = Product.objects.get(id=response.data["id"])
+        self.assertEqual(product.category, category)
+
+    def test_update_product_category(self):
+        self.client.force_authenticate(user=self.seller_user)
+        category1 = Category.objects.create(name="Engine")
+        category2 = Category.objects.create(name="Brakes")
+        product = Product.objects.create(
+            name="Test product",
+            brand="Test",
+            price=100,
+            currency="USD",
+            condition="new",
+            quantity=1,
+            seller=self.seller_user.seller,
+            category=category1,
+        )
+        url = f"/api/products/{product.id}/"
+        response = self.client.patch(
+            url,
+            {"category_id": category2.id},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 200)
+        product.refresh_from_db()
+        self.assertEqual(product.category, category2)
+
+    def test_product_contains_category_data(self):
+        self.client.force_authenticate(user=self.seller_user)
+        category = Category.objects.create(name="Engine")
+        product = Product.objects.create(
+            name="Test product",
+            brand="Test",
+            price=100,
+            currency="USD",
+            condition="new",
+            quantity=1,
+            seller=self.seller_user.seller,
+            category=category,
+        )
+        url = f"/api/products/{product.id}/"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("category", response.data)
+        self.assertEqual(response.data["category"]["id"], category.id)
+        self.assertEqual(response.data["category"]["name"], category.name)

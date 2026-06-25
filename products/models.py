@@ -5,6 +5,16 @@ from accounts.models import Seller
 from core.models import Audit
 
 
+class Category(models.Model):
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+    )
+
+    def __str__(self):
+        return self.name
+
+
 class Product(Audit):
 
     class CurrencyChoices(models.TextChoices):
@@ -22,6 +32,12 @@ class Product(Audit):
         on_delete=models.SET_NULL,
         related_name="products",
         null=True,
+        blank=True,
+    )
+
+    category = models.ManyToManyField(
+        Category,
+        related_name="products",
         blank=True,
     )
 
@@ -50,16 +66,6 @@ class Product(Audit):
     )
 
     quantity = models.PositiveIntegerField(default=0)
-
-    def __str__(self):
-        return self.name
-
-
-class Category(models.Model):
-    name = models.CharField(
-        max_length=100,
-        unique=True,
-    )
 
     def __str__(self):
         return self.name

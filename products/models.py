@@ -35,11 +35,9 @@ class Product(Audit):
         blank=True,
     )
 
-    category = models.ForeignKey(
+    category = models.ManyToManyField(
         Category,
-        on_delete=models.SET_NULL,
         related_name="products",
-        null=True,
         blank=True,
     )
 

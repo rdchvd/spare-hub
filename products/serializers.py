@@ -15,10 +15,14 @@ class ProductSerializer(serializers.ModelSerializer):
 
     seller = SellerSerializer(read_only=True)
 
-    category = CategorySerializer(read_only=True)
+    category = CategorySerializer(
+        many=True,
+        read_only=True,
+    )
 
-    category_id = serializers.PrimaryKeyRelatedField(
+    category_ids = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
+        many=True,
         source="category",
         write_only=True,
         required=False,
@@ -43,7 +47,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "condition",
             "quantity",
             "category",
-            "category_id",
+            "category_ids",
             "created_at",
             "updated_at",
         ]

@@ -538,19 +538,18 @@ class ProductCategoryRelationTests(APITestCase):
         self.client.force_authenticate(user=self.seller_user)
         category = Category.objects.create(name="Engine")
         payload = {
-            "name": "Brake pads",
-            "brand": "Bosch",
-            "description": "Test",
-            "price": "100.00",
+            "name": "Test product",
+            "brand": "Test",
+            "price": 100,
             "currency": "USD",
             "condition": "new",
-            "quantity": 5,
-            "category_id": category.id,
+            "quantity": 1,
+            "category_ids": [category.id],
         }
         response = self.client.post("/api/products/", payload, format="json")
         self.assertEqual(response.status_code, 201)
         product = Product.objects.get(id=response.data["id"])
-        self.assertEqual(product.category, category)
+        self.assertIn(category, product.category.all())
 
     def test_update_product_category(self):
         self.client.force_authenticate(user=self.seller_user)
@@ -564,17 +563,17 @@ class ProductCategoryRelationTests(APITestCase):
             condition="new",
             quantity=1,
             seller=self.seller_user.seller,
-            category=category1,
         )
+        product.category.set([category1])
         url = f"/api/products/{product.id}/"
         response = self.client.patch(
             url,
-            {"category_id": category2.id},
+            {"category_ids": [category2.id]},
             format="json",
         )
         self.assertEqual(response.status_code, 200)
         product.refresh_from_db()
-        self.assertEqual(product.category, category2)
+        self.assertIn(category2, product.category.all())
 
     def test_product_contains_category_data(self):
         self.client.force_authenticate(user=self.seller_user)
@@ -587,11 +586,12 @@ class ProductCategoryRelationTests(APITestCase):
             condition="new",
             quantity=1,
             seller=self.seller_user.seller,
-            category=category,
         )
+        product.category.set([category])
         url = f"/api/products/{product.id}/"
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertIn("category", response.data)
-        self.assertEqual(response.data["category"]["id"], category.id)
-        self.assertEqual(response.data["category"]["name"], category.name)
+        self.assertEqual(len(response.data["category"]), 1)
+        self.assertEqual(response.data["category"][0]["id"], category.id)
+        self.assertEqual(response.data["category"][0]["name"], category.name)

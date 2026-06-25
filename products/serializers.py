@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.serializers import SellerSerializer
-from products.models import Product
+from products.models import Category, Product
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -14,3 +14,10 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = "__all__"
         read_only_fields = ["seller"]
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = "__all__"

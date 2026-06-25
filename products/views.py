@@ -4,13 +4,14 @@ from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import (
     AllowAny,
+    IsAdminUser,
     IsAuthenticated,
 )
 from rest_framework.response import Response
 
-from products.models import Product
+from products.models import Category, Product
 from products.permissions import IsProductOwner, IsSeller
-from products.serializers import ProductSerializer
+from products.serializers import CategorySerializer, ProductSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -79,3 +80,20 @@ class ProductViewSet(viewsets.ModelViewSet):
             many=True,
         )
         return Response(serializer.data)
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get_permissions(self):
+        if self.action in [
+            "create",
+            "update",
+            "partial_update",
+            "destroy",
+        ]:
+            return [IsAdminUser()]
+
+        return [AllowAny()]

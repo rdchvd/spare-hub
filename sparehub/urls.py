@@ -29,6 +29,7 @@ from accounts.views import LogoutView, MeView, RegisterView
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("products.urls")),
+    path("api/", include("orders.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",

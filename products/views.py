@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from products.models import Category, Product
 from products.permissions import IsProductOwner, IsSeller
 from products.serializers import CategorySerializer, ProductSerializer
+from products.services import create_product_history
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -67,7 +68,14 @@ class ProductViewSet(viewsets.ModelViewSet):
         return qs.select_related("seller")
 
     def perform_create(self, serializer):
-        serializer.save(seller=self.request.user.seller)
+        product = serializer.save(
+            seller=self.request.user.seller,
+        )
+        create_product_history(product)
+
+    def perform_update(self, serializer):
+        product = serializer.save()
+        create_product_history(product)
 
     @action(
         detail=False,

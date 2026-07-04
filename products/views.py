@@ -15,6 +15,10 @@ from products.permissions import IsProductOwner, IsSeller
 from products.serializers import CategorySerializer, ProductSerializer
 
 
+class NumberInFilter(filters.BaseInFilter, filters.NumberFilter):
+    pass
+
+
 class ProductFilter(filters.FilterSet):
     category = filters.NumberFilter(field_name="category__id")
     brand = filters.CharFilter(field_name="brand", lookup_expr="iexact")
@@ -23,10 +27,6 @@ class ProductFilter(filters.FilterSet):
     class Meta:
         model = Product
         fields = ["category", "brand", "condition"]
-
-    def filter_categories(self, queryset, name, value):
-        category_ids = value.split(",")
-        return queryset.filter(category__id__in=category_ids).distinct()
 
 
 class ProductViewSet(viewsets.ModelViewSet):

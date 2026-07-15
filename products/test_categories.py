@@ -113,6 +113,7 @@ class CategoryApiTests(APITestCase):
     def test_filter_products_by_category(self):
         engine = Category.objects.create(name="Engine")
         brakes = Category.objects.create(name="Brakes")
+        suspension = Category.objects.create(name="Suspension")
         product1 = Product.objects.create(
             name="Engine Part",
             brand="BMW",
@@ -133,10 +134,24 @@ class CategoryApiTests(APITestCase):
             seller=self.seller,
         )
         product2.category.set([brakes])
-        response = self.client.get(f"/api/products/?category={engine.id}")
+        product3 = Product.objects.create(
+            name="Suspension Part",
+            brand="BMW",
+            price=300,
+            currency="USD",
+            condition="new",
+            quantity=1,
+            seller=self.seller,
+        )
+        product3.category.set([suspension])
+
+        response = self.client.get(f"/api/products/?category={engine.id},{brakes.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 1)
-        self.assertEqual(response.data["results"][0]["id"], product1.id)
+        self.assertEqual(response.data["count"], 2)
+        product_ids = {product["id"] for product in response.data["results"]}
+        self.assertIn(product1.id, product_ids)
+        self.assertIn(product2.id, product_ids)
+        self.assertNotIn(product3.id, product_ids)
 
     def test_search_categories_by_name(self):
         engine = Category.objects.create(name="Engine")

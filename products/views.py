@@ -20,7 +20,7 @@ class NumberInFilter(filters.BaseInFilter, filters.NumberFilter):
 
 
 class ProductFilter(filters.FilterSet):
-    category = filters.NumberFilter(field_name="category__id")
+    category = NumberInFilter(field_name="category__id")
     brand = filters.CharFilter(field_name="brand", lookup_expr="iexact")
     condition = filters.CharFilter(field_name="condition", lookup_expr="iexact")
 

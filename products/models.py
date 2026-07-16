@@ -73,7 +73,11 @@ class Product(Audit):
 
 class ProductHistory(Audit):
     product_history_id = models.BigAutoField(primary_key=True)
-    product_id = models.PositiveBigIntegerField()
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="history",
+    )
 
     seller = models.ForeignKey(
         Seller,

@@ -1,43 +1,61 @@
 from rest_framework import serializers
 
 from orders.models import Order, OrderDetail
+from products.models import Product, ProductHistory
+
+
+class OrderProductHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductHistory
+        fields = [
+            "product_history_id",
+            "name",
+            "brand",
+            "description",
+            "price",
+            "currency",
+            "condition",
+            "quantity",
+        ]
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
+    product = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all(),
+        write_only=True,
+    )
+
+    product_history = OrderProductHistorySerializer(read_only=True)
+
     class Meta:
         model = OrderDetail
-        fields = ["id", "product", "quantity", "price"]
-        read_only_fields = ["id"]
+        fields = ["id", "product", "product_history", "quantity"]
+        read_only_fields = ["id", "product_history"]
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    details = OrderDetailSerializer(many=True, required=True)
+    details = OrderDetailSerializer(many=True, min_length=1)
 
     class Meta:
         model = Order
         fields = ["id", "user", "status", "created_at", "updated_at", "details"]
         read_only_fields = ["user", "created_at", "updated_at"]
 
-    def validate(self, attrs):
-        details = attrs.get("details")
-        if not details:
-            raise serializers.ValidationError(
-                {"details": "Order must contain at least one item."}
-            )
-        return attrs
-
     def create(self, validated_data):
-        details_data = validated_data.pop("details", [])
+        details_data = validated_data.pop("details")
         order = Order.objects.create(**validated_data)
 
         for item in details_data:
-            product = item["product"]
+            product = item.pop("product")
+
+            history = ProductHistory.objects.filter(product=product).latest(
+                "created_at"
+            )
 
             OrderDetail.objects.create(
                 order=order,
-                product=product,
+                product_history=history,
                 quantity=item["quantity"],
-                price=product.price,
             )
 
         return order
@@ -51,6 +69,16 @@ class OrderSerializer(serializers.ModelSerializer):
         if details_data is not None:
             instance.details.all().delete()
             for item in details_data:
-                OrderDetail.objects.create(order=instance, **item)
+                product = item.pop("product")
+
+                history = ProductHistory.objects.filter(product=product).latest(
+                    "created_at"
+                )
+
+                OrderDetail.objects.create(
+                    order=instance,
+                    product_history=history,
+                    quantity=item["quantity"],
+                )
 
         return instance

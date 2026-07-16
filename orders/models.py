@@ -1,8 +1,9 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from accounts.models import User
 from core.models import Audit
-from products.models import Product
+from products.models import ProductHistory
 
 
 class Order(Audit):
@@ -36,18 +37,13 @@ class OrderDetail(Audit):
         related_name="details",
     )
 
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
+    product_history = models.ForeignKey(
+        ProductHistory,
+        on_delete=models.PROTECT,
         related_name="order_details",
     )
 
-    quantity = models.PositiveIntegerField()
-
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-    )
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
 
     def __str__(self):
-        return f"Order #{self.order_id} - {self.product.name}"
+        return f"Order #{self.order_id} - {self.product_history.name}"

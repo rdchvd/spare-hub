@@ -3,7 +3,7 @@ from products.models import ProductHistory
 
 def create_product_history(product):
     history = ProductHistory.objects.create(
-        product_id=product.pk,
+        product=product,
         seller=product.seller,
         name=product.name,
         brand=product.brand,

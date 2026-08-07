@@ -1,3 +1,4 @@
+from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -15,19 +16,27 @@ from products.serializers import CategorySerializer, ProductSerializer
 from products.services import create_product_history
 
 
+class NumberInFilter(filters.BaseInFilter, filters.NumberFilter):
+    pass
+
+
+class ProductFilter(filters.FilterSet):
+    category = NumberInFilter(field_name="category__id")
+    brand = filters.CharFilter(field_name="brand", lookup_expr="iexact")
+    condition = filters.CharFilter(field_name="condition", lookup_expr="iexact")
+
+    class Meta:
+        model = Product
+        fields = ["category", "brand", "condition"]
+
+
 class ProductViewSet(viewsets.ModelViewSet):
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-
-    filterset_fields = [
-        "brand",
-        "currency",
-        "condition",
-        "category",
-    ]
+    filterset_class = ProductFilter
 
     search_fields = [
         "name",
@@ -44,16 +53,10 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ["update", "partial_update", "destroy"]:
-            return [
-                IsAuthenticated(),
-                IsProductOwner(),
-            ]
+            return [IsAuthenticated(), IsProductOwner()]
 
         if self.action == "create":
-            return [
-                IsAuthenticated(),
-                IsSeller(),
-            ]
+            return [IsAuthenticated(), IsSeller()]
 
         if self.action == "my":
             return [IsAuthenticated()]
@@ -66,7 +69,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.action == "my":
             qs = qs.filter(seller__user=self.request.user)
 
-        return qs.select_related("seller")
+        return qs.select_related("seller").prefetch_related("category")
 
     def perform_create(self, serializer):
         product = serializer.save(
@@ -78,12 +81,8 @@ class ProductViewSet(viewsets.ModelViewSet):
         product = serializer.save()
         create_product_history(product)
 
-    @action(
-        detail=False,
-        methods=["get"],
-    )
+    @action(detail=False, methods=["get"])
     def my(self, request):
-
         serializer = self.get_serializer(
             self.get_queryset(),
             many=True,
@@ -96,13 +95,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+    filter_backends = [SearchFilter]
+    search_fields = ["name"]
+
     def get_permissions(self):
-        if self.action in [
-            "create",
-            "update",
-            "partial_update",
-            "destroy",
-        ]:
+        if self.action in ["create", "update", "partial_update", "destroy"]:
             return [IsAdminUser()]
 
         return [AllowAny()]

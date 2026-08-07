@@ -26,11 +26,15 @@ class OrderDetailSerializer(serializers.ModelSerializer):
     )
 
     product_history = OrderProductHistorySerializer(read_only=True)
+    product_id = serializers.IntegerField(
+        source="product_history.product_id",
+        read_only=True,
+    )
 
     class Meta:
         model = OrderDetail
-        fields = ["id", "product", "product_history", "quantity"]
-        read_only_fields = ["id", "product_history"]
+        fields = ["id", "product", "product_id", "product_history", "quantity"]
+        read_only_fields = ["id", "product_history", "product_id"]
 
 
 class OrderSerializer(serializers.ModelSerializer):

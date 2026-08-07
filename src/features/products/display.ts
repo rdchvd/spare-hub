@@ -1,6 +1,7 @@
 import { listings, type Listing } from "@/lib/listings";
 import type { Lang } from "@/lib/i18n";
 import { routeVisibility } from "@/lib/route-visibility";
+import { slugifyCategory } from "@/features/categories/display";
 import type {
   Product,
   ProductConditionApi,
@@ -22,6 +23,10 @@ export type ProductDisplay = {
   currency: ProductCurrency;
   sellerName: string;
   sellerIsPreview: boolean;
+  /** API category names when present; empty if none. */
+  categoryNames: string[];
+  /** Slug of first API category, or mock category key for links. */
+  categorySlug: string;
   mock: Pick<
     Listing,
     "category" | "location" | "verified" | "rating" | "reviews" | "emoji"
@@ -71,6 +76,10 @@ function sellerDisplayFromProduct(product: Product, seed: Listing) {
 export function productToDisplay(product: Product): ProductDisplay {
   const seed = mockSeedForProduct(product);
   const seller = sellerDisplayFromProduct(product, seed);
+  const apiCategories = Array.isArray(product.category) ? product.category : [];
+  const categoryNames = apiCategories.map((c) => c.name).filter(Boolean);
+  const categorySlug =
+    categoryNames[0] != null ? slugifyCategory(categoryNames[0]) : seed.category;
 
   return {
     id: String(product.id),
@@ -84,6 +93,8 @@ export function productToDisplay(product: Product): ProductDisplay {
     condition: apiConditionToUi(product.condition ?? "new"),
     currency: product.currency ?? "USD",
     ...seller,
+    categoryNames,
+    categorySlug,
     mock: mockExtrasForProduct(product),
   };
 }
@@ -106,6 +117,7 @@ export function mockListingToDisplay(listing: Listing, lang: Lang = "en"): Produ
       currency: listing.currency,
       condition: uiConditionToApi(listing.condition),
       quantity: listing.stock === "in" ? 12 : 3,
+      category: [],
       created_at: "",
       updated_at: "",
       deleted_at: null,
@@ -120,6 +132,8 @@ export function mockListingToDisplay(listing: Listing, lang: Lang = "en"): Produ
     currency: listing.currency,
     sellerName: listing.seller,
     sellerIsPreview: true,
+    categoryNames: [],
+    categorySlug: listing.category,
     mock: {
       category: listing.category,
       location: listing.location,
@@ -135,4 +149,9 @@ export function currencySymbol(currency: ProductCurrency | Listing["currency"]) 
   if (currency === "EUR") return "€";
   if (currency === "UAH") return "₴";
   return "$";
+}
+
+/** Primary category label: API name when present, else mock i18n key path handled by caller. */
+export function primaryCategoryLabel(display: ProductDisplay): string | null {
+  return display.categoryNames[0] ?? null;
 }

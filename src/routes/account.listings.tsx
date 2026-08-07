@@ -98,8 +98,15 @@ function MyListings() {
                       <span className="text-muted-foreground">
                         {t("products.quantity")}: {listing.quantity}
                       </span>
-                      <Badge variant="outline" className="text-[color:var(--mock-foreground)] border-[color:var(--mock)]">
-                        {t(`cat.${listing.mock.category}` as const)}
+                      <Badge
+                        variant="outline"
+                        className={
+                          listing.categoryNames[0]
+                            ? "font-normal"
+                            : "text-[color:var(--mock-foreground)] border-[color:var(--mock)]"
+                        }
+                      >
+                        {listing.categoryNames[0] ?? t(`cat.${listing.mock.category}` as const)}
                       </Badge>
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground truncate">

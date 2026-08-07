@@ -1,12 +1,12 @@
 export const routeVisibility = {
   backend: {
     productsApiReady: true,
+    categoriesApiReady: true,
     /** Nested seller on product list/detail responses — flip when backend ships. */
     productSellerInApi: false,
   },
   header: {
-    /** Browse lives on home + footer — not in the top bar. */
-    browse: false,
+    browse: true,
     sell: true,
     about: false,
   },
@@ -23,6 +23,7 @@ export const routeVisibility = {
   accountTabs: {
     profile: true,
     listings: true,
+    orders: true,
     favorites: false,
     settings: true,
   },

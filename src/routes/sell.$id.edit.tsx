@@ -39,6 +39,7 @@ import {
 import { apiConditionToUi, productToDisplay, uiConditionToApi } from "@/features/products/display";
 import type { ProductConditionUi, ProductCurrency } from "@/features/products/types";
 import { useSellerGuard } from "@/features/products/use-seller-guard";
+import { categoryQueries } from "@/features/categories/queries";
 
 type EditSearch = { delete?: boolean };
 
@@ -50,8 +51,13 @@ export const Route = createFileRoute("/sell/$id/edit")({
     const id = Number(params.id);
     if (!Number.isFinite(id)) throw notFound();
     try {
-      const product = await queryClient.ensureQueryData(productQueries.detail(id));
-      return { product, display: productToDisplay(product) };
+      const [product, categories] = await Promise.all([
+        queryClient.ensureQueryData(productQueries.detail(id)),
+        routeVisibility.backend.categoriesApiReady
+          ? queryClient.ensureQueryData(categoryQueries.list())
+          : Promise.resolve([]),
+      ]);
+      return { product, display: productToDisplay(product), categories };
     } catch (error) {
       if (error instanceof ApiError && error.status === 404) throw notFound();
       throw error;
@@ -65,7 +71,7 @@ function SellEdit() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const router = useRouter();
-  const { product, display } = Route.useLoaderData();
+  const { product, display, categories } = Route.useLoaderData();
   const { delete: openDeleteOnMount } = Route.useSearch();
   const { ready } = useSellerGuard(`/sell/${product.id}/edit`);
   const { data: mine = [], isLoading: mineLoading } = useMyProducts(ready);
@@ -80,6 +86,9 @@ function SellEdit() {
   const [currency, setCurrency] = useState<ProductCurrency>(product.currency);
   const [price, setPrice] = useState(String(Number(product.price)));
   const [quantity, setQuantity] = useState(String(product.quantity));
+  const [categoryId, setCategoryId] = useState(
+    product.category?.[0] ? String(product.category[0].id) : "",
+  );
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   useEffect(() => {
@@ -111,6 +120,7 @@ function SellEdit() {
         currency,
         price: Number(price).toFixed(2),
         quantity: Number(quantity),
+        ...(categoryId ? { category_ids: [Number(categoryId)] } : {}),
       });
       await router.invalidate();
       toast.success(t("products.saved"));
@@ -234,9 +244,23 @@ function SellEdit() {
               />
             </div>
 
-            <MockFieldShell label={t("listing.spec.category")}>
-              <Input readOnly value={t(`cat.${mock.category}` as const)} className={mockFieldClass} />
-            </MockFieldShell>
+            {routeVisibility.backend.categoriesApiReady && categories.length > 0 ? (
+              <div className="space-y-1.5">
+                <Label>{t("sell.field.category")}</Label>
+                <Select value={categoryId || undefined} onValueChange={setCategoryId}>
+                  <SelectTrigger className="h-11">
+                    <SelectValue placeholder={t("sell.field.category.placeholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((c) => (
+                      <SelectItem key={c.id} value={String(c.id)}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : null}
 
             <MockFieldShell label={t("sell.field.location")}>
               <Input readOnly value={mock.location} className={mockFieldClass} />

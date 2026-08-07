@@ -15,9 +15,10 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { MockFieldShell, mockFieldClass } from "@/components/mock-field-shell";
 import { useI18n } from "@/lib/i18n";
-import { categories, listings } from "@/lib/listings";
+import { listings } from "@/lib/listings";
 import { uiConditionToApi } from "@/features/products/display";
 import type { ProductConditionUi, ProductCurrency } from "@/features/products/types";
+import { categoryQueries } from "@/features/categories/queries";
 import { ArrowLeft, ArrowRight, Check, Loader2, PartyPopper } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,10 @@ import { useSellerGuard } from "@/features/products/use-seller-guard";
 import { ApiError } from "@/features/auth/client";
 
 export const Route = createFileRoute("/sell/new")({
+  loader: ({ context: { queryClient } }) =>
+    routeVisibility.backend.categoriesApiReady
+      ? queryClient.ensureQueryData(categoryQueries.list())
+      : Promise.resolve([]),
   component: SellNew,
 });
 
@@ -39,6 +44,7 @@ type FormState = {
   price: string;
   quantity: string;
   currency: ProductCurrency;
+  categoryId: string;
 };
 
 const initial: FormState = {
@@ -49,12 +55,14 @@ const initial: FormState = {
   price: "",
   quantity: "1",
   currency: "EUR",
+  categoryId: "",
 };
 
 function SellNew() {
   if (!routeVisibility.header.sell) return <ComingSoon />;
   const { t } = useI18n();
   const navigate = useNavigate();
+  const categories = Route.useLoaderData();
   const { ready } = useSellerGuard("/sell/new");
   const createProduct = useCreateProduct();
   const [step, setStep] = useState(1);
@@ -67,10 +75,14 @@ function SellNew() {
     setForm((p) => ({ ...p, [k]: v }));
 
   const previewMock = listings[0]!;
+  const requireCategory = routeVisibility.backend.categoriesApiReady && categories.length > 0;
 
   const canContinue =
     step === 1
-      ? form.name.trim() !== "" && form.description.trim() !== "" && form.brand.trim() !== ""
+      ? form.name.trim() !== "" &&
+        form.description.trim() !== "" &&
+        form.brand.trim() !== "" &&
+        (!requireCategory || form.categoryId !== "")
       : form.price.trim() !== "" &&
         Number.isFinite(Number(form.price)) &&
         Number(form.price) >= 0 &&
@@ -86,6 +98,7 @@ function SellNew() {
         currency: form.currency,
         price: Number(form.price).toFixed(2),
         quantity: Number(form.quantity),
+        ...(form.categoryId ? { category_ids: [Number(form.categoryId)] } : {}),
       });
       setCreatedId(String(product.id));
       setDone(true);
@@ -233,9 +246,26 @@ function SellNew() {
                   </Select>
                 </div>
 
-                <MockFieldShell label={t("listing.spec.category")}>
-                  <Input readOnly value={t(`cat.${categories[0]!.key}` as const)} className={mockFieldClass} />
-                </MockFieldShell>
+                {requireCategory ? (
+                  <div className="space-y-1.5">
+                    <Label>{t("sell.field.category")}</Label>
+                    <Select
+                      value={form.categoryId || undefined}
+                      onValueChange={(v) => update("categoryId", v)}
+                    >
+                      <SelectTrigger className="h-11">
+                        <SelectValue placeholder={t("sell.field.category.placeholder")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((c) => (
+                          <SelectItem key={c.id} value={String(c.id)}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ) : null}
 
                 <MockFieldShell label={t("sell.field.location")}>
                   <Input readOnly value={previewMock.location} className={mockFieldClass} />
@@ -296,6 +326,10 @@ function SellNew() {
                   {[
                     { k: t("sell.field.title"), v: form.name || "—" },
                     { k: t("sell.field.brand"), v: form.brand || "—" },
+                    {
+                      k: t("sell.field.category"),
+                      v: categories.find((c) => String(c.id) === form.categoryId)?.name || "—",
+                    },
                     { k: t("sell.field.condition"), v: t(`browse.condition.${form.condition}` as const) },
                     { k: t("sell.field.price"), v: form.price ? `${form.currency} ${Number(form.price).toLocaleString()}` : "—" },
                     { k: t("products.quantity"), v: form.quantity || "—" },

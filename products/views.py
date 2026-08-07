@@ -26,6 +26,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         "brand",
         "currency",
         "condition",
+        "category",
     ]
 
     search_fields = [
